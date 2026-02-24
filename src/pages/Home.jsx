@@ -1,12 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import {
-  motion,
-  AnimatePresence,
-  LayoutGroup
-} from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import { Close } from "@mui/icons-material";
+import { FaInstagram, FaLinkedinIn, FaGithub } from "react-icons/fa";
 
 import Comprehensive from "./Comprehensive";
 import NextureWork from "./NextureWork";
@@ -15,58 +12,33 @@ import Services from "./Services";
 import Contact from "./Contact";
 
 /* -------------------------------------------------- */
-/* CONFIG */
+/* CONFIG & ANIMATION */
 /* -------------------------------------------------- */
 
-const EASE = [0.22, 1, 0.36, 1]; // Apple-style cubic bezier
-const SPRING = {
-  type: "spring",
-  stiffness: 280,
-  damping: 30,
-  mass: 0.8
-};
+const EASE = [0.22, 1, 0.36, 1];
+const SPRING = { type: "spring", stiffness: 280, damping: 30, mass: 0.8 };
 
 const FONT_STYLE = {
-  fontFamily:
-    "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
-  fontWeight: 400
+  fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+  fontWeight: 400,
 };
 
-/* -------------------------------------------------- */
-/* MOBILE MOCKUP */
-/* -------------------------------------------------- */
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 },
+  },
+};
 
-const MobileMockup = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 40 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 1, ease: EASE }}
-    className="relative will-change-transform"
-  >
-    <div
-      className="
-        relative mx-auto w-full max-w-[260px]
-        aspect-[9/19]
-        bg-white
-        rounded-[28px] sm:rounded-[30px] md:rounded-[34px]
-        overflow-hidden
-        border-[8px] border-white
-        shadow-[0_30px_80px_rgba(0,0,0,0.12)]
-        transform-gpu
-      "
-    >
-      <img
-        src="camera1.webp"
-        alt="App interface"
-        className="w-full h-full object-cover"
-        loading="lazy"
-      />
-    </div>
-
-    {/* Soft Glow */}
-    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-blue-500/20 blur-3xl rounded-full pointer-events-none" />
-  </motion.div>
-);
+const textVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: EASE },
+  },
+};
 
 /* -------------------------------------------------- */
 /* HOME */
@@ -78,14 +50,13 @@ const Home = () => {
   const formRef = useRef();
   const location = useLocation();
 
-  // Handle Hash Scrolling on load or route change
+  /* Hash scroll */
   useEffect(() => {
-    if (location.hash === "#services") {
+    if (location.hash) {
       setTimeout(() => {
-        const element = document.getElementById("services-section");
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
+        const id = location.hash.substring(1);
+        const element = document.getElementById(`${id}-section`);
+        if (element) element.scrollIntoView({ behavior: "smooth" });
       }, 100);
     }
   }, [location]);
@@ -97,7 +68,6 @@ const Home = () => {
   const sendEmail = useCallback(async (e) => {
     e.preventDefault();
     setMessage("Sending...");
-
     try {
       await emailjs.sendForm(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -105,7 +75,6 @@ const Home = () => {
         formRef.current,
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
-
       setMessage("Success. We'll contact you shortly.");
       e.target.reset();
     } catch {
@@ -122,197 +91,181 @@ const Home = () => {
         className="min-h-screen bg-white text-gray-900 overflow-x-hidden"
         style={FONT_STYLE}
       >
-        {/* -------------------------------------------------- */}
-        {/* HERO */}
-        {/* -------------------------------------------------- */}
-
-        <section className="relative py-24 md:py-32 px-6 md:px-16 lg:px-32 overflow-hidden">
-          <div className="absolute inset-0">
-            <img
-              src="camera1.webp"
-              alt="Background"
-              className="w-full h-full object-cover scale-105 transform-gpu"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-md" />
-          </div>
-
-          <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+        {/* HERO SECTION */}
+        <section
+          className="relative w-full min-h-[100svh] md:min-h-screen flex items-center overflow-hidden pt-16 md:pt-0"
+          style={{
+            background: "linear-gradient(103deg, #E5E5E5 50%, #000000 50.1%)",
+          }}
+        >
+          <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 px-6 lg:px-12 relative z-10 h-full">
+            
+            {/* LEFT SIDE */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: EASE }}
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="flex flex-col justify-center pt-10 pb-6 md:py-0"
             >
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-semibold leading-[1.05] tracking-tighter text-[#1d1d1f] mb-6">
-                Birvyrion.
-                <br />
-                <span className="text-[#6e6e73]">
-                  Engineering Future.
-                </span>
-              </h1>
-
-              <p className="text-xl md:text-2xl leading-relaxed font-normal text-[#2A2A2A] max-w-lg mx-auto lg:mx-0 mb-10 tracking-tight">
-                We architect scalable infrastructure, intelligent automation,
-                and secure digital systems designed for performance,
-                longevity, and growth.
-              </p>
-
-              {/* FLIP BUTTON → MODAL MORPH */}
-              <motion.button
-                layoutId="modal-container"
-                transition={SPRING}
-                onClick={handleOpenModal}
-                whileTap={{ scale: 0.96 }}
-                className="
-                  relative px-8 py-4
-                  rounded-md
-                  bg-black text-[#6F8FA6]
-                  font-large
-                  shadow-xl
-                  transform-gpu
-                "
+              <motion.h2
+                variants={textVariants}
+                className="text-2xl md:text-4xl font-semibold text-gray-900 mb-4"
               >
-                Schedule a Consultation
-              </motion.button>
+                Hi, I am
+              </motion.h2>
+
+              <motion.h1
+                variants={textVariants}
+                className="text-5xl sm:text-6xl md:text-[80px] font-bold text-black tracking-tight leading-none mb-4"
+              >
+                Vincent
+              </motion.h1>
+
+              <motion.h3
+                variants={textVariants}
+                className="text-xl md:text-3xl font-medium text-gray-500 mb-10"
+              >
+                Full-stack Developer
+              </motion.h3>
+
+              {/* SOCIAL LINKS */}
+              <motion.div
+                variants={textVariants}
+                className="flex gap-4"
+              >
+                {[
+                  {
+                    icon: FaInstagram,
+                    link: "https://www.instagram.com/vinnyagunda/?hl=en",
+                  },
+                  {
+                    icon: FaLinkedinIn,
+                    link: "https://www.linkedin.com/in/vincentagunda",
+                  },
+                  {
+                    icon: FaGithub,
+                    link: "https://github.com/VincentAgunda",
+                  },
+                ].map(({ icon: Icon, link }, idx) => (
+                  <a
+                    key={idx}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 flex items-center justify-center bg-gray-300/60 hover:bg-black hover:text-white rounded-lg transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <Icon size={20} />
+                  </a>
+                ))}
+              </motion.div>
             </motion.div>
 
-            <MobileMockup />
+            {/* RIGHT SIDE IMAGE */}
+            {/* Changed alignment here to center on mobile, end on md+ */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.2, ease: EASE, delay: 0.3 }}
+              className="flex items-center md:items-end justify-center mt-6 md:mt-0 h-full pb-10 md:pb-0"
+            >
+              {/* Changed object-bottom to object-center on mobile, object-bottom on md+ */}
+              <img
+                src="/vincent.png"
+                alt="Vincent"
+                className="w-[80%] sm:w-[65%] md:w-[80%] max-h-[45vh] md:max-h-[85vh] object-contain object-center md:object-bottom drop-shadow-2xl"
+                loading="eager"
+              />
+            </motion.div>
           </div>
         </section>
 
-        <Comprehensive onOpenModal={handleOpenModal} />
-        <NextureWork />
+        {/* SECTIONS */}
+        <div id="about-section" className="scroll-mt-24">
+          <Comprehensive onOpenModal={handleOpenModal} />
+        </div>
+
+        <div id="portfolio-section" className="scroll-mt-24">
+          <NextureWork />
+        </div>
+
         <Questions />
-        
-        {/* Embedded Services below Questions - scroll-mt-24 prevents the header from covering text */}
-        <div id="services-section" className="scroll-mt-24">
+
+        <div id="skills-section" className="scroll-mt-24">
           <Services />
         </div>
 
-        <Contact />
+        <div id="contact-section" className="scroll-mt-24">
+          <Contact />
+        </div>
 
-        {/* -------------------------------------------------- */}
         {/* MODAL */}
-        {/* -------------------------------------------------- */}
-
         <AnimatePresence>
           {showModal && (
             <>
-              {/* BACKDROP */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, ease: EASE }}
                 className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xl"
                 onClick={() => setShowModal(false)}
               />
 
-              {/* MORPHING CONTAINER */}
               <motion.div
                 layoutId="modal-container"
                 transition={SPRING}
-                className="
-                  fixed z-50
-                  inset-6 sm:inset-12 md:inset-20
-                  bg-white
-                  rounded-[28px] sm:rounded-[32px] md:rounded-[36px]
-                  shadow-[0_60px_140px_rgba(0,0,0,0.2)]
-                  p-8 md:p-12
-                  overflow-auto
-                  transform-gpu
-                "
+                className="fixed z-50 inset-4 sm:inset-12 bg-white rounded-[28px] shadow-2xl p-6 sm:p-10 overflow-auto"
               >
-                {/* CLOSE */}
                 <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
                   onClick={() => setShowModal(false)}
-                  className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition"
+                  className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100"
                 >
                   <Close />
                 </motion.button>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15, duration: 0.5, ease: EASE }}
+                <h2 className="text-2xl sm:text-3xl font-semibold mb-8">
+                  Get a Free Quote
+                </h2>
+
+                <form
+                  ref={formRef}
+                  onSubmit={sendEmail}
+                  className="space-y-6 max-w-xl"
                 >
-                  <h2 className="text-3xl font-semibold mb-8 tracking-tight">
-                    Get a Free Quote
-                  </h2>
-
-                  <form
-                    ref={formRef}
-                    onSubmit={sendEmail}
-                    className="space-y-6 max-w-xl"
-                  >
-                    {["name", "email", "phone"].map((field) => (
-                      <input
-                        key={field}
-                        name={field}
-                        type={field === "email" ? "email" : "text"}
-                        placeholder={
-                          field.charAt(0).toUpperCase() + field.slice(1)
-                        }
-                        className="
-                          w-full px-5 py-4
-                          rounded-2xl
-                          border border-black/10
-                          focus:ring-2 focus:ring-black/20
-                          outline-none
-                          transition
-                          transform-gpu
-                        "
-                        required={field !== "phone"}
-                      />
-                    ))}
-
-                    <textarea
-                      name="message"
-                      rows="4"
-                      placeholder="Project Details"
-                      className="
-                        w-full px-5 py-4
-                        rounded-2xl
-                        border border-black/10
-                        focus:ring-2 focus:ring-black/20
-                        outline-none
-                        transition
-                        transform-gpu
-                      "
-                      required
+                  {["name", "email", "phone"].map((field) => (
+                    <input
+                      key={field}
+                      name={field}
+                      type={field === "email" ? "email" : "text"}
+                      placeholder={
+                        field.charAt(0).toUpperCase() + field.slice(1)
+                      }
+                      className="w-full px-5 py-4 rounded-2xl border border-black/10 focus:ring-2 focus:ring-black/20 outline-none"
+                      required={field !== "phone"}
                     />
+                  ))}
 
-                    {message && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="text-sm text-gray-600"
-                      >
-                        {message}
-                      </motion.div>
-                    )}
+                  <textarea
+                    name="message"
+                    rows="4"
+                    placeholder="Project Details"
+                    className="w-full px-5 py-4 rounded-2xl border border-black/10 focus:ring-2 focus:ring-black/20 outline-none"
+                    required
+                  />
 
-                    <motion.button
-                      whileTap={{ scale: 0.97 }}
-                      type="submit"
-                      className="
-                        w-full py-4
-                        rounded-full
-                        bg-black text-white
-                        font-medium
-                        shadow-lg
-                        transform-gpu
-                      "
-                    >
-                      {message === "Sending..."
-                        ? "Sending..."
-                        : "Send Message"}
-                    </motion.button>
-                  </form>
-                </motion.div>
+                  {message && (
+                    <div className="text-sm text-gray-600">{message}</div>
+                  )}
+
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    type="submit"
+                    className="w-full py-4 rounded-full bg-black text-white font-medium"
+                  >
+                    {message === "Sending..."
+                      ? "Sending..."
+                      : "Send Message"}
+                  </motion.button>
+                </form>
               </motion.div>
             </>
           )}

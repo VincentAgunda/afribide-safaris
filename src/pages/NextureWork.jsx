@@ -219,7 +219,7 @@ const NextureWork = () => {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
 
         <h2 className="text-5xl font-semibold text-black text-center mb-24 tracking-tight">
-          Selected Work.
+          Recent Projects.
         </h2>
 
         <div className="relative">

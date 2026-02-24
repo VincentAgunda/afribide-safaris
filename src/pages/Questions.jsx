@@ -7,27 +7,27 @@ const easing = [0.16, 1, 0.3, 1];
 const FAQ_DATA = [
   {
     q: "Do you provide end-to-end system architecture and infrastructure setup?",
-    a: "Yes. We design, deploy, and manage complete system architectures including server configuration, database design, cloud infrastructure, security hardening, and performance optimization to ensure scalability and reliability."
+    a: "Yes. I design, deploy, and manage complete system architectures including server configuration, database design, cloud infrastructure, security hardening, and performance optimization to ensure scalability and reliability."
   },
   {
     q: "Can you migrate our existing systems to the cloud?",
-    a: "Absolutely. We handle full cloud migration strategies including architecture redesign, AWS/Azure/GCP implementation, cost optimization, security compliance, and post-migration performance tuning."
+    a: "Absolutely. I handle full cloud migration strategies including architecture redesign, AWS/Azure/GCP implementation, cost optimization, security compliance, and post-migration performance tuning."
   },
   {
     q: "How do you ensure software quality and system reliability?",
-    a: "We implement structured QA processes including unit testing, integration testing, automated pipelines, load testing, and vulnerability assessments to guarantee stable and secure deployments."
+    a: "Iimplement structured QA processes including unit testing, integration testing, automated pipelines, load testing, and vulnerability assessments to guarantee stable and secure deployments."
   },
   {
     q: "Do you offer ongoing system monitoring and maintenance?",
-    a: "Yes. We provide continuous monitoring, patch management, performance tracking, incident management, and long-term technical support to keep your systems operating at peak performance."
+    a: "Yes. I provide continuous monitoring, patch management, performance tracking, incident management, and long-term technical support to keep your systems operating at peak performance."
   },
   {
     q: "Can you integrate AI or automation into our business processes?",
-    a: "Yes. We develop custom AI models, predictive analytics systems, chatbots, and intelligent automation workflows tailored to enhance operational efficiency and decision-making."
+    a: "Yes. I develop custom AI models, predictive analytics systems, chatbots, and intelligent automation workflows tailored to enhance operational efficiency and decision-making."
   },
   {
     q: "Do you offer strategic IT consultancy and digital transformation guidance?",
-    a: "We provide expert advisory services including technology audits, stack selection, DevOps implementation, architecture design, and digital transformation roadmaps aligned with your business goals."
+    a: "I provide expert advisory services including technology audits, stack selection, DevOps implementation, architecture design, and digital transformation roadmaps aligned with your business goals."
   }
 ];
 
@@ -107,7 +107,7 @@ const Questions = () => {
 </h2>
 
           <p className="text-[#6e6e73] text-lg max-w-xl mx-auto leading-relaxed">
-            Clear answers about our engineering methodology, infrastructure
+            Clear answers about my engineering methodology, infrastructure
             strategy, and digital transformation expertise.
           </p>
         </motion.div>

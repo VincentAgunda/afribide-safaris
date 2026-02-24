@@ -334,7 +334,7 @@ const Comprehensive = ({ onOpenModal }) => {
     <section className="w-full min-h-screen py-20 bg-[#F0F8FF]">
       <div className="max-w-7xl mx-auto mb-16 px-4 text-center">
         <h2 className="text-3xl md:text-4xl font-medium text-[#002D62]">
-          Comprehensive Digital Solutions
+          My Expertise
         </h2>
       </div>
 
