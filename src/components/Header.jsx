@@ -1,28 +1,39 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { FaSearch, FaUserCircle, FaBars, FaTimes } from "react-icons/fa"; 
+import { FaSearch, FaUserCircle, FaBars, FaTimes, FaChevronDown } from "react-icons/fa"; 
 import { Link, useLocation } from "react-router-dom";
-import { auth } from "../firebase"; // Keep your existing imports
+import { auth } from "../firebase"; 
 import { signOut } from "firebase/auth";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Updated links logic to support dropdowns
 const navLinks = [
-  { path: "/#about", label: "About me" },
-  { path: "/#skills", label: "Skills" },
-  { path: "/#portfolio", label: "Portfolio" },
+  { path: "/#about", label: "About Us" },
+  { path: "/#gallery", label: "Gallery" },
+  {
+    label: "Testimonials & Blogs",
+    isDropdown: true,
+    subLinks: [
+      { path: "/#testimonials", label: "Testimonials" },
+      { path: "/#blog", label: "Blogs" },
+    ],
+  },
 ];
 
 const Header = React.memo(({ user }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [navDropdownOpen, setNavDropdownOpen] = useState(false); // For Testimonials & Blogs
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const dropdownRef = useRef(null);
+  const navDropdownRef = useRef(null);
   const menuRef = useRef(null);
   const searchRef = useRef(null);
   const location = useLocation();
 
   const closeAllMenus = useCallback(() => {
     setDropdownOpen(false);
+    setNavDropdownOpen(false);
     setMobileMenuOpen(false);
     setSearchOpen(false);
   }, []);
@@ -39,17 +50,13 @@ const Header = React.memo(({ user }) => {
   const toggleMobileMenu = useCallback(() => {
     setMobileMenuOpen((prev) => !prev);
     setDropdownOpen(false);
+    setNavDropdownOpen(false);
     setSearchOpen(false);
-  }, []);
-
-  const toggleSearch = useCallback(() => {
-    setSearchOpen((prev) => !prev);
-    setDropdownOpen(false);
-    setMobileMenuOpen(false);
   }, []);
 
   // Custom Click Handler for Hash Links & Home
   const handleNavClick = useCallback((e, path) => {
+    if (!path) return; // Prevent errors on empty paths (dropdown toggles)
     if (path === "/") {
       if (location.pathname === "/") {
         e.preventDefault(); 
@@ -71,7 +78,45 @@ const Header = React.memo(({ user }) => {
   const isScrolled = scrollY > 10;
 
   const renderNavLinks = useMemo(() => (
-    navLinks.map((link) => {
+    navLinks.map((link, idx) => {
+      if (link.isDropdown) {
+        return (
+          <li key={idx} className="relative" ref={navDropdownRef}>
+            <button
+              onClick={() => setNavDropdownOpen(!navDropdownOpen)}
+              className={`flex items-center px-2 py-1 transition-colors duration-200 group outline-none ${
+                isScrolled ? "text-gray-800 hover:text-black dark:text-gray-300 dark:hover:text-white" : "text-gray-300 hover:text-white"
+              }`}
+            >
+              {link.label}
+              <FaChevronDown className={`ml-1 text-xs transition-transform duration-200 ${navDropdownOpen ? "rotate-180" : ""}`} />
+            </button>
+            <AnimatePresence>
+              {navDropdownOpen && (
+                <motion.ul
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700"
+                >
+                  {link.subLinks.map((subLink) => (
+                    <li key={subLink.path}>
+                      <Link
+                        to={subLink.path}
+                        className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        onClick={(e) => handleNavClick(e, subLink.path)}
+                      >
+                        {subLink.label}
+                      </Link>
+                    </li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </li>
+        );
+      }
+
       const isActive = location.pathname === link.path || 
                        (link.path.includes(location.hash) && location.hash !== "");
                        
@@ -92,10 +137,37 @@ const Header = React.memo(({ user }) => {
         </li>
       );
     })
-  ), [handleNavClick, location.pathname, location.hash, isScrolled]);
+  ), [handleNavClick, location.pathname, location.hash, isScrolled, navDropdownOpen]);
 
   const renderMobileMenuLinks = useMemo(() => (
     navLinks.map((link, index) => {
+      if (link.isDropdown) {
+        return (
+          <div key={index}>
+            <p className="block py-2 px-4 text-sm font-semibold text-gray-400 uppercase tracking-wider">
+              {link.label}
+            </p>
+            {link.subLinks.map((subLink, subIdx) => (
+              <motion.li
+                key={subLink.path}
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: index * 0.05 + 0.1 + (subIdx * 0.05) }}
+                className="ml-4 border-l-2 border-gray-100 dark:border-gray-800"
+              >
+                <Link
+                  to={subLink.path}
+                  className="block py-2 px-4 text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
+                  onClick={(e) => handleNavClick(e, subLink.path)}
+                >
+                  {subLink.label}
+                </Link>
+              </motion.li>
+            ))}
+          </div>
+        );
+      }
+
       const isActive = location.pathname === link.path || 
                        (link.path.includes(location.hash) && location.hash !== "");
                        
@@ -126,6 +198,9 @@ const Header = React.memo(({ user }) => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
+      }
+      if (navDropdownRef.current && !navDropdownRef.current.contains(event.target)) {
+        setNavDropdownOpen(false);
       }
       if (menuRef.current && !menuRef.current.contains(event.target) && 
           !event.target.closest('[aria-label="Mobile menu"]')) {
@@ -161,7 +236,7 @@ const Header = React.memo(({ user }) => {
       >
         <nav className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center h-24">
           
-          {/* LOGO (Updated to use logo.png) */}
+          {/* LOGO */}
           <motion.div 
             className="flex items-center"
             whileHover={{ scale: 1.05 }}
@@ -173,7 +248,7 @@ const Header = React.memo(({ user }) => {
             >
               <img 
                 src="/logo.png" 
-                alt="Brand Logo" 
+                alt="Afribide Safaris" 
                 className="h-10 md:h-12 w-auto object-contain" 
               />
             </Link>
@@ -185,7 +260,7 @@ const Header = React.memo(({ user }) => {
               {renderNavLinks}
             </ul>
             
-            {/* Contact Me Button */}
+            {/* Contact Us Button */}
             <Link
               to="/#contact"
               onClick={(e) => handleNavClick(e, "/#contact")}
@@ -195,7 +270,7 @@ const Header = React.memo(({ user }) => {
                 : "bg-white text-black hover:bg-gray-100"
               }`}
             >
-              Contact Me
+              Contact Us
             </Link>
           </div>
 
@@ -245,7 +320,7 @@ const Header = React.memo(({ user }) => {
                       className="block py-2 px-4 mt-4 bg-black text-white text-center rounded-lg"
                       onClick={(e) => handleNavClick(e, "/#contact")}
                     >
-                      Contact Me
+                      Contact Us
                     </Link>
                   </motion.li>
                 </ul>

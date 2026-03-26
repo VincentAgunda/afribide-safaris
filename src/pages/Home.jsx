@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import { Close } from "@mui/icons-material";
-import { FaInstagram, FaLinkedinIn, FaGithub } from "react-icons/fa";
+import { FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 
 import Comprehensive from "./Comprehensive";
 import NextureWork from "./NextureWork";
@@ -92,15 +92,35 @@ const Home = () => {
         style={FONT_STYLE}
       >
         {/* HERO SECTION */}
-        <section
-          className="relative w-full min-h-[100svh] md:min-h-screen flex items-center overflow-hidden pt-16 md:pt-0"
-          style={{
-            background: "linear-gradient(103deg, #E5E5E5 50%, #000000 50.1%)",
-          }}
-        >
-          <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 px-6 lg:px-12 relative z-10 h-full">
+        <section className="relative w-full min-h-[100svh] md:min-h-screen flex items-center overflow-hidden pt-16 md:pt-0">
+          
+          {/* 1. BASE LAYER: The Background Image (Restricted to prevent over-stretching) */}
+          <motion.div
+            initial={{ scale: 1.05, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: EASE }}
+            className="absolute top-0 right-0 w-full md:w-[55%] h-full z-0"
+          >
+            <img
+              src="/herosection1.png" 
+              alt="Afribide Safari Experience"
+              className="w-full h-full object-cover object-center md:object-right"
+              loading="eager"
+            />
+          </motion.div>
+
+          {/* 2. MIDDLE LAYER: The Angled Mask (Gray on the left, transparent window on the right) */}
+          <div 
+            className="absolute inset-0 z-10"
+            style={{
+              background: "linear-gradient(103deg, #E5E5E5 50%, transparent 50.1%)",
+            }}
+          />
+
+          {/* 3. TOP LAYER: Foreground Content */}
+          <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 px-6 lg:px-12 relative z-20 h-full">
             
-            {/* LEFT SIDE */}
+            {/* LEFT SIDE (Text & Links) */}
             <motion.div
               variants={containerVariants}
               initial="hidden"
@@ -111,21 +131,21 @@ const Home = () => {
                 variants={textVariants}
                 className="text-2xl md:text-4xl font-semibold text-gray-900 mb-4"
               >
-                Hi, I am
+                Welcome to
               </motion.h2>
 
               <motion.h1
                 variants={textVariants}
                 className="text-5xl sm:text-6xl md:text-[80px] font-bold text-black tracking-tight leading-none mb-4"
               >
-                Vincent
+                Afribide Safaris
               </motion.h1>
 
               <motion.h3
                 variants={textVariants}
                 className="text-xl md:text-3xl font-medium text-gray-500 mb-10"
               >
-                Full-stack Developer
+                Experience the wild like never before
               </motion.h3>
 
               {/* SOCIAL LINKS */}
@@ -134,18 +154,9 @@ const Home = () => {
                 className="flex gap-4"
               >
                 {[
-                  {
-                    icon: FaInstagram,
-                    link: "https://www.instagram.com/vinnyagunda/?hl=en",
-                  },
-                  {
-                    icon: FaLinkedinIn,
-                    link: "https://www.linkedin.com/in/vincentagunda",
-                  },
-                  {
-                    icon: FaGithub,
-                    link: "https://github.com/VincentAgunda",
-                  },
+                  { icon: FaInstagram, link: "#" },
+                  { icon: FaFacebookF, link: "#" },
+                  { icon: FaWhatsapp, link: "#" },
                 ].map(({ icon: Icon, link }, idx) => (
                   <a
                     key={idx}
@@ -160,22 +171,8 @@ const Home = () => {
               </motion.div>
             </motion.div>
 
-            {/* RIGHT SIDE IMAGE */}
-            {/* Changed alignment here to center on mobile, end on md+ */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, ease: EASE, delay: 0.3 }}
-              className="flex items-center md:items-end justify-center mt-6 md:mt-0 h-full pb-10 md:pb-0"
-            >
-              {/* Changed object-bottom to object-center on mobile, object-bottom on md+ */}
-              <img
-                src="/vincent.png"
-                alt="Vincent"
-                className="w-[80%] sm:w-[65%] md:w-[80%] max-h-[45vh] md:max-h-[85vh] object-contain object-center md:object-bottom drop-shadow-2xl"
-                loading="eager"
-              />
-            </motion.div>
+            {/* RIGHT SIDE EMPTY SPACE (Keeps the grid structure intact) */}
+            <div className="hidden md:block"></div>
           </div>
         </section>
 
@@ -184,13 +181,13 @@ const Home = () => {
           <Comprehensive onOpenModal={handleOpenModal} />
         </div>
 
-        <div id="portfolio-section" className="scroll-mt-24">
+        <div id="gallery-section" className="scroll-mt-24">
           <NextureWork />
         </div>
 
         <Questions />
 
-        <div id="skills-section" className="scroll-mt-24">
+        <div id="safariheros-section" className="scroll-mt-24">
           <Services />
         </div>
 
@@ -223,7 +220,7 @@ const Home = () => {
                 </motion.button>
 
                 <h2 className="text-2xl sm:text-3xl font-semibold mb-8">
-                  Get a Free Quote
+                  Plan Your Dream Safari
                 </h2>
 
                 <form
@@ -247,7 +244,7 @@ const Home = () => {
                   <textarea
                     name="message"
                     rows="4"
-                    placeholder="Project Details"
+                    placeholder="Tell us about your trip (Travel dates, number of travelers, preferred destinations...)"
                     className="w-full px-5 py-4 rounded-2xl border border-black/10 focus:ring-2 focus:ring-black/20 outline-none"
                     required
                   />
@@ -263,7 +260,7 @@ const Home = () => {
                   >
                     {message === "Sending..."
                       ? "Sending..."
-                      : "Send Message"}
+                      : "Send Inquiry"}
                   </motion.button>
                 </form>
               </motion.div>

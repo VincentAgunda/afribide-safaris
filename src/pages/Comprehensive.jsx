@@ -9,34 +9,13 @@ import React, {
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 
-// ✅ Lazy load icons
-const AdminPanelSettings = React.lazy(() =>
-  import("@mui/icons-material/AdminPanelSettings")
-);
-const Storage = React.lazy(() => import("@mui/icons-material/Storage"));
-const BugReport = React.lazy(() =>
-  import("@mui/icons-material/BugReport")
-);
-const Engineering = React.lazy(() =>
-  import("@mui/icons-material/Engineering")
-);
-const CloudDone = React.lazy(() =>
-  import("@mui/icons-material/CloudDone")
-);
-const ColorLens = React.lazy(() =>
-  import("@mui/icons-material/ColorLens")
-);
-const Terminal = React.lazy(() =>
-  import("@mui/icons-material/Terminal")
-);
-const Psychology = React.lazy(() =>
-  import("@mui/icons-material/Psychology")
-);
-const Lightbulb = React.lazy(() =>
-  import("@mui/icons-material/Lightbulb")
-);
+// Swap out IT icons for Safari/Travel relevant icons
+const Map = React.lazy(() => import("@mui/icons-material/Map"));
+const Explore = React.lazy(() => import("@mui/icons-material/Explore"));
+const Landscape = React.lazy(() => import("@mui/icons-material/Landscape"));
+const DirectionsCar = React.lazy(() => import("@mui/icons-material/DirectionsCar"));
+const Article = React.lazy(() => import("@mui/icons-material/Article"));
 
-// ✅ Color Themes
 const CARD_THEMES = [
   {
     bg: "#fafafa",
@@ -57,8 +36,7 @@ const CARD_THEMES = [
     iconColor: "text-white",
     btnBg: "bg-black hover:bg-[#222]",
     btnText: "text-white",
-    plusBorder:
-      "border-white text-white hover:bg-white hover:text-[#979797]",
+    plusBorder: "border-white text-white hover:bg-white hover:text-[#979797]",
     divider: "border-white/30",
   },
   {
@@ -80,8 +58,7 @@ const CARD_THEMES = [
     iconColor: "text-white",
     btnBg: "bg-white hover:bg-gray-200",
     btnText: "text-black",
-    plusBorder:
-      "border-white text-white hover:bg-white hover:text-black",
+    plusBorder: "border-white text-white hover:bg-white hover:text-black",
     divider: "border-gray-800",
   },
   {
@@ -97,7 +74,6 @@ const CARD_THEMES = [
   },
 ];
 
-// ✅ Service Card Component
 const ServiceCard = memo(
   ({ service, index, onOpenModal, isMobile, totalCards }) => {
     const theme = CARD_THEMES[index % CARD_THEMES.length];
@@ -168,7 +144,7 @@ const ServiceCard = memo(
             onClick={onOpenModal}
             className={`px-6 py-2 rounded-lg font-medium transition-colors ${theme.btnBg} ${theme.btnText}`}
           >
-            Get Started
+            Explore Options
           </motion.button>
 
           <button
@@ -185,7 +161,6 @@ const ServiceCard = memo(
 
 ServiceCard.displayName = "ServiceCard";
 
-// ✅ Main Component
 const Comprehensive = ({ onOpenModal }) => {
   const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -228,102 +203,58 @@ const Comprehensive = ({ onOpenModal }) => {
   const services = useMemo(
     () => [
       {
-        title: "System Administration",
+        title: "Safari Packages",
         description:
-          "Professional system administration and engineering services.",
-        icon: AdminPanelSettings,
+          "Browse our curated list of unforgettable safari adventures across East Africa.",
+        icon: Explore,
         features: [
-          "Server setup",
-          "Network security",
-          "System monitoring",
+          "Multi-day itineraries",
+          "Family-friendly options",
+          "Luxury & budget choices",
         ],
       },
       {
-        title: "Database Design",
+        title: "Kenya Safaris",
         description:
-          "Custom database solutions tailored to your needs.",
-        icon: Storage,
+          "Experience the magic of the Masai Mara and the beauty of the Great Rift Valley.",
+        icon: Map,
         features: [
-          "Relational databases",
-          "NoSQL solutions",
-          "Performance tuning",
+          "The Great Migration",
+          "Amboseli & Tsavo",
+          "Beach & Bush combos",
         ],
       },
       {
-        title: "Software Testing",
+        title: "Tanzania Safaris",
         description:
-          "Ensure your software is reliable and secure.",
-        icon: BugReport,
+          "Witness the vast plains of the Serengeti and the incredible Ngorongoro Crater.",
+        icon: Landscape,
         features: [
-          "Unit testing",
-          "Automation",
-          "Security testing",
+          "Serengeti National Park",
+          "Mount Kilimanjaro climbs",
+          "Zanzibar getaways",
         ],
       },
       {
-        title: "Cloud Management",
+        title: "Custom / Tailor-made Safari",
         description:
-          "Optimize and manage your cloud infrastructure.",
-        icon: CloudDone,
+          "Design your dream African adventure exactly the way you want it.",
+        icon: DirectionsCar,
         features: [
-          "Cloud architecture",
-          "AWS/Azure/GCP",
-          "DevOps automation",
+          "Personalized itineraries",
+          "Choose your accommodations",
+          "Private tour guides",
         ],
       },
       {
-        title: "AI Integration",
+        title: "Blog / Travel Guide",
         description:
-          "Intelligent automation for smarter decisions.",
-        icon: Psychology,
+          "Read our latest tips, destination guides, and stories from the wild.",
+        icon: Article,
         features: [
-          "Machine learning",
-          "Chatbots",
-          "Predictive analytics",
-        ],
-      },
-      {
-        title: "IT Consultancy",
-        description:
-          "Strategic guidance for digital transformation.",
-        icon: Lightbulb,
-        features: [
-          "Technology audits",
-          "Architecture design",
-          "Cloud strategy",
-        ],
-      },
-      {
-        title: "Custom Development",
-        description:
-          "Scalable software tailored to your workflows.",
-        icon: Terminal,
-        features: [
-          "Web applications",
-          "API development",
-          "Legacy modernization",
-        ],
-      },
-      {
-        title: "UI/UX Design",
-        description:
-          "User-centric design that maximizes engagement.",
-        icon: ColorLens,
-        features: [
-          "Wireframing",
-          "Prototyping",
-          "User research",
-        ],
-      },
-      {
-        title: "IT Equipment Supply",
-        description:
-          "Reliable sourcing and supply of enterprise-grade IT hardware and infrastructure.",
-        icon: Engineering,
-        features: [
-          "Laptops & desktops",
-          "Networking equipment",
-          "Servers & storage solutions",
+          "Packing guides",
+          "Best times to visit",
+          "Wildlife photography tips",
         ],
       },
     ],
@@ -334,7 +265,7 @@ const Comprehensive = ({ onOpenModal }) => {
     <section className="w-full min-h-screen py-20 bg-[#F0F8FF]">
       <div className="max-w-7xl mx-auto mb-16 px-4 text-center">
         <h2 className="text-3xl md:text-4xl font-medium text-[#002D62]">
-          My Expertise
+          Discover Africa
         </h2>
       </div>
 

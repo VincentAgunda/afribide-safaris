@@ -6,28 +6,28 @@ const easing = [0.16, 1, 0.3, 1];
 
 const FAQ_DATA = [
   {
-    q: "Do you provide end-to-end system architecture and infrastructure setup?",
-    a: "Yes. I design, deploy, and manage complete system architectures including server configuration, database design, cloud infrastructure, security hardening, and performance optimization to ensure scalability and reliability."
+    q: "What is the best time of year to go on a safari?",
+    a: "The 'best' time depends on the destination. For the Great Migration in the Masai Mara, July to October is ideal. Generally, the dry season (June to October) offers the best wildlife viewing as animals congregate around water sources."
   },
   {
-    q: "Can you migrate our existing systems to the cloud?",
-    a: "Absolutely. I handle full cloud migration strategies including architecture redesign, AWS/Azure/GCP implementation, cost optimization, security compliance, and post-migration performance tuning."
+    q: "Are your safari tours family-friendly?",
+    a: "Yes, we curate specific family-oriented itineraries. These include child-friendly lodges, specialized junior ranger programs, and shorter game drives to ensure a comfortable and engaging experience for all ages."
   },
   {
-    q: "How do you ensure software quality and system reliability?",
-    a: "Iimplement structured QA processes including unit testing, integration testing, automated pipelines, load testing, and vulnerability assessments to guarantee stable and secure deployments."
+    q: "What should I pack for my bush expedition?",
+    a: "We recommend neutral-colored clothing (khaki, beige, green), a high-quality camera, binoculars, sun protection, and comfortable walking shoes. We provide a detailed, destination-specific packing list upon booking."
   },
   {
-    q: "Do you offer ongoing system monitoring and maintenance?",
-    a: "Yes. I provide continuous monitoring, patch management, performance tracking, incident management, and long-term technical support to keep your systems operating at peak performance."
+    q: "Is it safe to go on a guided safari?",
+    a: "Safety is our absolute priority. Our guides are highly trained professionals with years of experience in animal behavior. We use custom-built, high-safety vehicles and partner only with secure, top-tier luxury lodges."
   },
   {
-    q: "Can you integrate AI or automation into our business processes?",
-    a: "Yes. I develop custom AI models, predictive analytics systems, chatbots, and intelligent automation workflows tailored to enhance operational efficiency and decision-making."
+    q: "Do I need specific vaccinations or travel insurance?",
+    a: "Requirements vary by country (e.g., Yellow Fever or Malaria precautions). We strongly advise consulting a travel clinic 4–6 weeks before departure. Comprehensive travel insurance is mandatory for all our expeditions."
   },
   {
-    q: "Do you offer strategic IT consultancy and digital transformation guidance?",
-    a: "I provide expert advisory services including technology audits, stack selection, DevOps implementation, architecture design, and digital transformation roadmaps aligned with your business goals."
+    q: "Can you customize a private itinerary?",
+    a: "Absolutely. We specialize in bespoke digital transformation of the traditional safari. We can tailor every detail—from private bush flights to specific dietary requirements and exclusive-use conservancies."
   }
 ];
 
@@ -55,7 +55,9 @@ const FAQItem = ({ item, index, isActive, onClick }) => {
             transition={{ duration: 0.4, ease: easing }}
             className="text-[#86868b] group-hover:text-[#1d1d1f] transition-colors"
           >
-            <ExpandMore fontSize="medium" />
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 group-hover:bg-gray-100">
+                <ExpandMore fontSize="medium" />
+            </span>
           </motion.div>
         </button>
 
@@ -92,8 +94,6 @@ const Questions = () => {
   return (
     <section className="relative py-32 px-6 bg-[#fafafa] overflow-hidden">
       <div className="max-w-3xl mx-auto">
-
-        {/* Heading */}
         <motion.div
           className="text-center mb-24"
           initial={{ opacity: 0, y: 24 }}
@@ -102,17 +102,14 @@ const Questions = () => {
           transition={{ duration: 0.8, ease: easing }}
         >
           <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1d1d1f] mb-6">
-  <span className="text-[#6e6e73]">Frequently</span>{" "}
-  Asked Questions
-</h2>
-
+            <span className="text-[#6e6e73]">Common</span> Questions
+          </h2>
           <p className="text-[#6e6e73] text-lg max-w-xl mx-auto leading-relaxed">
-            Clear answers about my engineering methodology, infrastructure
-            strategy, and digital transformation expertise.
+            Everything you need to know about planning your next 
+            unforgettable African wilderness expedition.
           </p>
         </motion.div>
 
-        {/* FAQ List */}
         <div className="space-y-6">
           {FAQ_DATA.map((item, index) => (
             <FAQItem
