@@ -185,11 +185,12 @@ const Home = () => {
           <NextureWork />
         </div>
 
-        <Questions />
+       
 
         <div id="safariheros-section" className="scroll-mt-24">
           <Services />
         </div>
+         <Questions />
 
         <div id="contact-section" className="scroll-mt-24">
           <Contact />
