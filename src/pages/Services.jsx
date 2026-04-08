@@ -2,26 +2,26 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /* ================================================= */
-/* DATA FOR TESTIMONIALS & BLOGS                     */
+/* DATA                                              */
 /* ================================================= */
 
 const testimonials = [
   {
     name: "Vincent. A",
     quote:
-      "Absolutely breathtaking experience in the Masai Mara! The guides were incredibly knowledgeable and made us feel safe the entire time.",
+      "Absolutely breathtaking experience in the Masai Mara! The guides were incredibly knowledgeable.",
     avatar: "vincent.png",
   },
   {
     name: "Anastasia Wokoli",
     quote:
-      "Afribide tailored our trip perfectly. The luxury lodges and the wildlife viewing exceeded all our expectations.",
+      "Afribide tailored our trip perfectly. The luxury lodges exceeded expectations.",
     avatar: "camera2.webp",
   },
   {
     name: "David & Emma",
     quote:
-      "A seamless and unforgettable honeymoon in the Serengeti. From the hot air balloon ride to the sunset drives, highly recommend!",
+      "A seamless and unforgettable honeymoon in the Serengeti.",
     avatar: "vincent.png",
   },
 ];
@@ -29,34 +29,57 @@ const testimonials = [
 const blogs = [
   {
     title: "What to Pack for Your First Safari",
-    excerpt:
-      "Essential gear, clothing tips, and camera equipment to make your African adventure comfortable and memorable.",
+    excerpt: "Essential gear for your safari.",
     content:
-      "Going on your first safari is a thrilling experience! Make sure you pack neutral-colored clothing to blend in with the environment. Layers are key, as early morning game drives can be freezing, while afternoons get blistering hot. Don't forget a high-quality pair of binoculars, a camera with a good zoom lens, and plenty of sunscreen. Finally, a sturdy pair of walking boots is essential for any guided bush walks.",
+      "Preparation is everything when heading into the wild. Packing smart ensures comfort and safety.",
+    highlights: [
+      "Neutral-colored clothing blends with nature",
+      "Layered outfits handle temperature shifts",
+      "Binoculars & zoom camera improve viewing",
+    ],
+    tips: [
+      "Avoid bright colors",
+      "Pack light but versatile",
+      "Carry sunscreen & hat",
+    ],
     image: "helicopter.jpeg",
   },
   {
     title: "The Great Migration Explained",
-    excerpt:
-      "Everything you need to know about the greatest wildlife spectacle on earth, including the best times and places to visit.",
+    excerpt: "Understand the world’s greatest wildlife event.",
     content:
-      "The Great Migration is an ever-moving circular journey of over a million wildebeest, zebra, and gazelle across the Serengeti-Mara ecosystem. Timing is everything: visit the southern Serengeti from January to March for calving season, or head to the Masai Mara between July and October to witness the dramatic river crossings. It's a true testament to the raw, untamed beauty of nature.",
-    image:
-      "/zebra.jpeg",
+      "Over a million animals move across ecosystems in a continuous cycle.",
+    highlights: [
+      "Over 1.5M animals migrate yearly",
+      "Best seen in Serengeti & Masai Mara",
+      "River crossings are dramatic moments",
+    ],
+    tips: [
+      "Visit July–October",
+      "Book early for peak season",
+    ],
+    image: "/zebra.jpeg",
   },
   {
-    title: "Top 5 Luxury Lodges in Kenya",
-    excerpt:
-      "Experience the untamed wild without sacrificing an ounce of comfort at these stunning, eco-friendly luxury locations.",
+    title: "Top 5 Luxury Lodges",
+    excerpt: "Stay in style in the wild.",
     content:
-      "Kenya offers some of the most spectacular luxury lodges in the world, seamlessly blending eco-conscious design with five-star comfort. Imagine infinity pools overlooking watering holes frequented by elephants, private plunge pools, and open-air spa treatments in the heart of the savannah. From the exclusive conservancies of Laikipia to the rolling plains of the Mara, these lodges redefine what it means to go 'glamping'.",
-    image:
-      "/parachute.jpeg",
+      "Luxury lodges redefine comfort in the middle of nature.",
+    highlights: [
+      "Infinity pools overlooking wildlife",
+      "Private decks & premium views",
+      "Eco-conscious architecture",
+    ],
+    tips: [
+      "Choose conservancies for exclusivity",
+      "Check seasonal pricing",
+    ],
+    image: "/parachute.jpeg",
   },
 ];
 
 /* ================================================= */
-/* MAIN COMPONENT                                    */
+/* COMPONENT                                         */
 /* ================================================= */
 
 const TestimonialsBlogs = () => {
@@ -64,45 +87,45 @@ const TestimonialsBlogs = () => {
 
   const closeModal = () => setSelectedBlog(null);
 
-  // Lock background scroll (Apple feel)
   useEffect(() => {
     document.body.style.overflow = selectedBlog ? "hidden" : "auto";
   }, [selectedBlog]);
 
   return (
-    <section className="min-h-screen bg-[#dadada] py-20 font-sans text-black relative">
+    <section className="min-h-screen bg-[#dadada] py-24 font-sans text-black">
+
       <div className="max-w-6xl mx-auto px-6">
 
-        {/* Header (UNCHANGED) */}
-        <div className="flex justify-center mb-20">
-          <h1 className="border-[3px] border-black px-6 py-2 text-3xl md:text-4xl font-bold tracking-widest bg-transparent text-center uppercase">
+        {/* HEADER */}
+        <div className="flex justify-center mb-24">
+          <h1 className="border-[3px] border-black px-8 py-3 text-3xl md:text-4xl font-bold tracking-widest uppercase">
             Testimonials & Blogs
           </h1>
         </div>
 
-        {/* ======================================= */}
-        {/* TESTIMONIALS */}
-        {/* ======================================= */}
-        <div className="mb-24">
-          <h2 className="text-xl md:text-2xl font-bold mb-10 tracking-wide uppercase text-center md:text-left">
+        {/* ================= TESTIMONIALS ================= */}
+        <div className="mb-28">
+          <h2 className="text-2xl font-semibold mb-12 uppercase tracking-wide">
             What Our Guests Say
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {testimonials.map((t, i) => (
               <motion.div
                 key={i}
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 200, damping: 18 }}
-                className="flex flex-col items-center text-center bg-white p-8 rounded-3xl shadow-md"
+                whileHover={{ y: -8 }}
+                transition={{ type: "spring", stiffness: 180 }}
+                className="bg-white p-8 rounded-3xl shadow-md text-center flex flex-col"
               >
-                <div className="w-20 h-20 mb-6 rounded-full overflow-hidden border-2 border-black">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full overflow-hidden border">
                   <img src={t.avatar} className="w-full h-full object-cover" />
                 </div>
-                <p className="italic text-gray-800 mb-6 flex-grow">
+
+                <p className="italic text-gray-800 mb-6 flex-grow leading-relaxed">
                   "{t.quote}"
                 </p>
-                <span className="text-sm font-bold uppercase tracking-wider">
+
+                <span className="text-sm font-semibold uppercase tracking-wide">
                   - {t.name}
                 </span>
               </motion.div>
@@ -110,24 +133,22 @@ const TestimonialsBlogs = () => {
           </div>
         </div>
 
-        {/* ======================================= */}
-        {/* BLOGS */}
-        {/* ======================================= */}
+        {/* ================= BLOGS ================= */}
         <div>
-          <h2 className="text-xl md:text-2xl font-bold mb-10 tracking-wide uppercase text-center md:text-left">
+          <h2 className="text-2xl font-semibold mb-12 uppercase tracking-wide">
             Travel Guides & Stories
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {blogs.map((blog, i) => (
               <motion.div
                 key={i}
-                whileHover={{ y: -4 }}
-                transition={{ type: "spring", stiffness: 200 }}
-                className="flex flex-col group bg-white rounded-3xl overflow-hidden shadow-md"
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 180 }}
+                className="bg-white rounded-3xl overflow-hidden shadow-md flex flex-col group"
               >
                 <div
-                  className="w-full h-48 overflow-hidden cursor-pointer"
+                  className="h-52 overflow-hidden cursor-pointer"
                   onClick={() => setSelectedBlog(blog)}
                 >
                   <motion.img
@@ -139,31 +160,28 @@ const TestimonialsBlogs = () => {
                 </div>
 
                 <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-xl font-bold mb-3">
+                  <h3 className="text-lg font-semibold mb-3 tracking-tight">
                     {blog.title}
                   </h3>
 
-                  <p className="text-sm text-gray-700 mb-6 flex-grow">
+                  <p className="text-sm text-gray-700 mb-6 flex-grow leading-relaxed">
                     {blog.excerpt}
                   </p>
 
-                  {/* BUTTONS (KEPT + IMPROVED) */}
                   <div className="flex justify-between items-center mt-auto">
-                    <motion.button
-                      whileTap={{ scale: 0.95 }}
+                    <button
                       onClick={() => setSelectedBlog(blog)}
-                      className="bg-black text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-md"
+                      className="bg-black text-white px-5 py-2 rounded-full text-sm font-medium"
                     >
                       Read More
-                    </motion.button>
+                    </button>
 
-                    <motion.button
-                      whileTap={{ scale: 0.9 }}
+                    <button
                       onClick={() => setSelectedBlog(blog)}
-                      className="w-10 h-10 rounded-full bg-gray-200 text-black flex items-center justify-center text-2xl"
+                      className="w-10 h-10 rounded-full bg-gray-200 text-xl flex items-center justify-center"
                     >
                       +
-                    </motion.button>
+                    </button>
                   </div>
                 </div>
               </motion.div>
@@ -173,43 +191,36 @@ const TestimonialsBlogs = () => {
 
       </div>
 
-      {/* ======================================= */}
-      {/* APPLE-STYLE MODAL */}
-      {/* ======================================= */}
+      {/* ================= MODAL ================= */}
       <AnimatePresence>
         {selectedBlog && (
           <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-lg"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, backdropFilter: "blur(10px)" }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
             onClick={closeModal}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 40, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.95, y: 20, opacity: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 180,
-                damping: 22,
-              }}
-              className="relative w-full max-w-2xl max-h-[90vh] bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col"
+              className="relative w-full max-w-3xl max-h-[92vh] bg-white rounded-[2.5rem] overflow-hidden shadow-2xl"
+              initial={{ scale: 0.92, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.96, y: 20 }}
+              transition={{ type: "spring", damping: 20 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close */}
+              {/* CLOSE */}
               <button
                 onClick={closeModal}
-                className="absolute top-5 right-5 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200"
+                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-gray-100"
               >
                 ✕
               </button>
 
-              {/* Scrollable Content */}
-              <div className="overflow-y-auto scrollbar-hide">
+              <div className="overflow-y-auto max-h-[92vh]">
 
-                {/* Image */}
-                <div className="w-full h-64 overflow-hidden">
+                {/* IMAGE */}
+                <div className="h-72 overflow-hidden">
                   <motion.img
                     src={selectedBlog.image}
                     className="w-full h-full object-cover"
@@ -219,23 +230,58 @@ const TestimonialsBlogs = () => {
                   />
                 </div>
 
-                {/* Content */}
-                <div className="p-8">
-                  <h3 className="text-3xl font-bold mb-4 tracking-tight">
-                    {selectedBlog.title}
-                  </h3>
+                {/* CONTENT */}
+                <div className="p-10 space-y-8">
 
-                  <div className="w-12 h-1 bg-black mb-6 rounded-full"></div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-2">
+                      Travel Guide • 5 min read
+                    </p>
 
-                  <p className="text-gray-800 leading-relaxed text-lg">
+                    <h3 className="text-3xl font-semibold tracking-tight">
+                      {selectedBlog.title}
+                    </h3>
+                  </div>
+
+                  <p className="text-lg text-gray-800 leading-relaxed">
                     {selectedBlog.content}
                   </p>
+
+                  {/* HIGHLIGHTS */}
+                  <div>
+                    <h4 className="font-semibold mb-4">Highlights</h4>
+                    <ul className="space-y-3">
+                      {selectedBlog.highlights.map((item, i) => (
+                        <li key={i} className="flex gap-3">
+                          <span className="text-lg">•</span>
+                          <span className="text-gray-800">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="h-px bg-gray-200"></div>
+
+                  {/* TIPS */}
+                  <div>
+                    <h4 className="font-semibold mb-4">Pro Tips</h4>
+                    <ul className="space-y-3">
+                      {selectedBlog.tips.map((item, i) => (
+                        <li key={i} className="flex gap-3">
+                          <span className="text-lg">•</span>
+                          <span className="text-gray-700">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
                 </div>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
     </section>
   );
 };
