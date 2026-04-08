@@ -2,10 +2,10 @@ import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSun, FaMoon, FaTimes, FaLinkedin, FaTwitter } from "react-icons/fa";
 
-// Import Material-UI icons for the Design Principles section
-import SettingsEthernetOutlinedIcon from '@mui/icons-material/SettingsEthernetOutlined';
-import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
-import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
+// Updated Material-UI icons for a Safari/Travel theme
+import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
+import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
+import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 
 // Animation variants
 const fadeInUp = {
@@ -53,52 +53,52 @@ const staggerItem = {
   }
 };
 
-// Data
+// Updated Data for Afribide Safaris
 const TEAM_MEMBERS = [
   {
     id: 1,
     name: "Vincent Agunda",
-    role: "Senior Software and System Engineer",
-    bio: "Crafting intuitive interfaces and navigating the Tech Landscape.",
-    image: "camera5.jpg",
+    role: "Founder & Lead Safari Guide",
+    bio: "Born in the heart of East Africa, Vincent curates authentic and thrilling wilderness experiences.",
+    image: "guide-vincent.jpg", // Update with actual image
     linkedin: "#",
     twitter: "#"
   },
   {
     id: 2,
     name: "Brian Okungu",
-    role: "Senior Developer",
-    bio: "Building robust, scalable systems.",
-    image: "camera1.webp",
+    role: "Head of Travel Operations",
+    bio: "Ensuring every logistical detail is flawless for a seamless African adventure.",
+    image: "guide-brian1.jpg", // Update with actual image
     linkedin: "#",
     twitter: "#"
   },
   {
     id: 3,
     name: "Brian Oloo",
-    role: "Full Stack Developer",
-    bio: "Shaping compelling brand narratives.",
-    image: "camera1.webp",
+    role: "Wildlife & Conservation Expert",
+    bio: "Passionate about sustainable tourism and protecting Africa's natural heritage.",
+    image: "guide-brian2.jpg", // Update with actual image
     linkedin: "#",
     twitter: "#"
   }
 ];
 
-const DESIGN_PRINCIPLES = [
+const CORE_VALUES = [
   {
-    title: "Precision",
-    description: "Pixel-perfect execution with atomic attention.",
-    icon: SettingsEthernetOutlinedIcon // MUI Icon Component
+    title: "Authenticity",
+    description: "Real, unfiltered encounters with Africa's majestic wildlife and cultures.",
+    icon: ExploreOutlinedIcon 
   },
   {
-    title: "Clarity",
-    description: "Simplifying complexity through thoughtful design.",
-    icon: LightbulbOutlinedIcon // MUI Icon Component
+    title: "Conservation",
+    description: "Committed to sustainable travel that protects habitats and uplifts local communities.",
+    icon: PublicOutlinedIcon 
   },
   {
-    title: "Depth",
-    description: "Layered experiences that reward exploration.",
-    icon: LayersOutlinedIcon // MUI Icon Component
+    title: "Tailor-Made",
+    description: "Bespoke itineraries designed from scratch to match your unique travel dreams.",
+    icon: MapOutlinedIcon 
   }
 ];
 
@@ -120,9 +120,9 @@ const AboutPage = () => {
 
   const sendEmail = (e) => {
     e.preventDefault();
-    setMessage("Sending message...");
+    setMessage("Sending your inquiry...");
     setTimeout(() => {
-      setMessage("Message sent successfully! We'll get back to you shortly.");
+      setMessage("Message sent successfully! Our safari experts will reach out shortly.");
       setFormData({ name: '', email: '', phone: '', plan: '', message: '' });
     }, 2000);
   };
@@ -164,19 +164,19 @@ const AboutPage = () => {
                 className={`text-3xl md:text-4xl font-medium leading-tight mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}
                 variants={fadeInUp}
               >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Crafting</span> digital
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Unforgettable</span> African
               </motion.h1>
               <motion.h1
                 className={`text-3xl md:text-4xl font-medium leading-tight mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}
                 variants={fadeInUp}
               >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">experiences</span> with
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">safaris</span> tailored
               </motion.h1>
               <motion.h1
                 className={`text-3xl md:text-4xl font-medium leading-tight mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}
                 variants={fadeInUp}
               >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">purpose</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">just for you</span>
               </motion.h1>
             </motion.div>
 
@@ -188,7 +188,7 @@ const AboutPage = () => {
               variants={fadeInUp}
               transition={{ delay: 0.6 }}
             >
-              Our journey is rooted in the conviction that technology, when artfully combined with purpose-driven design, can unlock transformative outcomes. We are a collective of <span className={`${darkMode ? "text-cyan-400" : "text-blue-600"}`}>passionate creators</span> and <span className={`${darkMode ? "text-cyan-400" : "text-blue-600"}`}>strategic thinkers</span>, dedicated to engineering bespoke digital solutions that not only function flawlessly but also resonate deeply and drive <span className={`${darkMode ? "text-cyan-400" : "text-blue-600"}`}>meaningful engagement</span>.
+              Our journey is rooted in a deep love for the African continent. We are a collective of <span className={`${darkMode ? "text-cyan-400" : "text-blue-600"}`}>passionate guides</span> and <span className={`${darkMode ? "text-cyan-400" : "text-blue-600"}`}>travel experts</span>, dedicated to designing bespoke wilderness adventures that not only thrill but also respect the <span className={`${darkMode ? "text-cyan-400" : "text-blue-600"}`}>natural habitats</span> and local communities.
             </motion.p>
           </div>
 
@@ -199,9 +199,10 @@ const AboutPage = () => {
             transition={{ delay: 0.3, duration: 0.5, ease:"circOut" }}
             className="flex-1 aspect-video md:aspect-square bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg"
           >
+            {/* Update this image source to a safari picture */}
             <img
-              src="camera1.webp"
-              alt="Innovative digital solutions"
+              src="/safari-hero.jpg" 
+              alt="Afribide Safari Experience"
               className="w-full h-full object-cover"
               loading="lazy"
               width="500"
@@ -222,11 +223,11 @@ const AboutPage = () => {
             className={`text-2xl md:text-3xl font-medium text-center mb-12 ${darkMode ? "text-white" : "text-gray-900"}`}
             variants={fadeInUp}
           >
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Our Design</span> Principles
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Our Core</span> Values
           </motion.h2>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {DESIGN_PRINCIPLES.map((item, index) => (
+            {CORE_VALUES.map((item, index) => (
               <motion.div
                 key={item.title}
                 initial="hidden"
@@ -260,23 +261,38 @@ const AboutPage = () => {
           transition={{duration: 0.6, ease: "easeOut"}}
         >
           <motion.h2
-            className={`text-2xl md:text-3xl font-medium mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}
+            className={`text-2xl md:text-3xl font-medium mb-6 ${darkMode ? "text-white" : "text-gray-900"}`}
             variants={fadeInUp}
             initial="hidden" whileInView="visible" viewport={{ once: true }}
           >
-            Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">ignite</span> your digital presence?
+            Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">explore</span> the wild with us?
           </motion.h2>
-          <motion.button
-            onClick={() => setShowConsultationModal(true)}
-            variants={fadeInUp}
-            initial="hidden" whileInView="visible" viewport={{ once: true }}
-            transition={{ delay: 0.15 }}
-            className={`px-6 py-2.5 rounded-lg font-semibold border-2 ${darkMode ? "border-cyan-400 text-white hover:bg-cyan-400/10" : "border-blue-600 text-blue-600 hover:bg-blue-600/10"} transition-all duration-300 text-sm`}
-            whileHover={{ scale: 1.03, y: -2, boxShadow: darkMode ? "0px 4px 12px rgba(0, 200, 200, 0.2)" : "0px 4px 12px rgba(59, 130, 246, 0.15)" }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Start a project
-          </motion.button>
+          
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <motion.button
+              onClick={() => setShowConsultationModal(true)}
+              variants={fadeInUp}
+              initial="hidden" whileInView="visible" viewport={{ once: true }}
+              transition={{ delay: 0.15 }}
+              className={`px-6 py-2.5 rounded-lg font-semibold border-2 ${darkMode ? "border-cyan-400 text-white hover:bg-cyan-400/10" : "border-blue-600 text-blue-600 hover:bg-blue-600/10"} transition-all duration-300 text-sm`}
+              whileHover={{ scale: 1.03, y: -2, boxShadow: darkMode ? "0px 4px 12px rgba(0, 200, 200, 0.2)" : "0px 4px 12px rgba(59, 130, 246, 0.15)" }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Plan Your Safari
+            </motion.button>
+
+            <motion.button
+              onClick={() => setShowTeam(true)}
+              variants={fadeInUp}
+              initial="hidden" whileInView="visible" viewport={{ once: true }}
+              transition={{ delay: 0.25 }}
+              className={`px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 text-sm ${darkMode ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Meet Our Team
+            </motion.button>
+          </div>
         </motion.div>
 
         {/* Consultation Form Modal */}
@@ -315,7 +331,7 @@ const AboutPage = () => {
                     className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}
                     variants={staggerItem}
                   >
-                    Get a Free Quote
+                    Start Your Adventure
                   </motion.h2>
 
                   <form ref={formRef} onSubmit={sendEmail}>
@@ -344,17 +360,18 @@ const AboutPage = () => {
                         <input id="phone" type="tel" name="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className={`w-full rounded-lg px-3 py-2.5 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500 border-gray-700' : 'bg-gray-100 text-gray-900 placeholder-gray-400 border-gray-300'} border focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 outline-none transition text-sm`} placeholder="(Optional)"/>
                       </motion.div>
                       <motion.div variants={staggerItem}>
-                        <label htmlFor="service" className={`block text-xs mb-1 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>Interested Service</label>
+                        <label htmlFor="service" className={`block text-xs mb-1 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>Type of Safari</label>
                         <select id="service" name="service" value={formData.plan} onChange={(e) => setFormData({...formData, plan: e.target.value})} className={`w-full rounded-lg px-3 py-2.5 ${darkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-gray-100 text-gray-900 border-gray-300'} border focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 outline-none transition appearance-none text-sm`} required>
-                          <option value="">Select a service</option>
-                          <option value="Basic Website">Basic Plan</option>
-                          <option value="E-commerce Website">E-commerce Website</option>
-                          <option value="Custom Solution">Custom Solution</option>
+                          <option value="">Select an option</option>
+                          <option value="Classic Safari">Classic Safari</option>
+                          <option value="Luxury Lodge Safari">Luxury Lodge Safari</option>
+                          <option value="Family Holiday">Family Holiday</option>
+                          <option value="Custom Itinerary">Custom Tailor-Made Itinerary</option>
                         </select>
                       </motion.div>
                       <motion.div variants={staggerItem}>
-                        <label htmlFor="message" className={`block text-xs mb-1 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>Project Details</label>
-                        <textarea id="message" name="message" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} rows="3" className={`w-full rounded-lg px-3 py-2.5 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500 border-gray-700' : 'bg-gray-100 text-gray-900 placeholder-gray-400 border-gray-300'} border focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 outline-none transition text-sm`} required placeholder="Tell us about your project..."></textarea>
+                        <label htmlFor="message" className={`block text-xs mb-1 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>Trip Details</label>
+                        <textarea id="message" name="message" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} rows="3" className={`w-full rounded-lg px-3 py-2.5 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500 border-gray-700' : 'bg-gray-100 text-gray-900 placeholder-gray-400 border-gray-300'} border focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 outline-none transition text-sm`} required placeholder="Tell us about your dream trip, dates, and group size..."></textarea>
                       </motion.div>
                     </motion.div>
 
@@ -364,7 +381,7 @@ const AboutPage = () => {
                       </motion.div>
                     )}
                     <motion.button type="submit" className="w-full mt-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold py-2.5 px-5 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-500 text-sm" variants={staggerItem} whileHover={{ scale: 1.01, y: -1, boxShadow: "0px 3px 10px rgba(0, 180, 180, 0.2)"}} whileTap={{ scale: 0.98 }} >
-                      {message === "Sending message..." ? "Sending..." : "Send Message"}
+                      {message === "Sending your inquiry..." ? "Sending..." : "Send Request"}
                     </motion.button>
                   </form>
                 </div>
@@ -394,7 +411,7 @@ const AboutPage = () => {
                 <div className={`p-3 md:p-4 sticky top-0 ${darkMode ? 'bg-gray-900/80' : 'bg-white/80'} backdrop-blur-sm border-b ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'} z-10 flex justify-between items-center`}>
                   <h3 className={`text-lg md:text-xl font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                      Our Core Team
+                      Meet Our Safari Experts
                     </span>
                   </h3>
                   <button

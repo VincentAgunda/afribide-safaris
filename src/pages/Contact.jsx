@@ -166,65 +166,68 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
     }
   };
 
+  // Note the Fragment `<>` wrapping everything so the modal sits completely outside the transformed `<section>`
   return (
-    <section
-      ref={sectionRef}
-      className="relative max-w-7xl mx-auto my-40 rounded-[40px] overflow-hidden"
-      style={{ perspective: 1400 }}
-    >
-      {/* Background */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-[#e5e5e1] via-[#f5f5f7] to-[#d4d4d0]"
-        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-        transition={{ duration: 30, ease: "linear", repeat: Infinity }}
-        style={{ backgroundSize: "200% 200%" }}
-      />
-
-      {/* Content */}
-      <motion.div
-        style={{
-          ...(isMobile ? {} : { scale, rotateX, y, transformStyle: "preserve-3d" }),
-          willChange: isMobile ? "auto" : "transform", // Hardware acceleration for scroll animations
-        }}
-        className="relative grid grid-cols-1 lg:grid-cols-2 items-center gap-12 px-8 md:px-16 py-28 bg-white/60 backdrop-blur-2xl rounded-[40px] shadow-[0_40px_120px_rgba(0,0,0,0.12)]"
+    <>
+      <section
+        ref={sectionRef}
+        className="relative max-w-7xl mx-auto my-40 rounded-[40px] overflow-hidden"
+        style={{ perspective: 1400 }}
       >
-        {/* Left */}
-        <div>
-          <h2 className="text-5xl md:text-7xl font-semibold tracking-tight text-neutral-900 leading-[1.05] mb-8">
-            Your wild adventure <br /> begins here.
-          </h2>
+        {/* Background */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-br from-[#e5e5e1] via-[#f5f5f7] to-[#d4d4d0]"
+          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+          transition={{ duration: 30, ease: "linear", repeat: Infinity }}
+          style={{ backgroundSize: "200% 200%" }}
+        />
 
-          <p className="text-xl text-neutral-600 mb-10 max-w-md leading-relaxed">
-            Choose your safari, tell us your dates, and we’ll craft your perfect
-            journey.
-          </p>
+        {/* Content */}
+        <motion.div
+          style={{
+            ...(isMobile ? {} : { scale, rotateX, y, transformStyle: "preserve-3d" }),
+            willChange: isMobile ? "auto" : "transform", 
+          }}
+          className="relative grid grid-cols-1 lg:grid-cols-2 items-center gap-12 px-8 md:px-16 py-28 bg-white/60 backdrop-blur-2xl rounded-[40px] shadow-[0_40px_120px_rgba(0,0,0,0.12)]"
+        >
+          {/* Left */}
+          <div>
+            <h2 className="text-5xl md:text-7xl font-semibold tracking-tight text-neutral-900 leading-[1.05] mb-8">
+              Your wild adventure <br /> begins here.
+            </h2>
 
-          <motion.button
-            whileHover={{ y: -3 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => setOpen(true)}
-            className="bg-black text-white px-10 py-4 rounded-full text-lg font-medium shadow-xl hover:bg-neutral-800 transition-colors"
-          >
-            Plan Your Safari
-          </motion.button>
-        </div>
+            <p className="text-xl text-neutral-600 mb-10 max-w-md leading-relaxed">
+              Choose your safari, tell us your dates, and we’ll craft your perfect
+              journey.
+            </p>
 
-        {/* Right Image */}
-        <div className="flex justify-center lg:justify-end">
-          <img
-            src="/calltoaction.png"
-            alt="Safari Journey Concept"
-            className="w-72 md:w-[450px] object-contain drop-shadow-2xl"
-            loading="lazy"
-          />
-        </div>
-      </motion.div>
+            <motion.button
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setOpen(true)}
+              className="bg-black text-white px-10 py-4 rounded-full text-lg font-medium shadow-xl hover:bg-neutral-800 transition-colors"
+            >
+              Plan Your Safari
+            </motion.button>
+          </div>
 
-      {/* ================= MODAL ================= */}
+          {/* Right Image */}
+          <div className="flex justify-center lg:justify-end">
+            <img
+              src="/calltoaction.png"
+              alt="Safari Journey Concept"
+              className="w-72 md:w-[450px] object-contain drop-shadow-2xl"
+              loading="lazy"
+            />
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ================= MODAL MOVED OUTSIDE THE SECTION ================= */}
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50 px-4"
+            className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-[100] px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -257,7 +260,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
                     name="package"
                     value={formData.package}
                     onChange={handleChange}
-                    className={`w-full border px-4 py-3 rounded-2xl transition-colors focus:outline-none focus:ring-2 focus:ring-black/5 ${
+                    className={`w-full text-base border px-4 py-3 rounded-2xl transition-colors focus:outline-none focus:ring-2 focus:ring-black/5 ${
                       errors.package ? 'border-red-500' : 'border-neutral-200'
                     }`}
                   >
@@ -280,7 +283,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
                     placeholder="Adults"
                     min="1"
                     onChange={handleChange}
-                    className="border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5"
+                    className="text-base border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5"
                   />
                   <input
                     type="number"
@@ -289,7 +292,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
                     placeholder="Children"
                     min="0"
                     onChange={handleChange}
-                    className="border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5"
+                    className="text-base border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5"
                   />
                 </div>
 
@@ -303,7 +306,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
                     name="travel_date"
                     value={formData.travel_date}
                     onChange={handleChange}
-                    className={`w-full border px-4 py-3 rounded-2xl text-neutral-600 focus:outline-none focus:ring-2 focus:ring-black/5 ${
+                    className={`w-full text-base border px-4 py-3 rounded-2xl text-neutral-600 focus:outline-none focus:ring-2 focus:ring-black/5 ${
                       errors.travel_date ? 'border-red-500' : 'border-neutral-200'
                     }`}
                   />
@@ -316,7 +319,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
                     value={formData.name}
                     placeholder="Name"
                     onChange={handleChange}
-                    className={`w-full border px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 ${
+                    className={`w-full text-base border px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 ${
                       errors.name ? 'border-red-500' : 'border-neutral-200'
                     }`}
                   />
@@ -329,7 +332,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
                     placeholder="Email"
                     type="email"
                     onChange={handleChange}
-                    className={`w-full border px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 ${
+                    className={`w-full text-base border px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 ${
                       errors.email ? 'border-red-500' : 'border-neutral-200'
                     }`}
                   />
@@ -340,7 +343,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
                   value={formData.phone}
                   placeholder="Phone"
                   onChange={handleChange}
-                  className="w-full border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5"
+                  className="w-full text-base border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5"
                 />
 
                 {/* Message */}
@@ -350,7 +353,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
                   rows="3"
                   placeholder="Special requests or custom ideas..."
                   onChange={handleChange}
-                  className="w-full border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 resize-none"
+                  className="w-full text-base border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 resize-none"
                 />
 
                 {/* Actions */}
@@ -417,7 +420,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </>
   );
 };
 
