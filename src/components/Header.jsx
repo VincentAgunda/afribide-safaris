@@ -225,7 +225,7 @@ const Header = React.memo(({ user }) => {
   return (
     <>
       <motion.header 
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-[999] transition-all duration-300 ${
           isScrolled 
             ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm" 
             : "bg-transparent"
@@ -298,7 +298,7 @@ const Header = React.memo(({ user }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/30 z-40 md:hidden"
+                className="fixed inset-0 bg-black/30 z-[999] md:hidden"
                 onClick={closeAllMenus}
               />
               <motion.div
@@ -307,7 +307,7 @@ const Header = React.memo(({ user }) => {
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ type: "tween", ease: "easeOut", duration: 0.25 }}
-                className="fixed top-0 right-0 w-64 h-full z-50 bg-white dark:bg-gray-900 shadow-lg p-6 overflow-y-auto"
+                className="fixed top-0 right-0 w-64 h-full z-[1000] bg-white dark:bg-gray-900 shadow-lg p-6 overflow-y-auto"
               >
                 <div className="flex justify-end mb-8">
                    <button onClick={toggleMobileMenu}><FaTimes size={24} className="text-gray-800 dark:text-white" /></button>

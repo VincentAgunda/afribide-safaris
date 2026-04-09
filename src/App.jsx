@@ -7,9 +7,9 @@ import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 
 import About from "./pages/About";
-import Pricing from "./pages/Pricing";
+
 import Home from "./pages/Home";
-import Blogs from "./pages/Blogs";
+
 
 /* =========================
    PAGE ANIMATION VARIANTS
@@ -85,35 +85,9 @@ function App() {
             }
           />
 
-          <Route
-            path="/pricing"
-            element={
-              <motion.div
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                className="page-content"
-              >
-                <Pricing />
-              </motion.div>
-            }
-          />
+          
 
-          <Route
-            path="/blogs"
-            element={
-              <motion.div
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                className="page-content"
-              >
-                <Blogs />
-              </motion.div>
-            }
-          />
+          
 
         </Routes>
       </AnimatePresence>

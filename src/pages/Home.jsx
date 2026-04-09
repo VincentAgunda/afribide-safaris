@@ -11,6 +11,10 @@ import Questions from "./Questions";
 import Services from "./Services";
 import Contact from "./Contact";
 
+// IMPORT YOUR NEW COMPONENTS HERE WHEN READY:
+// import Testimonials from "./Testimonials";
+// import Blogs from "./Blogs";
+
 /* -------------------------------------------------- */
 /* CONFIG & ANIMATION */
 /* -------------------------------------------------- */
@@ -56,7 +60,9 @@ const Home = () => {
       setTimeout(() => {
         const id = location.hash.substring(1);
         const element = document.getElementById(`${id}-section`);
-        if (element) element.scrollIntoView({ behavior: "smooth" });
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       }, 100);
     }
   }, [location]);
@@ -94,7 +100,6 @@ const Home = () => {
         {/* HERO SECTION */}
         <section className="relative w-full min-h-[100svh] md:min-h-screen flex items-center overflow-hidden pt-16 md:pt-0">
           
-          {/* 1. BASE LAYER: The Background Image (Restricted to prevent over-stretching) */}
           <motion.div
             initial={{ scale: 1.05, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -109,7 +114,6 @@ const Home = () => {
             />
           </motion.div>
 
-          {/* 2. MIDDLE LAYER: The Angled Mask (Gray on the left, transparent window on the right) */}
           <div 
             className="absolute inset-0 z-10"
             style={{
@@ -117,10 +121,7 @@ const Home = () => {
             }}
           />
 
-          {/* 3. TOP LAYER: Foreground Content */}
           <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 px-6 lg:px-12 relative z-20 h-full">
-            
-            {/* LEFT SIDE (Text & Links) */}
             <motion.div
               variants={containerVariants}
               initial="hidden"
@@ -148,11 +149,7 @@ const Home = () => {
                 Experience the wild like never before
               </motion.h3>
 
-              {/* SOCIAL LINKS */}
-              <motion.div
-                variants={textVariants}
-                className="flex gap-4"
-              >
+              <motion.div variants={textVariants} className="flex gap-4">
                 {[
                   { icon: FaInstagram, link: "#" },
                   { icon: FaFacebookF, link: "#" },
@@ -170,8 +167,6 @@ const Home = () => {
                 ))}
               </motion.div>
             </motion.div>
-
-            {/* RIGHT SIDE EMPTY SPACE (Keeps the grid structure intact) */}
             <div className="hidden md:block"></div>
           </div>
         </section>
@@ -185,12 +180,22 @@ const Home = () => {
           <NextureWork />
         </div>
 
-       
+        {/* TESTIMONIALS SECTION - ADDED */}
+        <div id="testimonials-section" className="scroll-mt-24">
+          {/* <Testimonials /> */}
+        </div>
+
+        {/* BLOGS SECTION - ADDED */}
+        <div id="blog-section" className="scroll-mt-24">
+          {/* <Blogs /> */}
+        </div>
 
         <div id="safariheros-section" className="scroll-mt-24">
           <Services />
         </div>
-         <Questions />
+        
+        {/* If Questions component has an anchor point, wrap it in a div too */}
+        <Questions />
 
         <div id="contact-section" className="scroll-mt-24">
           <Contact />

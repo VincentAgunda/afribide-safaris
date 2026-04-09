@@ -92,7 +92,7 @@ const Questions = () => {
   }, []);
 
   return (
-    <section className="relative py-32 px-6 bg-[#fafafa] overflow-hidden">
+    <section className="relative py-32 px-6 bg-[#fafafa] overflow-hidden">  
       <div className="max-w-3xl mx-auto">
         <motion.div
           className="text-center mb-24"
@@ -104,7 +104,7 @@ const Questions = () => {
           <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1d1d1f] mb-6">
             <span className="text-[#6e6e73]">Common</span> Questions
           </h2>
-          <p className="text-[#6e6e73] text-lg max-w-xl mx-auto leading-relaxed">
+          <p className=" text-[#002D62] text-2xl max-w-xl mx-auto leading-relaxed">
             Everything you need to know about planning your next 
             unforgettable African wilderness expedition.
           </p>
