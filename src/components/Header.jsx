@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { FaSearch, FaUserCircle, FaBars, FaTimes, FaChevronDown } from "react-icons/fa"; 
+import { FaSearch, FaUserCircle, FaBars, FaTimes, FaChevronDown, FaSignOutAlt } from "react-icons/fa"; 
 import { Link, useLocation } from "react-router-dom";
 import { auth } from "../firebase"; 
 import { signOut } from "firebase/auth";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Updated links logic to support dropdowns
 const navLinks = [
   { path: "/#about", label: "About Us" },
-  { path: "/#gallery", label: "Gallery" },
+  { path: "/gallery", label: "Gallery" },
   {
     label: "Testimonials & Blogs",
     isDropdown: true,
@@ -21,7 +20,7 @@ const navLinks = [
 
 const Header = React.memo(({ user }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [navDropdownOpen, setNavDropdownOpen] = useState(false); // For Testimonials & Blogs
+  const [navDropdownOpen, setNavDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
@@ -54,9 +53,8 @@ const Header = React.memo(({ user }) => {
     setSearchOpen(false);
   }, []);
 
-  // Custom Click Handler for Hash Links & Home
   const handleNavClick = useCallback((e, path) => {
-    if (!path) return; // Prevent errors on empty paths (dropdown toggles)
+    if (!path) return; 
     if (path === "/") {
       if (location.pathname === "/") {
         e.preventDefault(); 
@@ -94,16 +92,17 @@ const Header = React.memo(({ user }) => {
             <AnimatePresence>
               {navDropdownOpen && (
                 <motion.ul
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700"
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="absolute top-full left-0 mt-2 w-48 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl shadow-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50"
                 >
                   {link.subLinks.map((subLink) => (
                     <li key={subLink.path}>
                       <Link
                         to={subLink.path}
-                        className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                         onClick={(e) => handleNavClick(e, subLink.path)}
                       >
                         {subLink.label}
@@ -144,7 +143,7 @@ const Header = React.memo(({ user }) => {
       if (link.isDropdown) {
         return (
           <div key={index}>
-            <p className="block py-2 px-4 text-sm font-semibold text-gray-400 uppercase tracking-wider">
+            <p className="block py-2 px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
               {link.label}
             </p>
             {link.subLinks.map((subLink, subIdx) => (
@@ -153,7 +152,7 @@ const Header = React.memo(({ user }) => {
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.05 + 0.1 + (subIdx * 0.05) }}
-                className="ml-4 border-l-2 border-gray-100 dark:border-gray-800"
+                className="ml-4 border-l border-gray-200 dark:border-gray-800"
               >
                 <Link
                   to={subLink.path}
@@ -180,10 +179,10 @@ const Header = React.memo(({ user }) => {
         >
           <Link
             to={link.path}
-            className={`block py-2 px-4 rounded-lg transition-colors text-sm ${
+            className={`block py-3 px-4 rounded-xl transition-colors text-sm font-medium ${
               isActive 
-                ? "bg-gradient-to-r from-blue-500/10 to-purple-500/10 text-blue-600 dark:text-blue-400"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-700/50"
+                ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
             }`}
             onClick={(e) => handleNavClick(e, link.path)}
           >
@@ -227,19 +226,19 @@ const Header = React.memo(({ user }) => {
       <motion.header 
         className={`fixed top-0 left-0 w-full z-[999] transition-all duration-300 ${
           isScrolled 
-            ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm" 
+            ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50" 
             : "bg-transparent"
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <nav className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center h-24">
+        <nav className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center h-20 md:h-24">
           
           {/* LOGO */}
           <motion.div 
             className="flex items-center"
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.02 }}
           >
             <Link 
               to="/" 
@@ -249,41 +248,106 @@ const Header = React.memo(({ user }) => {
               <img 
                 src="/logo.png" 
                 alt="Afribide Safaris" 
-                className="h-10 md:h-12 w-auto object-contain" 
+                className="h-8 md:h-10 w-auto object-contain" 
               />
             </Link>
           </motion.div>
 
           {/* DESKTOP LINKS */}
-          <div className="hidden md:flex flex-1 justify-end items-center space-x-10 pr-10">
-            <ul className="flex space-x-8 items-center">
+          <div className="hidden md:flex flex-1 justify-end items-center space-x-8 pr-8">
+            <ul className="flex space-x-6 items-center">
               {renderNavLinks}
             </ul>
             
-            {/* Contact Us Button */}
-            <Link
-              to="/#contact"
-              onClick={(e) => handleNavClick(e, "/#contact")}
-              className={`px-6 py-2.5 rounded-full font-medium transition-all ${
-                isScrolled 
-                ? "bg-black text-white hover:bg-gray-800" 
-                : "bg-white text-black hover:bg-gray-100"
-              }`}
-            >
-              Contact Us
-            </Link>
+            <div className="flex items-center space-x-4 border-l border-gray-300/30 pl-8">
+              <Link
+                to="/#contact"
+                onClick={(e) => handleNavClick(e, "/#contact")}
+                className={`px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-300 ${
+                  isScrolled 
+                  ? "bg-black text-white hover:bg-gray-800 shadow-md hover:shadow-lg" 
+                  : "bg-white text-black hover:bg-gray-100 shadow-lg"
+                }`}
+              >
+                Contact Us
+              </Link>
+
+              {/* AUTHENTICATION COMPONENT */}
+              {user ? (
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
+                      isScrolled ? "bg-gray-100 hover:bg-gray-200 text-gray-800" : "bg-white/20 hover:bg-white/30 text-white"
+                    }`}
+                  >
+                    {user.photoURL ? (
+                      <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                    ) : (
+                      <FaUserCircle size={22} />
+                    )}
+                  </button>
+                  <AnimatePresence>
+                    {dropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute right-0 mt-3 w-48 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-2xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50"
+                      >
+                        <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            {user.displayName || "User"}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                            {user.email}
+                          </p>
+                        </div>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        >
+                          <FaSignOutAlt className="mr-2" /> Logout
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className={`px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-300 ${
+                    isScrolled 
+                    ? "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg" 
+                    : "bg-blue-500 text-white hover:bg-blue-600 shadow-lg"
+                  }`}
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
 
-          {/* MOBILE MENU / AUTH */}
-          <div className="flex items-center space-x-4">
+          {/* MOBILE MENU / AUTH TOGGLE */}
+          <div className="flex items-center space-x-4 md:hidden">
+            {user && !mobileMenuOpen && (
+               <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm">
+                 {user.photoURL ? (
+                    <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <FaUserCircle className={`w-full h-full ${isScrolled ? "text-gray-800" : "text-white"}`} />
+                  )}
+               </div>
+            )}
             <motion.button
-              className={`md:hidden focus:outline-none p-2 rounded-full transition-colors ${
+              className={`focus:outline-none p-2 rounded-full transition-colors ${
                 isScrolled ? "text-black" : "text-white"
               }`}
               onClick={toggleMobileMenu}
               aria-label="Mobile menu"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </motion.button>
@@ -298,7 +362,7 @@ const Header = React.memo(({ user }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/30 z-[999] md:hidden"
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[999] md:hidden"
                 onClick={closeAllMenus}
               />
               <motion.div
@@ -306,22 +370,61 @@ const Header = React.memo(({ user }) => {
                 initial={{ x: "100%" }}
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
-                transition={{ type: "tween", ease: "easeOut", duration: 0.25 }}
-                className="fixed top-0 right-0 w-64 h-full z-[1000] bg-white dark:bg-gray-900 shadow-lg p-6 overflow-y-auto"
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="fixed top-0 right-0 w-[80%] max-w-sm h-full z-[1000] bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-6 overflow-y-auto border-l border-white/20 dark:border-gray-800"
               >
-                <div className="flex justify-end mb-8">
-                   <button onClick={toggleMobileMenu}><FaTimes size={24} className="text-gray-800 dark:text-white" /></button>
+                <div className="flex justify-between items-center mb-8">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Menu</h2>
+                  <button onClick={toggleMobileMenu} className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full">
+                    <FaTimes size={18} className="text-gray-800 dark:text-white" />
+                  </button>
                 </div>
-                <ul className="space-y-4">
+
+                {user && (
+                  <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl flex items-center space-x-3 border border-gray-100 dark:border-gray-700">
+                    {user.photoURL ? (
+                      <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+                    ) : (
+                      <FaUserCircle size={40} className="text-gray-400" />
+                    )}
+                    <div className="flex-1 overflow-hidden">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{user.displayName || "User"}</p>
+                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                    </div>
+                  </div>
+                )}
+
+                <ul className="space-y-2">
                   {renderMobileMenuLinks}
+                  
                   <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                     <Link
                       to="/#contact"
-                      className="block py-2 px-4 mt-4 bg-black text-white text-center rounded-lg"
+                      className="block py-3 px-4 mt-6 bg-black text-white text-sm font-medium text-center rounded-xl shadow-md"
                       onClick={(e) => handleNavClick(e, "/#contact")}
                     >
                       Contact Us
                     </Link>
+                  </motion.li>
+
+                  {/* MOBILE AUTH ACTION */}
+                  <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
+                    {user ? (
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center justify-center py-3 px-4 mt-3 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 text-sm font-medium text-center rounded-xl transition-colors"
+                      >
+                        <FaSignOutAlt className="mr-2" /> Logout
+                      </button>
+                    ) : (
+                      <Link
+                        to="/login"
+                        onClick={closeAllMenus}
+                        className="block py-3 px-4 mt-3 bg-blue-600 text-white text-sm font-medium text-center rounded-xl shadow-md"
+                      >
+                        Login
+                      </Link>
+                    )}
                   </motion.li>
                 </ul>
               </motion.div>

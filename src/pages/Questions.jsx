@@ -102,9 +102,9 @@ const Questions = () => {
           transition={{ duration: 0.8, ease: easing }}
         >
           <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1d1d1f] mb-6">
-            <span className="text-[#6e6e73]">Common</span> Questions
+            <span className="text-blue-600 ">Common</span> Questions
           </h2>
-          <p className=" text-[#002D62] text-2xl max-w-xl mx-auto leading-relaxed">
+          <p className=" text-[#6e6e73] text-2xl max-w-xl mx-auto leading-relaxed">
             Everything you need to know about planning your next 
             unforgettable African wilderness expedition.
           </p>
