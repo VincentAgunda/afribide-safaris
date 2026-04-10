@@ -9,159 +9,116 @@ import ScrollToTop from "./components/ScrollToTop";
 import About from "./pages/About";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+
 import Home from "./pages/Home";
 
+
 /* =========================
-   APPLE-LIKE PAGE VARIANTS
+   PAGE ANIMATION VARIANTS
 ========================= */
 const pageVariants = {
   initial: {
     opacity: 0,
-    y: 20,
-    scale: 0.98,
-    filter: "blur(6px)"
+    x: -30
   },
   animate: {
     opacity: 1,
-    y: 0,
-    scale: 1,
-    filter: "blur(0px)",
+    x: 0,
     transition: {
-      duration: 0.45,
-      ease: [0.22, 1, 0.36, 1] // Apple cubic-bezier
+      duration: 0.3,
+      ease: "easeInOut"
     }
   },
   exit: {
     opacity: 0,
-    y: -20,
-    scale: 0.985,
-    filter: "blur(6px)",
+    x: 30,
     transition: {
-      duration: 0.35,
-      ease: [0.22, 1, 0.36, 1]
+      duration: 0.25,
+      ease: "easeInOut"
     }
   }
 };
 
 /* =========================
-   REUSABLE PAGE WRAPPER
-========================= */
-const PageWrapper = ({ children }) => (
-  <motion.div
-    variants={pageVariants}
-    initial="initial"
-    animate="animate"
-    exit="exit"
-    className="page-content"
-  >
-    {children}
-  </motion.div>
-);
-
-/* =========================
    ROUTE TRANSITION INDICATOR
 ========================= */
 const RouteTransitionIndicator = () => (
-  <motion.div
-    className="route-transition-indicator"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-  />
+  <div className="route-transition-indicator" />
 );
 
 function App() {
   const location = useLocation();
 
   return (
-    <div className="app bg-gray-50 dark:bg-black min-h-screen flex flex-col">
+    <div className="app bg-gray-50 dark:bg-black min-h-screen">
       <ScrollToTop />
       <Header />
 
-      {/* Indicator */}
-      <RouteTransitionIndicator />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
 
-      {/* ROUTES */}
-      <div className="flex-1">
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={
+              <motion.div
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="page-content"
+              >
+                <Home />
+              </motion.div>
+            }
+          />
 
-            <Route
-              path="/"
-              element={
-                <PageWrapper>
-                  <Home />
-                </PageWrapper>
-              }
-            />
+          <Route
+            path="/about"
+            element={
+              <motion.div
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="page-content"
+              >
+                <About />
+              </motion.div>
+            }
+          />
 
-            <Route
-              path="/about"
-              element={
-                <PageWrapper>
-                  <About />
-                </PageWrapper>
-              }
-            />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-            <Route
-              path="/login"
-              element={
-                <PageWrapper>
-                  <Login />
-                </PageWrapper>
-              }
-            />
+          
 
-            <Route
-              path="/register"
-              element={
-                <PageWrapper>
-                  <Register />
-                </PageWrapper>
-              }
-            />
-
-          </Routes>
-        </AnimatePresence>
-      </div>
+        </Routes>
+      </AnimatePresence>
 
       <Footer />
 
-      {/* =========================
-          GLOBAL STYLES
-      ========================= */}
       <style>
         {`
-          .page-content {
-            min-height: calc(100vh - 140px);
-            will-change: transform, opacity, filter;
-          }
-
-          /* Smooth scrolling feel */
-          html {
-            scroll-behavior: smooth;
-          }
-
-          /* Apple-like floating indicator */
-          @keyframes pulseSmooth {
-            0% { transform: scale(0.9); opacity: 0.4; }
-            50% { transform: scale(1.15); opacity: 0.9; }
-            100% { transform: scale(0.9); opacity: 0.4; }
+          @keyframes fadePulse {
+            0%, 100% { opacity: 0.4; transform: scale(0.9); }
+            50% { opacity: 0.8; transform: scale(1.1); }
           }
 
           .route-transition-indicator {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 10px;
-            height: 10px;
+            bottom: 24px;
+            right: 24px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #60a5fa, #3b82f6);
-            animation: pulseSmooth 1.4s ease-in-out infinite;
-            z-index: 9999;
+            background: #3b82f6;
+            animation: fadePulse 1.2s ease-in-out infinite;
+            z-index: 1000;
             pointer-events: none;
-            box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+          }
+
+          .page-content {
+            min-height: calc(100vh - 140px);
           }
         `}
       </style>
