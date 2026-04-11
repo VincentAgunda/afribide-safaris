@@ -1,6 +1,6 @@
 // components/Header.jsx
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { FaSearch, FaUserCircle, FaBars, FaTimes, FaChevronDown, FaSignOutAlt, FaShieldAlt } from "react-icons/fa";
+import { FaUserCircle, FaBars, FaTimes, FaChevronDown, FaSignOutAlt, FaShieldAlt } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,23 +21,20 @@ const navLinks = [
 ];
 
 const Header = React.memo(() => {
-  const { currentUser, userRole } = useAuth(); // from AuthContext
+  const { currentUser, userRole } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [navDropdownOpen, setNavDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const dropdownRef = useRef(null);
   const navDropdownRef = useRef(null);
   const menuRef = useRef(null);
-  const searchRef = useRef(null);
   const location = useLocation();
 
   const closeAllMenus = useCallback(() => {
     setDropdownOpen(false);
     setNavDropdownOpen(false);
     setMobileMenuOpen(false);
-    setSearchOpen(false);
   }, []);
 
   const handleLogout = useCallback(async () => {
@@ -53,7 +50,6 @@ const Header = React.memo(() => {
     setMobileMenuOpen((prev) => !prev);
     setDropdownOpen(false);
     setNavDropdownOpen(false);
-    setSearchOpen(false);
   }, []);
 
   const handleNavClick = useCallback((e, path) => {
@@ -78,6 +74,11 @@ const Header = React.memo(() => {
 
   const isScrolled = scrollY > 10;
   const isAdmin = userRole === "admin";
+
+  // Debug: log admin status (remove in production)
+  useEffect(() => {
+    console.log("Auth status:", { currentUser: !!currentUser, userRole, isAdmin });
+  }, [currentUser, userRole, isAdmin]);
 
   const renderNavLinks = useMemo(() => (
     navLinks.map((link, idx) => {
@@ -209,10 +210,6 @@ const Header = React.memo(() => {
           !event.target.closest('[aria-label="Mobile menu"]')) {
         setMobileMenuOpen(false);
       }
-      if (searchRef.current && !searchRef.current.contains(event.target) &&
-          !event.target.closest('[aria-label="Search"]')) {
-        setSearchOpen(false);
-      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -253,7 +250,6 @@ const Header = React.memo(() => {
           <div className="hidden md:flex flex-1 justify-end items-center space-x-8 pr-8">
             <ul className="flex space-x-6 items-center">
               {renderNavLinks}
-              {/* Admin Dashboard Link (visible only to admins) */}
               {isAdmin && (
                 <li>
                   <Link
@@ -283,7 +279,6 @@ const Header = React.memo(() => {
                 Contact Us
               </Link>
 
-              {/* AUTHENTICATION COMPONENT */}
               {currentUser ? (
                 <div className="relative" ref={dropdownRef}>
                   <button
@@ -419,18 +414,20 @@ const Header = React.memo(() => {
                 <ul className="space-y-2">
                   {renderMobileMenuLinks}
 
+                  {/* ADMIN LINK IN MOBILE - MADE PROMINENT */}
                   {isAdmin && (
                     <motion.li
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: 0.25 }}
+                      className="mt-4"
                     >
                       <Link
                         to="/admin"
-                        className="block py-3 px-4 rounded-xl text-sm font-medium text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400"
+                        className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md transition-all"
                         onClick={closeAllMenus}
                       >
-                        <FaShieldAlt className="inline mr-2" /> Admin Dashboard
+                        <FaShieldAlt /> Admin Dashboard
                       </Link>
                     </motion.li>
                   )}
@@ -438,7 +435,7 @@ const Header = React.memo(() => {
                   <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                     <Link
                       to="/#contact"
-                      className="block py-3 px-4 mt-6 bg-black text-white text-sm font-medium text-center rounded-xl shadow-md"
+                      className="block py-3 px-4 mt-2 bg-black text-white text-sm font-medium text-center rounded-xl shadow-md"
                       onClick={(e) => handleNavClick(e, "/#contact")}
                     >
                       Contact Us
@@ -465,6 +462,9 @@ const Header = React.memo(() => {
                     )}
                   </motion.li>
                 </ul>
+
+                {/* Extra spacer to ensure scrollability */}
+                <div className="h-8" />
               </motion.div>
             </>
           )}

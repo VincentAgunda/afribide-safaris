@@ -25,6 +25,7 @@ const IMAGE_OPTIONS = [
   { label: "Parachute over Mara", value: "/parachute.jpeg" },
   { label: "Zebra Herd", value: "/zebra.jpeg" },
   { label: "Geese at Lake", value: "/goose.jpeg" },
+   { label: "Helicopter", value: "/helicopter.jpeg" },
 ];
 
 const AdminDashboard = () => {
