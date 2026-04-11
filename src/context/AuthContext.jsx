@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 const AuthContext = createContext();
 
@@ -15,18 +15,35 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
-      if (user) {
-        // Fetch role from Firestore
+
+      if (!user) {
+        setUserRole(null);
+        setLoading(false);
+        return;
+      }
+
+      try {
         const userDocRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          setUserRole(userDoc.data().role);
+
+        // 🔥 If user doc DOES NOT exist → create it
+        if (!userDoc.exists()) {
+          await setDoc(userDocRef, {
+            email: user.email,
+            role: "user",
+            createdAt: new Date()
+          });
+
+          setUserRole("user");
         } else {
-          setUserRole("user"); // Default role
+          setUserRole(userDoc.data().role || "user");
         }
-      } else {
-        setUserRole(null);
+
+      } catch (error) {
+        console.error("Error fetching/creating user:", error);
+        setUserRole("user"); // fallback
       }
+
       setLoading(false);
     });
 
