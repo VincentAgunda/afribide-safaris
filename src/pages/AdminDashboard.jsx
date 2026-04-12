@@ -20,6 +20,7 @@ import {
   Loader2,
   Menu,
   X,
+  Clock,
 } from "lucide-react";
 
 // Pre‑existing images
@@ -44,6 +45,7 @@ const AdminDashboard = () => {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
+    duration: "",
     image: IMAGE_OPTIONS[0].value,
     description: "",
     itinerary: [{ day: "", title: "", desc: "" }],
@@ -125,6 +127,7 @@ const AdminDashboard = () => {
       setFormData({
         title: "",
         category: "",
+        duration: "",
         image: IMAGE_OPTIONS[0].value,
         description: "",
         itinerary: [{ day: "", title: "", desc: "" }],
@@ -143,6 +146,7 @@ const AdminDashboard = () => {
   const handleEdit = (pkg) => {
     setFormData({
       ...pkg,
+      duration: pkg.duration || "",
       itinerary: pkg.itinerary?.length ? pkg.itinerary : [{ day: "", title: "", desc: "" }],
       pricing: pkg.pricing?.length ? pkg.pricing : [{ title: "", details: "" }],
       included: pkg.included?.length ? pkg.included : [""],
@@ -172,6 +176,7 @@ const AdminDashboard = () => {
     setFormData({
       title: "",
       category: "",
+      duration: "",
       image: IMAGE_OPTIONS[0].value,
       description: "",
       itinerary: [{ day: "", title: "", desc: "" }],
@@ -271,7 +276,7 @@ const AdminDashboard = () => {
                 {isEditing ? "Edit Package" : "Add New Package"}
               </h3>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1">
                       Title
@@ -295,6 +300,21 @@ const AdminDashboard = () => {
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      Duration
+                    </label>
+                    <div className="relative">
+                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                      <input
+                        type="text"
+                        placeholder="e.g. 9 Days / 8 Nights"
+                        className="w-full pl-9 pr-2 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                        value={formData.duration}
+                        onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -417,6 +437,9 @@ const AdminDashboard = () => {
                       </div>
                     ))}
                   </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Example: "2 PAX" / "$4135 (Single) / $3500 (Double)"
+                  </p>
                 </div>
 
                 {/* Included / Excluded */}
@@ -526,9 +549,17 @@ const AdminDashboard = () => {
                         />
                         <div className="flex-1">
                           <h4 className="font-semibold text-gray-800">{pkg.title}</h4>
-                          <span className="text-xs font-medium text-blue-600 uppercase">
-                            {pkg.category}
-                          </span>
+                          <div className="flex items-center gap-2 text-xs">
+                            <span className="font-medium text-blue-600 uppercase">
+                              {pkg.category}
+                            </span>
+                            {pkg.duration && (
+                              <>
+                                <span className="text-gray-300">•</span>
+                                <span className="text-gray-500">{pkg.duration}</span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div className="flex gap-2 mt-3 sm:mt-0">

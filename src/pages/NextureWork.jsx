@@ -1,4 +1,4 @@
-// NextureWork.jsx (SafariGalleryPage)
+// SafariGalleryPage.jsx
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -11,9 +11,11 @@ import {
   Banknote,
   CheckCircle2,
   XCircle,
+  Calendar,
 } from "lucide-react";
 import { db } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
+import BookingModal from "../components/BookingModal"; // The Contact component renamed
 
 /* ------------------ Animation Config ------------------ */
 const spring = {
@@ -45,9 +47,9 @@ const generateGallery = (seed) =>
   );
 
 /* ===========================
-   Modal
+   Details Modal (existing)
 =========================== */
-const SafariModal = ({ item, onClose }) => {
+const SafariModal = ({ item, onClose, onBookNow }) => {
   const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
@@ -121,6 +123,11 @@ const SafariModal = ({ item, onClose }) => {
               >
                 {item.title}
               </motion.h3>
+              {item.duration && (
+                <p className="mt-2 text-white/80 text-sm flex items-center gap-1">
+                  <Calendar size={14} /> {item.duration}
+                </p>
+              )}
             </div>
           </motion.div>
 
@@ -154,6 +161,16 @@ const SafariModal = ({ item, onClose }) => {
                 </button>
               );
             })}
+            {/* Book Now button inside modal */}
+            <button
+              onClick={() => {
+                onClose();
+                onBookNow(item);
+              }}
+              className="ml-auto px-5 py-2 bg-black text-white rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+            >
+              Book Now
+            </button>
           </div>
 
           <div className="px-4 sm:px-8 py-8 max-w-5xl mx-auto min-h-[300px]">
@@ -245,16 +262,14 @@ const SafariModal = ({ item, onClose }) => {
                         ))}
                       </div>
                       <p className="text-xs text-gray-400 mt-4 font-medium">
-                        * Rates are based on persons traveling in a private 4x4
-                        safari vehicle.
+                        * Rates are based on persons traveling in a private 4x4 safari vehicle.
                       </p>
                     </div>
                   </div>
                   <div className="lg:col-span-5 space-y-6">
                     <div className="p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
                       <h4 className="text-lg font-bold tracking-tight text-[#1d1d1f] mb-4 flex items-center gap-2">
-                        <CheckCircle2 className="text-green-500" size={18} />{" "}
-                        Included
+                        <CheckCircle2 className="text-green-500" size={18} /> Included
                       </h4>
                       <ul className="space-y-2">
                         {item.included?.map((inc, idx) => (
@@ -262,16 +277,14 @@ const SafariModal = ({ item, onClose }) => {
                             key={idx}
                             className="flex items-start gap-2 text-sm text-[#86868b]"
                           >
-                            <span className="text-green-500 mt-0.5">•</span>{" "}
-                            {inc}
+                            <span className="text-green-500 mt-0.5">•</span> {inc}
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div className="p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
                       <h4 className="text-lg font-bold tracking-tight text-[#1d1d1f] mb-4 flex items-center gap-2">
-                        <XCircle className="text-red-500" size={18} /> Not
-                        Included
+                        <XCircle className="text-red-500" size={18} /> Not Included
                       </h4>
                       <ul className="space-y-2">
                         {item.excluded?.map((exc, idx) => (
@@ -279,8 +292,7 @@ const SafariModal = ({ item, onClose }) => {
                             key={idx}
                             className="flex items-start gap-2 text-sm text-[#86868b]"
                           >
-                            <span className="text-red-400 mt-0.5">✕</span>{" "}
-                            {exc}
+                            <span className="text-red-400 mt-0.5">✕</span> {exc}
                           </li>
                         ))}
                       </ul>
@@ -303,6 +315,7 @@ const SafariGalleryPage = () => {
   const carouselRef = useRef(null);
   const [active, setActive] = useState(0);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [bookingItem, setBookingItem] = useState(null); // For booking modal
   const cardRefs = useRef([]);
   const [safaris, setSafaris] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -366,6 +379,10 @@ const SafariGalleryPage = () => {
   const handlePrev = () => scrollToIndex(Math.max(0, active - 1));
   const handleNext = () => scrollToIndex(Math.min(safaris.length - 1, active + 1));
 
+  const openBooking = (item) => {
+    setBookingItem(item);
+  };
+
   if (loading) {
     return (
       <section className="py-16 sm:py-24 bg-[#F5F5F7] min-h-screen flex items-center justify-center">
@@ -414,14 +431,32 @@ const SafariGalleryPage = () => {
                       <span className="block text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] mb-2 sm:mb-3 opacity-90">
                         {item.category}
                       </span>
-                      <h3 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.05]">
+                      <h3 className="text-2xl sm:text-3xl font-medium tracking-tight leading-[1.2] line-clamp-2">
                         {item.title}
                       </h3>
+                      {item.duration && (
+                        <p className="mt-2 text-xs opacity-80 flex items-center gap-1">
+                          <Calendar size={12} /> {item.duration}
+                        </p>
+                      )}
                     </div>
-                    <div className="opacity-0 translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out pb-4">
-                      <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-white/20 backdrop-blur-md px-5 py-3 rounded-full hover:bg-white/30 transition-colors">
-                        View Details <ChevronRight size={16} />
+                    <div className="flex items-end justify-between pb-4">
+                      <span className="opacity-0 translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out">
+                        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-white/20 backdrop-blur-md px-5 py-3 rounded-full hover:bg-white/30 transition-colors">
+                          View Details <ChevronRight size={16} />
+                        </span>
                       </span>
+                      <motion.button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openBooking(item);
+                        }}
+                        className="bg-white text-black text-sm font-semibold px-5 py-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Book Now
+                      </motion.button>
                     </div>
                   </div>
                   <motion.div
@@ -434,15 +469,6 @@ const SafariGalleryPage = () => {
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
                     />
                   </motion.div>
-                  <motion.button
-                    className={`absolute bottom-6 right-6 w-12 h-12 rounded-full z-30 flex items-center justify-center shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
-                      style.button === "dark"
-                        ? "bg-[#1d1d1f] text-white"
-                        : "bg-white text-[#1d1d1f]"
-                    }`}
-                  >
-                    <Plus size={24} strokeWidth={2.5} />
-                  </motion.button>
                 </motion.div>
               );
             })}
@@ -490,9 +516,17 @@ const SafariGalleryPage = () => {
           <SafariModal
             item={selectedItem}
             onClose={() => setSelectedItem(null)}
+            onBookNow={openBooking}
           />
         )}
       </AnimatePresence>
+
+      {/* Booking Modal */}
+      <BookingModal
+        isModalOpen={!!bookingItem}
+        onClose={() => setBookingItem(null)}
+        initialPackage={bookingItem?.title || ""}
+      />
     </section>
   );
 };
