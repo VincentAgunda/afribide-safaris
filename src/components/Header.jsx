@@ -9,7 +9,8 @@ import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
   { path: "/#about", label: "About Us" },
-  { path: "/gallery", label: "Gallery" },
+  { path: "/#gallery", label: "Explore" },       // Scrolls to NextureWork (id="gallery-section")
+  { path: "/#full-gallery", label: "Gallery" },  // Scrolls to GalleryPage (id="full-gallery-section")
   {
     label: "Testimonials & Blogs",
     isDropdown: true,

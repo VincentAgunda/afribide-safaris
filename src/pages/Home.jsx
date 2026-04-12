@@ -10,7 +10,7 @@ import NextureWork from "./NextureWork";
 import Questions from "./Questions";
 import Services from "./Services";
 import Contact from "./Contact";
-
+import GalleryPage from "./GalleryPage";
 // IMPORT YOUR NEW COMPONENTS HERE WHEN READY:
 // import Testimonials from "./Testimonials";
 // import Blogs from "./Blogs";
@@ -177,9 +177,13 @@ const Home = () => {
         </div>
 
         <div id="gallery-section" className="scroll-mt-24">
-          <NextureWork />
-        </div>
+  <NextureWork />
+</div>
 
+{/* NEW GALLERY PAGE SECTION */}
+<div id="full-gallery-section" className="scroll-mt-24">
+  <GalleryPage />
+</div>
         {/* TESTIMONIALS SECTION - ADDED */}
         <div id="testimonials-section" className="scroll-mt-24">
           {/* <Testimonials /> */}

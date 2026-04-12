@@ -1,6 +1,6 @@
 // App.jsx
 import React from "react";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom"; // ← Added Navigate
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { AuthProvider } from "./context/AuthContext";
@@ -12,11 +12,15 @@ import ScrollToTop from "./components/ScrollToTop";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
-import SafariGalleryPage from "./pages/NextureWork"; // your gallery component
+
+// ✅ FIXED IMPORTS (SEPARATE PAGES)
+import NextureWork from "./pages/NextureWork";
+import GalleryPage from "./pages/GalleryPage";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
-import AdminAuth from "./pages/AdminAuth"; // optional unified auth page
+import AdminAuth from "./pages/AdminAuth";
 
 /* =========================
    PAGE ANIMATION VARIANTS
@@ -52,84 +56,165 @@ function AppContent() {
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          {/* Public Routes */}
+
+          {/* =========================
+              PUBLIC ROUTES
+          ========================= */}
+          
+          {/* HOME */}
           <Route
             path="/"
             element={
-              <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="page-content">
+              <motion.div
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="page-content"
+              >
                 <Home />
               </motion.div>
             }
           />
+
+          {/* ABOUT */}
           <Route
             path="/about"
             element={
-              <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="page-content">
+              <motion.div
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="page-content"
+              >
                 <About />
               </motion.div>
             }
           />
+
+          {/* ✅ NEXTURE WORK PAGE */}
           <Route
-            path="/gallery"
+            path="/nexture-work"
             element={
-              <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="page-content">
-                <SafariGalleryPage />
+              <motion.div
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="page-content"
+              >
+                <NextureWork />
               </motion.div>
             }
           />
 
-          {/* Auth Routes */}
+          {/* ✅ FULL GALLERY PAGE */}
+          <Route
+            path="/gallery"
+            element={
+              <motion.div
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="page-content"
+              >
+                <GalleryPage />
+              </motion.div>
+            }
+          />
+
+          {/* =========================
+              AUTH ROUTES
+          ========================= */}
+
           <Route
             path="/login"
             element={
-              <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="page-content">
+              <motion.div
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="page-content"
+              >
                 <Login />
               </motion.div>
             }
           />
+
           <Route
             path="/register"
             element={
-              <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="page-content">
+              <motion.div
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="page-content"
+              >
                 <Register />
               </motion.div>
             }
           />
-          {/* Optional unified admin auth page */}
+
+          {/* OPTIONAL ADMIN AUTH */}
           <Route
             path="/admin-auth"
             element={
-              <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="page-content">
+              <motion.div
+                variants={pageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="page-content"
+              >
                 <AdminAuth />
               </motion.div>
             }
           />
 
-          {/* Protected Admin Route */}
+          {/* =========================
+              PROTECTED ADMIN ROUTE
+          ========================= */}
           <Route
             path="/admin"
             element={
               <ProtectedRoute requireAdmin>
-                <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="page-content">
+                <motion.div
+                  variants={pageVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="page-content"
+                >
                   <AdminDashboard />
                 </motion.div>
               </ProtectedRoute>
             }
           />
 
-          {/* Catch-all redirect to home */}
+          {/* =========================
+              FALLBACK ROUTE
+          ========================= */}
           <Route path="*" element={<Navigate to="/" replace />} />
+
         </Routes>
       </AnimatePresence>
 
       <Footer />
 
+      {/* =========================
+          GLOBAL STYLES
+      ========================= */}
       <style>
         {`
           @keyframes fadePulse {
             0%, 100% { opacity: 0.4; transform: scale(0.9); }
             50% { opacity: 0.8; transform: scale(1.1); }
           }
+
           .route-transition-indicator {
             position: fixed;
             bottom: 24px;
@@ -142,6 +227,7 @@ function AppContent() {
             z-index: 1000;
             pointer-events: none;
           }
+
           .page-content {
             min-height: calc(100vh - 140px);
           }

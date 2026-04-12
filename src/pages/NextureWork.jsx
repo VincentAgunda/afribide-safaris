@@ -430,7 +430,7 @@ const SafariGalleryPage = () => {
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-4xl font-medium text-[#002D62] tracking-tight mb-4"
+            className="text-3xl md:text-4xl font-medium text-blue-600 tracking-tight mb-4"
           >
             Explore Afribide Safaris.
           </motion.h2>
