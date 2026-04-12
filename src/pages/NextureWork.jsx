@@ -1,10 +1,9 @@
 // SafariGalleryPage.jsx
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { motion, AnimatePresence, useIsPresent } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
-  Plus,
   X,
   ImageIcon,
   Map,
@@ -15,21 +14,21 @@ import {
 } from "lucide-react";
 import { db } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
-import BookingModal from "../components/BookingModal"; // The Contact component renamed
+import BookingModal from "../components/BookingModal";
 
-/* ------------------ Animation Config ------------------ */
+/* ------------------ Animation Config (mobile‑first) ------------------ */
 const spring = {
   type: "spring",
-  stiffness: 300,
-  damping: 30,
-  mass: 1,
+  stiffness: 250,        // slightly softer for mobile
+  damping: 28,
+  mass: 0.8,
 };
 
 const fadeUp = {
-  initial: { opacity: 0, y: 15 },
+  initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -10 },
-  transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] },
+  exit: { opacity: 0, y: -5 },
+  transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] },
 };
 
 /* ------------------ Card Styles ------------------ */
@@ -47,14 +46,17 @@ const generateGallery = (seed) =>
   );
 
 /* ===========================
-   Details Modal (existing)
+   Details Modal (optimised)
 =========================== */
 const SafariModal = ({ item, onClose, onBookNow }) => {
   const [activeTab, setActiveTab] = useState("overview");
+  const isPresent = useIsPresent();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    return () => (document.body.style.overflow = "");
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 
   const tabs = [
@@ -63,7 +65,10 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
     { id: "pricing", label: "Pricing & Details", icon: Banknote },
   ];
 
-  const gallery = item.gallery || generateGallery(item.title);
+  const gallery = useMemo(
+    () => item.gallery || generateGallery(item.title),
+    [item.gallery, item.title]
+  );
 
   return (
     <motion.div
@@ -71,7 +76,7 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.2 }}
     >
       <motion.div
         onClick={onClose}
@@ -80,10 +85,13 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       />
+
       <motion.div
         layoutId={`card-${item.id}`}
+        layout="position"
         transition={spring}
         className="relative z-10 w-full max-w-5xl h-full max-h-[85vh] flex flex-col rounded-[2rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-white"
+        style={{ willChange: "transform" }}
       >
         <motion.button
           onClick={onClose}
@@ -94,23 +102,29 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
           <X size={20} strokeWidth={2.5} />
         </motion.button>
 
-        <div className="overflow-y-auto w-full h-full scrollbar-none pb-12">
+        <div className="overflow-y-auto w-full h-full scrollbar-hide overscroll-contain pb-12">
           <motion.div
             layoutId={`image-${item.id}`}
+            layout="position"
+            transition={spring}
             className="h-[250px] sm:h-[350px] w-full relative shrink-0 overflow-hidden"
-            style={{ backgroundColor: item.bg || "#000" }}
+            style={{ backgroundColor: item.bg || "#000", willChange: "transform" }}
           >
             <img
               src={item.image}
               alt={item.title}
               className="w-full h-full object-cover"
+              width="1200"
+              height="800"
+              decoding="async"
+              loading="eager"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute bottom-0 left-0 p-6 sm:p-8 text-white w-full max-w-3xl">
               <motion.span
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.1 }}
                 className="block text-sm sm:text-base font-semibold uppercase tracking-[0.2em] mb-2 sm:mb-3 text-white/90"
               >
                 {item.category}
@@ -118,7 +132,7 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
               <motion.h3
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.2 }}
                 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.1]"
               >
                 {item.title}
@@ -131,7 +145,8 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
             </div>
           </motion.div>
 
-          <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-200/60 px-4 sm:px-8 pt-4 pb-0 flex gap-2 overflow-x-auto scrollbar-none">
+          {/* Sticky Tabs + Book Now */}
+          <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-200/60 px-4 sm:px-8 pt-4 pb-0 flex gap-2 overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -161,7 +176,6 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
                 </button>
               );
             })}
-            {/* Book Now button inside modal */}
             <button
               onClick={() => {
                 onClose();
@@ -187,7 +201,7 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
                     {gallery.map((imgUrl, idx) => (
                       <motion.div
                         key={idx}
-                        whileHover={{ scale: 1.03, y: -3 }}
+                        whileHover={{ scale: 1.02, y: -2 }}
                         transition={spring}
                         className="aspect-[4/5] rounded-xl overflow-hidden bg-gray-100 shadow-sm ring-1 ring-black/5"
                       >
@@ -196,6 +210,9 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
                           alt={`${item.title} gallery ${idx + 1}`}
                           className="w-full h-full object-cover"
                           loading="lazy"
+                          decoding="async"
+                          width="400"
+                          height="500"
                         />
                       </motion.div>
                     ))}
@@ -309,17 +326,19 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
 };
 
 /* ===========================
-   Main Gallery Component
+   Main Gallery Component (optimised)
 =========================== */
 const SafariGalleryPage = () => {
   const carouselRef = useRef(null);
   const [active, setActive] = useState(0);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [bookingItem, setBookingItem] = useState(null); // For booking modal
+  const [bookingItem, setBookingItem] = useState(null);
   const cardRefs = useRef([]);
   const [safaris, setSafaris] = useState([]);
   const [loading, setLoading] = useState(true);
+  const scrollRAF = useRef(null);
 
+  // Firestore subscription
   useEffect(() => {
     const q = collection(db, "safaris");
     const unsubscribe = onSnapshot(
@@ -351,16 +370,18 @@ const SafariGalleryPage = () => {
     });
   }, []);
 
+  // Throttled scroll handler
   useEffect(() => {
     const container = carouselRef.current;
     if (!container || safaris.length === 0) return;
-    let raf;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
+
+    const handleScroll = () => {
+      if (scrollRAF.current) cancelAnimationFrame(scrollRAF.current);
+      scrollRAF.current = requestAnimationFrame(() => {
         const scrollLeft = container.scrollLeft;
         let closestIndex = 0;
         let minDistance = Infinity;
+
         cardRefs.current.forEach((card, i) => {
           if (!card) return;
           const distance = Math.abs(card.offsetLeft - 24 - scrollLeft);
@@ -372,16 +393,20 @@ const SafariGalleryPage = () => {
         setActive(closestIndex);
       });
     };
-    container.addEventListener("scroll", onScroll, { passive: true });
-    return () => container.removeEventListener("scroll", onScroll);
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      if (scrollRAF.current) cancelAnimationFrame(scrollRAF.current);
+    };
   }, [safaris]);
 
   const handlePrev = () => scrollToIndex(Math.max(0, active - 1));
   const handleNext = () => scrollToIndex(Math.min(safaris.length - 1, active + 1));
 
-  const openBooking = (item) => {
+  const openBooking = useCallback((item) => {
     setBookingItem(item);
-  };
+  }, []);
 
   if (loading) {
     return (
@@ -407,8 +432,14 @@ const SafariGalleryPage = () => {
         <div className="relative">
           <div
             ref={carouselRef}
-            className="overflow-x-auto scrollbar-none snap-x snap-mandatory flex gap-4 sm:gap-6 pb-12 px-4 sm:px-6 -mx-4 sm:-mx-6"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-4 sm:gap-6 pb-12 px-4 sm:px-6 -mx-4 sm:-mx-6"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              WebkitOverflowScrolling: "touch",
+              overscrollBehaviorX: "contain",
+              willChange: "scroll-position",
+            }}
           >
             {safaris.map((item, i) => {
               const style = cardColors[i % cardColors.length];
@@ -418,6 +449,7 @@ const SafariGalleryPage = () => {
                   key={item.id}
                   ref={(el) => (cardRefs.current[i] = el)}
                   layoutId={`card-${item.id}`}
+                  layout="position"
                   whileHover={{ scale: 0.98 }}
                   transition={spring}
                   onClick={() => setSelectedItem(enrichedItem)}
@@ -442,7 +474,7 @@ const SafariGalleryPage = () => {
                     </div>
                     <div className="flex items-end justify-between pb-4">
                       <span className="opacity-0 translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out">
-                        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-white/20 backdrop-blur-md px-5 py-3 rounded-full hover:bg-white/30 transition-colors">
+                        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-white/20 backdrop-blur-md px-5 py-3 rounded-full">
                           View Details <ChevronRight size={16} />
                         </span>
                       </span>
@@ -461,12 +493,18 @@ const SafariGalleryPage = () => {
                   </div>
                   <motion.div
                     layoutId={`image-${item.id}`}
+                    layout="position"
                     className="absolute inset-0 z-10 pointer-events-none"
+                    transition={spring}
                   >
                     <img
                       src={item.image}
                       alt={item.title}
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
+                      loading="eager"
+                      decoding="async"
+                      width="800"
+                      height="1000"
                     />
                   </motion.div>
                 </motion.div>
@@ -479,14 +517,14 @@ const SafariGalleryPage = () => {
               <div className="flex gap-3 order-2 sm:order-1">
                 <button
                   onClick={handlePrev}
-                  className="w-12 h-12 rounded-full bg-white border border-gray-200 text-[#1d1d1f] flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all shadow-sm"
+                  className="w-12 h-12 rounded-full bg-white border border-gray-200 text-[#1d1d1f] flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all shadow-sm disabled:opacity-40"
                   disabled={active === 0}
                 >
                   <ChevronLeft size={20} strokeWidth={2} />
                 </button>
                 <button
                   onClick={handleNext}
-                  className="w-12 h-12 rounded-full bg-white border border-gray-200 text-[#1d1d1f] flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all shadow-sm"
+                  className="w-12 h-12 rounded-full bg-white border border-gray-200 text-[#1d1d1f] flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all shadow-sm disabled:opacity-40"
                   disabled={active === safaris.length - 1}
                 >
                   <ChevronRight size={20} strokeWidth={2} />
@@ -521,7 +559,6 @@ const SafariGalleryPage = () => {
         )}
       </AnimatePresence>
 
-      {/* Booking Modal */}
       <BookingModal
         isModalOpen={!!bookingItem}
         onClose={() => setBookingItem(null)}
