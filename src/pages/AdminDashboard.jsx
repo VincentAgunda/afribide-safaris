@@ -29,6 +29,10 @@ const IMAGE_OPTIONS = [
   { label: "Zebra Herd", value: "/zebra.jpeg" },
   { label: "Geese at Lake", value: "/goose.jpeg" },
   { label: "Helicopter", value: "/helicopter.jpeg" },
+  { label: "Chimpanzee", value: "/chimpanzee.jpeg" },
+  { label: "Firewood", value: "/firewood.jpeg" },
+  { label: "Goose on water", value: "/goose2.jpeg" },
+  { label: "Zebra outside", value: "/zebra-outside.jpeg" },
 ];
 
 const AdminDashboard = () => {

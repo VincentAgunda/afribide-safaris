@@ -15,15 +15,15 @@ const categories = ["All", "Wildlife", "Landscapes", "Lodges"];
 
 // Premium placeholder images (Replace with your actual Firebase/Storage URLs)
 const galleryData = [
-  { id: 1, src: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=1600", category: "Wildlife", title: "Majestic Elephant", size: "large" },
-  { id: 2, src: "https://images.unsplash.com/photo-1614531341773-3bff8b7cb3fc?auto=format&fit=crop&q=80&w=800", category: "Landscapes", title: "Serengeti Plains", size: "wide" },
-  { id: 3, src: "https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&q=80&w=600", category: "Wildlife", title: "Leopard in Tree", size: "tall" },
-  { id: 4, src: "https://images.unsplash.com/photo-1504430580004-94a2824cc40c?auto=format&fit=crop&q=80&w=600", category: "Lodges", title: "Luxury Tents", size: "small" },
-  { id: 5, src: "https://images.unsplash.com/photo-1547471080-7fc2caa6f17f?auto=format&fit=crop&q=80&w=1200", category: "Wildlife", title: "Lion Pride", size: "large" },
-  { id: 6, src: "https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&q=80&w=800", category: "Landscapes", title: "Baobab Sunset", size: "tall" },
-  { id: 7, src: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&q=80&w=800", category: "Wildlife", title: "Giraffe Herd", size: "wide" },
-  { id: 8, src: "https://images.unsplash.com/photo-1551009175-15bdf9dcb580?auto=format&fit=crop&q=80&w=600", category: "Lodges", title: "Lodge Pool", size: "small" },
-  { id: 9, src: "https://images.unsplash.com/photo-1517815233158-b64db4a80277?auto=format&fit=crop&q=80&w=600", category: "Wildlife", title: "Cheetah Sprint", size: "small" },
+  { id: 1, src: "/parachute.jpeg", category: "Wildlife", title: "Majestic Elephant", size: "large" },
+  { id: 2, src: "/zebra.jpeg", category: "Landscapes", title: "Serengeti Plains", size: "wide" },
+  { id: 3, src: "/parachute.jpeg", category: "Wildlife", title: "Leopard in Tree", size: "tall" },
+  { id: 4, src: "/helicopter.jpeg", category: "Lodges", title: "Luxury Tents", size: "small" },
+  { id: 5, src: "/chimpanzee.jpeg", category: "Wildlife", title: "Lion Pride", size: "large" },
+  { id: 6, src: "/firewood.jpeg", category: "Landscapes", title: "Baobab Sunset", size: "tall" },
+  { id: 7, src: "/goose2.jpeg", category: "Wildlife", title: "Giraffe Herd", size: "wide" },
+  { id: 8, src: "/zebra-outside.jpeg", category: "Lodges", title: "Lodge Pool", size: "small" },
+  { id: 9, src: "/goose.jpeg", category: "Wildlife", title: "Cheetah Sprint", size: "small" },
 ];
 
 /* ------------------ Helper: Size Classes ------------------ */

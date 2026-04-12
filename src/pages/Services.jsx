@@ -42,7 +42,7 @@ const blogs = [
       "Pack light but versatile",
       "Carry sunscreen & hat",
     ],
-    image: "helicopter.jpeg",
+    image: "/goose.jpeg",
   },
   {
     title: "The Great Migration Explained",
