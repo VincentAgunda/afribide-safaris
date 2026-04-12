@@ -1,5 +1,4 @@
-// SafariGalleryPage.jsx
-import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import React, { useRef, useState, useEffect, useCallback, useMemo, memo } from "react";
 import { motion, AnimatePresence, useIsPresent } from "framer-motion";
 import {
   ChevronLeft,
@@ -19,15 +18,15 @@ import BookingModal from "../components/BookingModal";
 /* ------------------ Animation Config (mobile‑first) ------------------ */
 const spring = {
   type: "spring",
-  stiffness: 250,        // slightly softer for mobile
-  damping: 28,
+  stiffness: 300,        // slightly tightened for a snappier, premium feel
+  damping: 30,
   mass: 0.8,
 };
 
 const fadeUp = {
-  initial: { opacity: 0, y: 10 },
+  initial: { opacity: 0, y: 15 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -5 },
+  exit: { opacity: 0, y: -10 },
   transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] },
 };
 
@@ -46,9 +45,9 @@ const generateGallery = (seed) =>
   );
 
 /* ===========================
-   Details Modal (optimised)
+   Details Modal (optimised & memoized)
 =========================== */
-const SafariModal = ({ item, onClose, onBookNow }) => {
+const SafariModal = memo(({ item, onClose, onBookNow }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const isPresent = useIsPresent();
 
@@ -59,11 +58,11 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
     };
   }, []);
 
-  const tabs = [
+  const tabs = useMemo(() => [
     { id: "overview", label: "Overview", icon: ImageIcon },
     { id: "itinerary", label: "Itinerary", icon: Map },
     { id: "pricing", label: "Pricing & Details", icon: Banknote },
-  ];
+  ], []);
 
   const gallery = useMemo(
     () => item.gallery || generateGallery(item.title),
@@ -76,7 +75,7 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
     >
       <motion.div
         onClick={onClose}
@@ -88,10 +87,8 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
 
       <motion.div
         layoutId={`card-${item.id}`}
-        layout="position"
         transition={spring}
-        className="relative z-10 w-full max-w-5xl h-full max-h-[85vh] flex flex-col rounded-[2rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-white"
-        style={{ willChange: "transform" }}
+        className="relative z-10 w-full max-w-5xl h-full max-h-[85vh] flex flex-col rounded-[2rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-white will-change-transform"
       >
         <motion.button
           onClick={onClose}
@@ -102,13 +99,12 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
           <X size={20} strokeWidth={2.5} />
         </motion.button>
 
-        <div className="overflow-y-auto w-full h-full scrollbar-hide overscroll-contain pb-12">
+        <div className="overflow-y-auto w-full h-full scrollbar-hide overscroll-contain pb-12 translate-z-0">
           <motion.div
             layoutId={`image-${item.id}`}
-            layout="position"
             transition={spring}
-            className="h-[250px] sm:h-[350px] w-full relative shrink-0 overflow-hidden"
-            style={{ backgroundColor: item.bg || "#000", willChange: "transform" }}
+            className="h-[250px] sm:h-[350px] w-full relative shrink-0 overflow-hidden will-change-transform"
+            style={{ backgroundColor: item.bg || "#000" }}
           >
             <img
               src={item.image}
@@ -124,7 +120,7 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
               <motion.span
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
+                transition={{ delay: 0.15 }}
                 className="block text-sm sm:text-base font-semibold uppercase tracking-[0.2em] mb-2 sm:mb-3 text-white/90"
               >
                 {item.category}
@@ -203,7 +199,7 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
                         key={idx}
                         whileHover={{ scale: 1.02, y: -2 }}
                         transition={spring}
-                        className="aspect-[4/5] rounded-xl overflow-hidden bg-gray-100 shadow-sm ring-1 ring-black/5"
+                        className="aspect-[4/5] rounded-xl overflow-hidden bg-gray-100 shadow-sm ring-1 ring-black/5 will-change-transform"
                       >
                         <img
                           src={imgUrl}
@@ -221,7 +217,7 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
               )}
 
               {activeTab === "itinerary" && (
-                <motion.div {...fadeUp} className="max-w-3xl mx-auto">
+                <motion.div key="itinerary" {...fadeUp} className="max-w-3xl mx-auto">
                   <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-[2px] before:bg-gray-200">
                     {item.itinerary?.map((day, idx) => (
                       <div
@@ -252,6 +248,7 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
 
               {activeTab === "pricing" && (
                 <motion.div
+                  key="pricing"
                   {...fadeUp}
                   className="grid lg:grid-cols-12 gap-8"
                 >
@@ -323,7 +320,8 @@ const SafariModal = ({ item, onClose, onBookNow }) => {
       </motion.div>
     </motion.div>
   );
-};
+});
+SafariModal.displayName = "SafariModal"; // Needed when using React.memo
 
 /* ===========================
    Main Gallery Component (optimised)
@@ -336,7 +334,6 @@ const SafariGalleryPage = () => {
   const cardRefs = useRef([]);
   const [safaris, setSafaris] = useState([]);
   const [loading, setLoading] = useState(true);
-  const scrollRAF = useRef(null);
 
   // Firestore subscription
   useEffect(() => {
@@ -370,39 +367,43 @@ const SafariGalleryPage = () => {
     });
   }, []);
 
-  // Throttled scroll handler
+  // Highly optimized IntersectionObserver to track scroll without layout thrashing
   useEffect(() => {
     const container = carouselRef.current;
     if (!container || safaris.length === 0) return;
 
-    const handleScroll = () => {
-      if (scrollRAF.current) cancelAnimationFrame(scrollRAF.current);
-      scrollRAF.current = requestAnimationFrame(() => {
-        const scrollLeft = container.scrollLeft;
-        let closestIndex = 0;
-        let minDistance = Infinity;
-
-        cardRefs.current.forEach((card, i) => {
-          if (!card) return;
-          const distance = Math.abs(card.offsetLeft - 24 - scrollLeft);
-          if (distance < minDistance) {
-            minDistance = distance;
-            closestIndex = i;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.getAttribute("data-index"), 10);
+            if (!isNaN(index)) {
+              setActive(index);
+            }
           }
         });
-        setActive(closestIndex);
-      });
-    };
+      },
+      {
+        root: container,
+        threshold: 0.6, // Fire when 60% of the card is visible
+      }
+    );
 
-    container.addEventListener("scroll", handleScroll, { passive: true });
+    const currentCards = cardRefs.current;
+    currentCards.forEach((card) => {
+      if (card) observer.observe(card);
+    });
+
     return () => {
-      container.removeEventListener("scroll", handleScroll);
-      if (scrollRAF.current) cancelAnimationFrame(scrollRAF.current);
+      currentCards.forEach((card) => {
+        if (card) observer.unobserve(card);
+      });
+      observer.disconnect();
     };
   }, [safaris]);
 
-  const handlePrev = () => scrollToIndex(Math.max(0, active - 1));
-  const handleNext = () => scrollToIndex(Math.min(safaris.length - 1, active + 1));
+  const handlePrev = useCallback(() => scrollToIndex(Math.max(0, active - 1)), [active, scrollToIndex]);
+  const handleNext = useCallback(() => scrollToIndex(Math.min(safaris.length - 1, active + 1)), [active, safaris.length, scrollToIndex]);
 
   const openBooking = useCallback((item) => {
     setBookingItem(item);
@@ -411,7 +412,13 @@ const SafariGalleryPage = () => {
   if (loading) {
     return (
       <section className="py-16 sm:py-24 bg-[#F5F5F7] min-h-screen flex items-center justify-center">
-        <div className="text-xl text-gray-500">Loading safaris...</div>
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="text-xl text-gray-500 font-medium"
+        >
+          Loading safaris...
+        </motion.div>
       </section>
     );
   }
@@ -432,13 +439,12 @@ const SafariGalleryPage = () => {
         <div className="relative">
           <div
             ref={carouselRef}
-            className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-4 sm:gap-6 pb-12 px-4 sm:px-6 -mx-4 sm:-mx-6"
+            className="overflow-x-auto scrollbar-hide snap-x snap-mandatory flex gap-4 sm:gap-6 pb-12 px-4 sm:px-6 -mx-4 sm:-mx-6 scroll-smooth"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
               WebkitOverflowScrolling: "touch",
               overscrollBehaviorX: "contain",
-              willChange: "scroll-position",
             }}
           >
             {safaris.map((item, i) => {
@@ -447,13 +453,13 @@ const SafariGalleryPage = () => {
               return (
                 <motion.div
                   key={item.id}
+                  data-index={i}
                   ref={(el) => (cardRefs.current[i] = el)}
                   layoutId={`card-${item.id}`}
-                  layout="position"
                   whileHover={{ scale: 0.98 }}
                   transition={spring}
                   onClick={() => setSelectedItem(enrichedItem)}
-                  className="snap-center shrink-0 relative rounded-[2rem] w-[85vw] sm:w-[350px] lg:w-[400px] h-[420px] sm:h-[500px] group cursor-pointer overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-shadow duration-500"
+                  className="snap-center shrink-0 relative rounded-[2rem] w-[85vw] sm:w-[350px] lg:w-[400px] h-[420px] sm:h-[500px] group cursor-pointer overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-shadow duration-500 will-change-transform translate-z-0"
                   style={{ backgroundColor: style.bg }}
                 >
                   <div
@@ -493,8 +499,7 @@ const SafariGalleryPage = () => {
                   </div>
                   <motion.div
                     layoutId={`image-${item.id}`}
-                    layout="position"
-                    className="absolute inset-0 z-10 pointer-events-none"
+                    className="absolute inset-0 z-10 pointer-events-none will-change-transform"
                     transition={spring}
                   >
                     <img
