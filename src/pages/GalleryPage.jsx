@@ -1,4 +1,4 @@
-// SafariPhotoGallery.jsx
+// SafariPhotoGallery.jsx 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
@@ -13,7 +13,6 @@ const spring = {
 
 const categories = ["All", "Wildlife", "Landscapes", "Lodges"];
 
-// Premium placeholder images (Replace with your actual Firebase/Storage URLs)
 const galleryData = [
   { id: 1, src: "/parachute.jpeg", category: "Wildlife", title: "Majestic Elephant", size: "large" },
   { id: 2, src: "/zebra.jpeg", category: "Landscapes", title: "Serengeti Plains", size: "wide" },
@@ -29,10 +28,14 @@ const galleryData = [
 /* ------------------ Helper: Size Classes ------------------ */
 const getSizeClasses = (size) => {
   switch (size) {
-    case "large": return "md:col-span-2 md:row-span-2";
-    case "wide": return "md:col-span-2 md:row-span-1";
-    case "tall": return "md:col-span-1 md:row-span-2";
-    default: return "md:col-span-1 md:row-span-1"; // small
+    case "large":
+      return "col-span-2 row-span-2 md:col-span-2 md:row-span-2";
+    case "wide":
+      return "col-span-2 row-span-1 md:col-span-2 md:row-span-1";
+    case "tall":
+      return "col-span-1 row-span-2 md:col-span-1 md:row-span-2";
+    default:
+      return "col-span-1 row-span-1 md:col-span-1 md:row-span-1";
   }
 };
 
@@ -43,7 +46,6 @@ const SafariPhotoGallery = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
-  // Lock body scroll when lightbox is open
   useEffect(() => {
     if (selectedPhoto) {
       document.body.style.overflow = "hidden";
@@ -73,13 +75,12 @@ const SafariPhotoGallery = () => {
             >
               The Wild in Focus.
             </motion.h2>
-            
           </div>
 
-          {/* Filter Pills */}
+          {/* Filters */}
           <motion.div 
-            initial={{ opacity: 0, opacity: 0 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
             className="flex flex-wrap gap-2 bg-white p-1.5 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-gray-100"
           >
@@ -107,19 +108,19 @@ const SafariPhotoGallery = () => {
         {/* Mosaic Grid */}
         <motion.div 
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-[250px]"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-[180px] sm:auto-rows-[220px] md:auto-rows-[250px]"
         >
           <AnimatePresence mode="popLayout">
             {filteredPhotos.map((photo) => (
               <motion.div
                 key={photo.id}
                 layout
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.85 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
+                exit={{ opacity: 0, scale: 0.85 }}
                 transition={spring}
                 onClick={() => setSelectedPhoto(photo)}
-                className={`relative group rounded-[2rem] overflow-hidden cursor-pointer bg-gray-200 ${getSizeClasses(photo.size)}`}
+                className={`relative group rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer bg-gray-200 ${getSizeClasses(photo.size)}`}
               >
                 <img
                   src={photo.src}
@@ -127,7 +128,7 @@ const SafariPhotoGallery = () => {
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out will-change-transform"
                   loading="lazy"
                 />
-                
+
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 sm:p-8">
                   <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
@@ -153,51 +154,36 @@ const SafariPhotoGallery = () => {
         )}
       </div>
 
-      {/* Fullscreen Lightbox */}
+      {/* Lightbox */}
       <AnimatePresence>
         {selectedPhoto && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 backdrop-blur-xl bg-black/90"
           >
-            {/* Close Button */}
             <motion.button
               onClick={() => setSelectedPhoto(null)}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
               className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-md transition-colors"
             >
-              <X size={24} strokeWidth={2} />
+              <X size={24} />
             </motion.button>
 
-            <motion.div
-              layoutId={`image-container-${selectedPhoto.id}`}
-              className="relative max-w-7xl w-full max-h-[90vh] flex flex-col items-center justify-center"
-            >
+            <motion.div className="relative max-w-7xl w-full max-h-[90vh] flex flex-col items-center justify-center">
               <motion.img
                 src={selectedPhoto.src}
                 alt={selectedPhoto.title}
                 className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                transition={spring}
               />
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-center mt-6"
-              >
-                <h3 className="text-2xl font-medium text-white tracking-tight">
+              <div className="text-center mt-6">
+                <h3 className="text-2xl font-medium text-white">
                   {selectedPhoto.title}
                 </h3>
-                <p className="text-white/60 text-sm tracking-widest uppercase mt-2">
+                <p className="text-white/60 text-sm uppercase mt-2">
                   {selectedPhoto.category}
                 </p>
-              </motion.div>
+              </div>
             </motion.div>
           </motion.div>
         )}
