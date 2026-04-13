@@ -174,12 +174,9 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
         className="relative max-w-7xl mx-auto my-40 rounded-[40px] overflow-hidden"
         style={{ perspective: 1400 }}
       >
-        {/* Background */}
+        {/* Background - Updated to match the Gray to Orange gradient */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-[#e5e5e1] via-[#f5f5f7] to-[#d4d4d0]"
-          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-          transition={{ duration: 30, ease: "linear", repeat: Infinity }}
-          style={{ backgroundSize: "200% 200%" }}
+          className="absolute inset-0 bg-gradient-to-r from-[#d8d9dd] via-[#d8d9dd] via-45% to-[#e26c22]"
         />
 
         {/* Content */}
@@ -188,7 +185,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
             ...(isMobile ? {} : { scale, rotateX, y, transformStyle: "preserve-3d" }),
             willChange: isMobile ? "auto" : "transform", 
           }}
-          className="relative grid grid-cols-1 lg:grid-cols-2 items-center gap-12 px-8 md:px-16 py-28 bg-white/60 backdrop-blur-2xl rounded-[40px] shadow-[0_40px_120px_rgba(0,0,0,0.12)]"
+          className="relative grid grid-cols-1 lg:grid-cols-2 items-center gap-12 px-8 md:px-16 py-28 bg-white/20 backdrop-blur-sm rounded-[40px] shadow-[0_40px_120px_rgba(0,0,0,0.12)]"
         >
           {/* Left */}
           <div>
@@ -196,7 +193,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
               Your wild adventure <br /> begins here.
             </h2>
 
-            <p className="text-xl text-neutral-600 mb-10 max-w-md leading-relaxed">
+            <p className="text-xl text-neutral-800 mb-10 max-w-md leading-relaxed font-medium">
               Choose your safari, tell us your dates, and we’ll craft your perfect
               journey.
             </p>
