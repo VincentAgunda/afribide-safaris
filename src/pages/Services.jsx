@@ -10,13 +10,13 @@ const testimonials = [
     name: "Vincent. A",
     quote:
       "Absolutely breathtaking experience in the Masai Mara! The guides were incredibly knowledgeable.",
-    avatar: "vincent.png",
+    avatar: "ecommerce.png",
   },
   {
     name: "Anastasia Wokoli",
     quote:
       "Afribide tailored our trip perfectly. The luxury lodges exceeded expectations.",
-    avatar: "camera2.webp",
+    avatar: "camera1.webp",
   },
   {
     name: "David & Emma",

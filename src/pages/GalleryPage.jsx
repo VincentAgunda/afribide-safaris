@@ -1,51 +1,85 @@
-// SafariPhotoGallery.jsx 
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ZoomIn } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, X } from "lucide-react";
 
 /* ------------------ Configuration ------------------ */
-const spring = {
-  type: "spring",
-  stiffness: 250,
-  damping: 28,
-  mass: 0.8,
-};
-
-const categories = ["All", "Wildlife", "Landscapes", "Lodges"];
-
+// Expanded dataset with #F5F5F7 and #FAFAFA colors integrated.
+// Ensure your image sources (.png) have transparent backgrounds for the floating effect.
 const galleryData = [
-  { id: 1, src: "/parachute.jpeg", category: "Wildlife", title: "Majestic Elephant", size: "large" },
-  { id: 2, src: "/zebra.jpeg", category: "Landscapes", title: "Serengeti Plains", size: "wide" },
-  { id: 3, src: "/parachute.jpeg", category: "Wildlife", title: "Leopard in Tree", size: "tall" },
-  { id: 4, src: "/helicopter.jpeg", category: "Lodges", title: "Luxury Tents", size: "small" },
-  { id: 5, src: "/chimpanzee.jpeg", category: "Wildlife", title: "Lion Pride", size: "large" },
-  { id: 6, src: "/firewood.jpeg", category: "Landscapes", title: "Baobab Sunset", size: "tall" },
-  { id: 7, src: "/goose2.jpeg", category: "Wildlife", title: "Giraffe Herd", size: "wide" },
-  { id: 8, src: "/zebra-outside.jpeg", category: "Lodges", title: "Lodge Pool", size: "small" },
-  { id: 9, src: "/goose.jpeg", category: "Wildlife", title: "Cheetah Sprint", size: "small" },
+  { 
+    id: 1, 
+    src: "/giraffeT.png", 
+    category: "Wildlife", 
+    title: "Majestic Elephant.", 
+    bgColor: "bg-[#000000]", 
+    textColor: "text-white" 
+  },
+  { 
+    id: 2, 
+    src: "/gooseT.png", 
+    category: "Exploration", 
+    title: "Venture into the wild.", 
+    bgColor: "bg-[#1d1d1f]", 
+    textColor: "text-white" 
+  },
+  { 
+    id: 3, 
+    src: "/giraffeT.png", 
+    category: "Speed", 
+    title: "The fastest on land.", 
+    bgColor: "bg-[#F5F5F7]", 
+    textColor: "text-black" 
+  },
+  { 
+    id: 4, 
+    src: "/parachute.png", 
+    category: "Lodges", 
+    title: "Rest in luxury.", 
+    bgColor: "bg-[#FAFAFA]", 
+    textColor: "text-black" 
+  },
+  { 
+    id: 5, 
+    src: "/giraffeT.png", 
+    category: "Landscape", 
+    title: "Endless horizons.", 
+    bgColor: "bg-[#F5F5F7]", 
+    textColor: "text-black" 
+  },
+  { 
+    id: 6, 
+    src: "/giraffeT.png", 
+    category: "Predators", 
+    title: "Silent hunters.", 
+    bgColor: "bg-[#000000]", 
+    textColor: "text-white" 
+  },
+  { 
+    id: 7, 
+    src: "/bird.png", 
+    category: "Avian", 
+    title: "Masters of the sky.", 
+    bgColor: "bg-[#FAFAFA]", 
+    textColor: "text-black" 
+  },
+  { 
+    id: 8, 
+    src: "/jeep.png", 
+    category: "Safari", 
+    title: "Journey together.", 
+    bgColor: "bg-[#1d1d1f]", 
+    textColor: "text-white" 
+  },
 ];
 
-/* ------------------ Helper: Size Classes ------------------ */
-const getSizeClasses = (size) => {
-  switch (size) {
-    case "large":
-      return "col-span-2 row-span-2 md:col-span-2 md:row-span-2";
-    case "wide":
-      return "col-span-2 row-span-1 md:col-span-2 md:row-span-1";
-    case "tall":
-      return "col-span-1 row-span-2 md:col-span-1 md:row-span-2";
-    default:
-      return "col-span-1 row-span-1 md:col-span-1 md:row-span-1";
-  }
-};
-
 /* ===========================
-   Photo Gallery Component
+    Apple Style Safari Gallery
 =========================== */
 const SafariPhotoGallery = () => {
-  const [activeFilter, setActiveFilter] = useState("All");
+  const scrollContainerRef = useRef(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
+  // Lock body scroll when lightbox is open
   useEffect(() => {
     if (selectedPhoto) {
       document.body.style.overflow = "hidden";
@@ -57,133 +91,142 @@ const SafariPhotoGallery = () => {
     };
   }, [selectedPhoto]);
 
-  const filteredPhotos = galleryData.filter(
-    (photo) => activeFilter === "All" || photo.category === activeFilter
-  );
+  // Optimized scroll function to prevent unnecessary re-renders
+  const scroll = useCallback((direction) => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, clientWidth } = scrollContainerRef.current;
+      // Scroll by roughly one card width (card width + gap)
+      const scrollAmount = clientWidth > 768 ? 420 : clientWidth * 0.85; 
+      const scrollTo = direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount;
+      
+      scrollContainerRef.current.scrollTo({ 
+        left: scrollTo, 
+        behavior: "smooth" 
+      });
+    }
+  }, []);
 
   return (
-    <section className="py-16 sm:py-24 bg-[#F5F5F7] min-h-screen font-sans antialiased selection:bg-[#002D62] selection:text-white">
+    <section className="py-16 sm:py-24 bg-white min-h-screen font-sans antialiased">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header & Filters */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 sm:mb-16">
-          <div className="max-w-2xl">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-medium text-blue-600 tracking-tight mb-4"
-            >
-              The Wild in Focus.
-            </motion.h2>
-          </div>
-
-          {/* Filters */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex flex-wrap gap-2 bg-white p-1.5 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-gray-100"
+        {/* Header */}
+        <div className="mb-8 sm:mb-12">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-5xl font-semibold text-[#1d1d1f] tracking-tight"
           >
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveFilter(category)}
-                className="relative px-5 py-2.5 text-sm font-medium rounded-full transition-colors outline-none"
+            The Wild in Focus.
+          </motion.h2>
+        </div>
+
+        {/* Carousel Container */}
+        <div className="relative">
+          <motion.div 
+            ref={scrollContainerRef}
+            layout
+            // Hide scrollbar natively across browsers using Tailwind arbitrary variants
+            className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {galleryData.map((item) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className={`relative flex-shrink-0 w-[85vw] sm:w-[320px] md:w-[400px] h-[500px] rounded-[2rem] overflow-hidden snap-start ${item.bgColor} shadow-sm border border-gray-100`}
               >
-                {activeFilter === category && (
-                  <motion.div
-                    layoutId="active-filter"
-                    className="absolute inset-0 bg-[#1d1d1f] rounded-full"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                {/* Text Content - Top Left */}
+                <div className={`absolute top-8 left-8 right-8 z-20 ${item.textColor}`}>
+                  <span className="block text-sm font-semibold mb-2">
+                    {item.category}
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-semibold tracking-tight leading-tight w-4/5">
+                    {item.title}
+                  </h3>
+                </div>
+
+                {/* Floating Image */}
+                <div className="absolute inset-x-0 bottom-0 top-32 flex justify-center items-end p-6 z-10 pointer-events-none">
+                  <img
+                    src={item.src}
+                    alt={item.title}
+                    // object-contain ensures it fits without distortion, object-bottom anchors it
+                    className="w-full h-full object-contain object-bottom transform transition-transform duration-700 hover:scale-105"
+                    loading="lazy"
                   />
-                )}
-                <span className={`relative z-10 ${activeFilter === category ? "text-white" : "text-[#86868b] hover:text-[#1d1d1f]"}`}>
-                  {category}
-                </span>
-              </button>
+                </div>
+
+                {/* Plus Button - Bottom Right */}
+                <button 
+                  onClick={() => setSelectedPhoto(item)}
+                  className="absolute bottom-6 right-6 z-30 w-10 h-10 bg-white rounded-full flex items-center justify-center text-black shadow-[0_2px_10px_rgba(0,0,0,0.1)] hover:scale-105 hover:bg-gray-50 transition-all duration-200"
+                  aria-label="View Details"
+                >
+                  <Plus size={24} strokeWidth={2.5} />
+                </button>
+              </motion.div>
             ))}
           </motion.div>
         </div>
 
-        {/* Mosaic Grid */}
-        <motion.div 
-          layout
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-[180px] sm:auto-rows-[220px] md:auto-rows-[250px]"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredPhotos.map((photo) => (
-              <motion.div
-                key={photo.id}
-                layout
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.85 }}
-                transition={spring}
-                onClick={() => setSelectedPhoto(photo)}
-                className={`relative group rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer bg-gray-200 ${getSizeClasses(photo.size)}`}
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.title}
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out will-change-transform"
-                  loading="lazy"
-                />
-
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 sm:p-8">
-                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="block text-xs font-bold uppercase tracking-widest text-white/80 mb-2">
-                      {photo.category}
-                    </span>
-                    <h3 className="text-xl sm:text-2xl font-semibold text-white tracking-tight flex items-center justify-between">
-                      {photo.title}
-                      <ZoomIn className="text-white/80" size={20} />
-                    </h3>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Empty State */}
-        {filteredPhotos.length === 0 && (
-          <div className="py-24 text-center">
-            <p className="text-xl text-gray-500">No photos found in this category.</p>
-          </div>
-        )}
+        {/* Navigation Arrows - External */}
+        <div className="flex justify-end gap-4 mt-2 pr-2">
+          <button 
+            onClick={() => scroll("left")}
+            className="w-10 h-10 rounded-full bg-[#e8e8ed] text-[#1d1d1f] flex items-center justify-center hover:bg-[#d2d2d7] transition-colors"
+            aria-label="Scroll Left"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <button 
+            onClick={() => scroll("right")}
+            className="w-10 h-10 rounded-full bg-[#e8e8ed] text-[#1d1d1f] flex items-center justify-center hover:bg-[#d2d2d7] transition-colors"
+            aria-label="Scroll Right"
+          >
+            <ChevronRight size={24} />
+          </button>
+        </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox / Modal */}
       <AnimatePresence>
         {selectedPhoto && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 backdrop-blur-xl bg-black/90"
+            onClick={() => setSelectedPhoto(null)} // Clicking the backdrop closes the modal
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 backdrop-blur-xl bg-black/80"
           >
             <motion.button
               onClick={() => setSelectedPhoto(null)}
               className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-md transition-colors"
+              aria-label="Close modal"
             >
               <X size={24} />
             </motion.button>
 
-            <motion.div className="relative max-w-7xl w-full max-h-[90vh] flex flex-col items-center justify-center">
-              <motion.img
-                src={selectedPhoto.src}
-                alt={selectedPhoto.title}
-                className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
-              />
-              <div className="text-center mt-6">
-                <h3 className="text-2xl font-medium text-white">
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside the content box
+              className={`relative max-w-2xl w-full rounded-[2rem] p-10 overflow-hidden shadow-2xl ${selectedPhoto.bgColor} ${selectedPhoto.textColor}`}
+            >
+               <span className="block text-sm font-semibold mb-2">
+                  {selectedPhoto.category}
+                </span>
+                <h3 className="text-3xl md:text-4xl font-semibold tracking-tight mb-8">
                   {selectedPhoto.title}
                 </h3>
-                <p className="text-white/60 text-sm uppercase mt-2">
-                  {selectedPhoto.category}
-                </p>
-              </div>
+                <div className="w-full flex justify-center">
+                  <img
+                    src={selectedPhoto.src}
+                    alt={selectedPhoto.title}
+                    className="max-h-[50vh] object-contain drop-shadow-2xl"
+                  />
+                </div>
             </motion.div>
           </motion.div>
         )}
