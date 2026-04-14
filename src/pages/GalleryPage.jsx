@@ -8,7 +8,7 @@ import { Plus, ChevronLeft, ChevronRight, X } from "lucide-react";
 const galleryData = [
   { 
     id: 1, 
-    src: "/giraffeT.png", 
+    src: "/majestic-elephant.png", 
     category: "Wildlife", 
     title: "Majestic Elephant.", 
     bgColor: "bg-[#000000]", 
@@ -16,7 +16,7 @@ const galleryData = [
   },
   { 
     id: 2, 
-    src: "/gooseT.png", 
+    src: "/RhinoT.png", 
     category: "Exploration", 
     title: "Venture into the wild.", 
     bgColor: "bg-[#1d1d1f]", 
@@ -24,7 +24,7 @@ const galleryData = [
   },
   { 
     id: 3, 
-    src: "/giraffeT.png", 
+    src: "/cheetahT.png", 
     category: "Speed", 
     title: "The fastest on land.", 
     bgColor: "bg-[#F5F5F7]", 
@@ -40,7 +40,7 @@ const galleryData = [
   },
   { 
     id: 5, 
-    src: "/giraffeT.png", 
+    src: "/horizonT.png", 
     category: "Landscape", 
     title: "Endless horizons.", 
     bgColor: "bg-[#F5F5F7]", 
@@ -48,7 +48,7 @@ const galleryData = [
   },
   { 
     id: 6, 
-    src: "/giraffeT.png", 
+    src: "/mud-rhinoT.png", 
     category: "Predators", 
     title: "Silent hunters.", 
     bgColor: "bg-[#000000]", 
@@ -56,7 +56,7 @@ const galleryData = [
   },
   { 
     id: 7, 
-    src: "/bird.png", 
+    src: "/gooseT.png", 
     category: "Avian", 
     title: "Masters of the sky.", 
     bgColor: "bg-[#FAFAFA]", 
