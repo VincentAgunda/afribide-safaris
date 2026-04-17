@@ -21,6 +21,8 @@ import {
   Menu,
   X,
   Clock,
+  Home,
+  Utensils,
 } from "lucide-react";
 
 // Pre‑existing images
@@ -43,7 +45,7 @@ const AdminDashboard = () => {
   const [deleteLoading, setDeleteLoading] = useState(null);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // Form state
+  // Form state – itinerary items now include accommodation and mealPlan
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState(null);
   const [formData, setFormData] = useState({
@@ -52,7 +54,8 @@ const AdminDashboard = () => {
     duration: "",
     image: IMAGE_OPTIONS[0].value,
     description: "",
-    itinerary: [{ day: "", title: "", desc: "" }],
+    journeyAtAGlance: "",      // global field
+    itinerary: [{ day: "", title: "", desc: "", accommodation: "", mealPlan: "" }],
     pricing: [{ title: "", details: "" }],
     included: [""],
     excluded: [""],
@@ -134,7 +137,8 @@ const AdminDashboard = () => {
         duration: "",
         image: IMAGE_OPTIONS[0].value,
         description: "",
-        itinerary: [{ day: "", title: "", desc: "" }],
+        journeyAtAGlance: "",
+        itinerary: [{ day: "", title: "", desc: "", accommodation: "", mealPlan: "" }],
         pricing: [{ title: "", details: "" }],
         included: [""],
         excluded: [""],
@@ -148,10 +152,22 @@ const AdminDashboard = () => {
   };
 
   const handleEdit = (pkg) => {
+    // Ensure each itinerary item has the new fields
+    const itinerary = pkg.itinerary?.length
+      ? pkg.itinerary.map(item => ({
+          day: item.day || "",
+          title: item.title || "",
+          desc: item.desc || "",
+          accommodation: item.accommodation || "",
+          mealPlan: item.mealPlan || "",
+        }))
+      : [{ day: "", title: "", desc: "", accommodation: "", mealPlan: "" }];
+
     setFormData({
       ...pkg,
       duration: pkg.duration || "",
-      itinerary: pkg.itinerary?.length ? pkg.itinerary : [{ day: "", title: "", desc: "" }],
+      journeyAtAGlance: pkg.journeyAtAGlance || "",
+      itinerary,
       pricing: pkg.pricing?.length ? pkg.pricing : [{ title: "", details: "" }],
       included: pkg.included?.length ? pkg.included : [""],
       excluded: pkg.excluded?.length ? pkg.excluded : [""],
@@ -183,7 +199,8 @@ const AdminDashboard = () => {
       duration: "",
       image: IMAGE_OPTIONS[0].value,
       description: "",
-      itinerary: [{ day: "", title: "", desc: "" }],
+      journeyAtAGlance: "",
+      itinerary: [{ day: "", title: "", desc: "", accommodation: "", mealPlan: "" }],
       pricing: [{ title: "", details: "" }],
       included: [""],
       excluded: [""],
@@ -283,7 +300,7 @@ const AdminDashboard = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1">
-                      Title
+                      Title <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -295,7 +312,7 @@ const AdminDashboard = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1">
-                      Category
+                      Category <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -341,7 +358,7 @@ const AdminDashboard = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Description
+                    Description <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     required
@@ -352,29 +369,53 @@ const AdminDashboard = () => {
                   />
                 </div>
 
-                {/* Itinerary */}
+                {/* Journey at a Glance (global) */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">
+                    Journey at a Glance <span className="text-gray-400 text-xs">(optional)</span>
+                  </label>
+                  <textarea
+                    rows="3"
+                    placeholder="e.g. Samburu → Buffalo Springs → Ol Pejeta → Aberdare → Solio → Lake Nakuru → Masai Mara → Nairobi"
+                    className="w-full p-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500"
+                    value={formData.journeyAtAGlance}
+                    onChange={(e) => setFormData({ ...formData, journeyAtAGlance: e.target.value })}
+                  />
+                </div>
+
+                {/* Itinerary with accommodation & mealPlan per day */}
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <div className="flex justify-between items-center mb-3">
-                    <label className="font-semibold text-gray-800">Itinerary</label>
+                    <label className="font-semibold text-gray-800">Itinerary (Day by Day)</label>
                     <button
                       type="button"
-                      onClick={() => addArrayItem("itinerary", { day: "", title: "", desc: "" })}
+                      onClick={() => addArrayItem("itinerary", { day: "", title: "", desc: "", accommodation: "", mealPlan: "" })}
                       className="text-xs bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700"
                     >
                       Add Day
                     </button>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {formData.itinerary.map((item, idx) => (
-                      <div key={idx} className="flex flex-col sm:flex-row gap-2 items-start">
-                        <input
-                          type="text"
-                          placeholder="Day"
-                          className="w-full sm:w-1/4 p-2 text-sm border rounded-lg"
-                          value={item.day}
-                          onChange={(e) => handleArrayChange("itinerary", idx, "day", e.target.value)}
-                        />
-                        <div className="w-full sm:w-3/4 space-y-2">
+                      <div key={idx} className="p-4 bg-white rounded-lg border border-gray-200 space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium text-gray-600">Day {idx + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => removeArrayItem("itinerary", idx)}
+                            className="text-red-500 p-1 hover:bg-red-50 rounded-lg"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <input
+                            type="text"
+                            placeholder="Day label (e.g. Day 1)"
+                            className="w-full p-2 text-sm border rounded-lg"
+                            value={item.day}
+                            onChange={(e) => handleArrayChange("itinerary", idx, "day", e.target.value)}
+                          />
                           <input
                             type="text"
                             placeholder="Title"
@@ -382,21 +423,36 @@ const AdminDashboard = () => {
                             value={item.title}
                             onChange={(e) => handleArrayChange("itinerary", idx, "title", e.target.value)}
                           />
-                          <textarea
-                            placeholder="Description"
-                            rows="2"
-                            className="w-full p-2 text-sm border rounded-lg"
-                            value={item.desc}
-                            onChange={(e) => handleArrayChange("itinerary", idx, "desc", e.target.value)}
-                          />
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => removeArrayItem("itinerary", idx)}
-                          className="text-red-500 p-2 hover:bg-red-50 rounded-lg"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                        <textarea
+                          placeholder="Description"
+                          rows="2"
+                          className="w-full p-2 text-sm border rounded-lg"
+                          value={item.desc}
+                          onChange={(e) => handleArrayChange("itinerary", idx, "desc", e.target.value)}
+                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div className="relative">
+                            <Home className="absolute left-3 top-3 text-gray-400" size={14} />
+                            <input
+                              type="text"
+                              placeholder="Accommodation (optional)"
+                              className="w-full pl-9 pr-2 py-2 text-sm border rounded-lg"
+                              value={item.accommodation}
+                              onChange={(e) => handleArrayChange("itinerary", idx, "accommodation", e.target.value)}
+                            />
+                          </div>
+                          <div className="relative">
+                            <Utensils className="absolute left-3 top-3 text-gray-400" size={14} />
+                            <input
+                              type="text"
+                              placeholder="Meal Plan (optional)"
+                              className="w-full pl-9 pr-2 py-2 text-sm border rounded-lg"
+                              value={item.mealPlan}
+                              onChange={(e) => handleArrayChange("itinerary", idx, "mealPlan", e.target.value)}
+                            />
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>

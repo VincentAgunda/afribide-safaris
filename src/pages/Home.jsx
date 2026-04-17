@@ -107,7 +107,7 @@ const Home = () => {
             className="absolute top-0 right-0 w-full md:w-[55%] h-full z-0"
           >
             <img
-              src="/herosection1.png" 
+              src="/parachute.jpeg" 
               alt="Afribide Safari Experience"
               className="w-full h-full object-cover object-center md:object-right"
               loading="eager"

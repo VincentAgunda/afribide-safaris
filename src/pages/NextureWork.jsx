@@ -1,3 +1,4 @@
+// SafariGalleryPage.jsx
 import React, { useRef, useState, useEffect, useCallback, useMemo, memo } from "react";
 import { motion, AnimatePresence, useIsPresent } from "framer-motion";
 import {
@@ -10,15 +11,18 @@ import {
   CheckCircle2,
   XCircle,
   Calendar,
+  MapPin,
+  Home,
+  Utensils,
 } from "lucide-react";
 import { db } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import BookingModal from "../components/BookingModal";
 
-/* ------------------ Animation Config (mobile‑first) ------------------ */
+/* ------------------ Animation Config ------------------ */
 const spring = {
   type: "spring",
-  stiffness: 300,        // slightly tightened for a snappier, premium feel
+  stiffness: 300,
   damping: 30,
   mass: 0.8,
 };
@@ -38,11 +42,19 @@ const cardColors = [
   { bg: "#FAFAFA", text: "text-[#F5F5F7]", button: "light" },
 ];
 
-/* ------------------ Helper: generate gallery ------------------ */
-const generateGallery = (seed) =>
-  Array.from({ length: 10 }).map(
-    (_, i) => `https://picsum.photos/seed/${seed}${i}/800/600`
-  );
+/* ------------------ Hardcoded Gallery Fallback ------------------ */
+const defaultGalleryImages = [
+  "/cottage.jpeg", // parachute
+  "/zebra.jpeg", // Lion
+  "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=fo", // Giraffe
+  "lion1.jpeg", // Zebra
+  "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=800&h=600", // Rhino
+  "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?auto=format&fit=crop&q=80&w=800&h=600", // Leopard
+  "elephant1.jpeg", // Cheetah
+  "horizon.jpeg", // Safari jeep
+  "cottage1.jpeg", // Landscape sunset
+  "parachute.jpeg"  // Hippo
+];
 
 /* ===========================
    Details Modal (optimised & memoized)
@@ -61,12 +73,12 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
   const tabs = useMemo(() => [
     { id: "overview", label: "Overview", icon: ImageIcon },
     { id: "itinerary", label: "Itinerary", icon: Map },
-    { id: "pricing", label: "Pricing & Details", icon: Banknote },
+    { id: "pricing", label: "Pricing & Inclusions", icon: Banknote },
   ], []);
 
   const gallery = useMemo(
-    () => item.gallery || generateGallery(item.title),
-    [item.gallery, item.title]
+    () => (item.gallery?.length ? item.gallery : defaultGalleryImages),
+    [item.gallery]
   );
 
   return (
@@ -107,7 +119,7 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
             style={{ backgroundColor: item.bg || "#000" }}
           >
             <img
-              src={item.image}
+              src={item.image || defaultGalleryImages[0]}
               alt={item.title}
               className="w-full h-full object-cover"
               width="1200"
@@ -190,7 +202,21 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
                   <p className="text-lg sm:text-xl text-[#545454] font-medium leading-relaxed tracking-tight mb-8">
                     {item.description}
                   </p>
-                  <h4 className="text-xl font-bold tracking-tight text-[#1d1d1f] mb-4">
+                  
+                  {/* Journey at a Glance in Overview */}
+                  {item.journeyAtAGlance && (
+                    <div className="mt-8 p-6 rounded-2xl bg-gray-50 border border-gray-100">
+                      <h4 className="text-xl font-bold text-[#1d1d1f] mb-3 flex items-center gap-2">
+                        <MapPin className="text-blue-500" size={22} />
+                        Journey at a Glance
+                      </h4>
+                      <p className="text-[#545454] leading-relaxed whitespace-pre-line">
+                        {item.journeyAtAGlance}
+                      </p>
+                    </div>
+                  )}
+
+                  <h4 className="text-xl font-bold tracking-tight text-[#1d1d1f] mt-8 mb-4">
                     Gallery Highlights
                   </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -239,6 +265,26 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
                           <p className="text-[#86868b] text-sm leading-relaxed">
                             {day.desc}
                           </p>
+
+                          {/* Accommodation & Meal Plan per day */}
+                          <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
+                            {day.accommodation && (
+                              <div className="flex items-start gap-2">
+                                <Home className="text-green-600 mt-0.5 shrink-0" size={14} />
+                                <span className="text-sm text-[#545454]">
+                                  <span className="font-medium">Accommodation:</span> {day.accommodation}
+                                </span>
+                              </div>
+                            )}
+                            {day.mealPlan && (
+                              <div className="flex items-start gap-2">
+                                <Utensils className="text-orange-500 mt-0.5 shrink-0" size={14} />
+                                <span className="text-sm text-[#545454]">
+                                  <span className="font-medium">Meal Plan:</span> {day.mealPlan}
+                                </span>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -321,10 +367,10 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
     </motion.div>
   );
 });
-SafariModal.displayName = "SafariModal"; // Needed when using React.memo
+SafariModal.displayName = "SafariModal";
 
 /* ===========================
-   Main Gallery Component (optimised)
+   Main Gallery Component
 =========================== */
 const SafariGalleryPage = () => {
   const carouselRef = useRef(null);
@@ -344,7 +390,7 @@ const SafariGalleryPage = () => {
         const packages = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-          gallery: doc.data().gallery || generateGallery(doc.data().title),
+          gallery: doc.data().gallery?.length ? doc.data().gallery : defaultGalleryImages,
         }));
         setSafaris(packages);
         setLoading(false);
@@ -367,7 +413,6 @@ const SafariGalleryPage = () => {
     });
   }, []);
 
-  // Highly optimized IntersectionObserver to track scroll without layout thrashing
   useEffect(() => {
     const container = carouselRef.current;
     if (!container || safaris.length === 0) return;
@@ -385,7 +430,7 @@ const SafariGalleryPage = () => {
       },
       {
         root: container,
-        threshold: 0.6, // Fire when 60% of the card is visible
+        threshold: 0.6,
       }
     );
 
@@ -503,7 +548,7 @@ const SafariGalleryPage = () => {
                     transition={spring}
                   >
                     <img
-                      src={item.image}
+                      src={item.image || defaultGalleryImages[0]}
                       alt={item.title}
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
                       loading="eager"
