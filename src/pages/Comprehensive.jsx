@@ -123,7 +123,7 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
   };
 
   const handleWhatsApp = () => {
-    const phoneNumber = "254700000000"; // Replace with your number
+    const phoneNumber = "+254113073535"; // Replace with your number
     const text = `Hello! I'm interested in a safari and would like a quote.\n\n*Package:* ${
       formData.package || "Not selected"
     }\n*Travel Date:* ${formData.travel_date || "Not decided"}\n*Adults:* ${

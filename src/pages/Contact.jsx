@@ -114,7 +114,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
      WhatsApp Fallback
   ================================= */
   const handleWhatsApp = useCallback(() => {
-    const phoneNumber = "254792823182"; 
+    const phoneNumber = "+254113073535"; 
     
     const text = `Hello! I'm interested in a safari and would like a quote.\n\n*Package:* ${
       formData.package || "Not selected yet"

@@ -22,7 +22,7 @@ const testimonials = [
     name: "David & Emma",
     quote:
       "A seamless and unforgettable honeymoon in the Serengeti.",
-    avatar: "vincent.png",
+    avatar: "/gallery/jeep.jpeg",
   },
 ];
 

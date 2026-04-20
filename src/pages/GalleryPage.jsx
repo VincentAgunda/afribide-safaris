@@ -6,16 +6,16 @@ import { Plus, ChevronLeft, ChevronRight, X } from "lucide-react";
 const galleryData = [
   {
     id: 1,
-    src: "/majestic-elephant.png",
-    category: "Wildlife",
-    title: "Majestic Elephant.",
-    bgColor: "bg-[#000000]",
+    src: "/gallery/jeepT.png",
+    category: "Safari",
+    title: "Journey together.",
+    bgColor: "bg-[#979797]",
     textColor: "text-white",
     relatedImages: [
       "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
-      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
-      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
+      "/gallery/jeep.jpeg", "/horizon.jpeg", "/giraffe1.jpeg",
+      "/gallery/hotel2.jpeg", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/gallery/hotel1.jpeg"
     ],
   },
   {
@@ -37,7 +37,7 @@ const galleryData = [
     src: "/cheetahT.png",
     category: "Speed",
     title: "The fastest on land.",
-    bgColor: "bg-[#979797]",
+    bgColor: "bg-[#000000]",
     textColor: "text-white",
     relatedImages: [
       "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
@@ -104,16 +104,16 @@ const galleryData = [
   },
   {
     id: 8,
-    src: "/jeep.png",
-    category: "Safari",
-    title: "Journey together.",
+    src: "/majestic-elephant.png",
+    category: "Wildlife",
+    title: "Majestic Elephant.",
     bgColor: "bg-[#979797]",
     textColor: "text-white",
     relatedImages: [
       "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
-      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
-      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
+      "/gallery/jeep.jpeg", "/horizon.jpeg", "/giraffe1.jpeg",
+      "/gallery/hotel2.jpeg", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/gallery/hotel1.jpeg"
     ],
   },
 ];
@@ -389,7 +389,7 @@ const SafariPhotoGallery = () => {
               </button>
             </div>
 
-            {/* Left Nav Area - NOW VISIBLE ON MOBILE */}
+            {/* Left Nav Area */}
             <div 
               className="absolute left-0 inset-y-0 w-20 sm:w-1/6 z-[65] flex items-center justify-start pl-4 sm:pl-6 cursor-pointer"
               onClick={handlePrevImage}
@@ -399,7 +399,7 @@ const SafariPhotoGallery = () => {
               </div>
             </div>
 
-            {/* Right Nav Area - NOW VISIBLE ON MOBILE */}
+            {/* Right Nav Area */}
             <div 
               className="absolute right-0 inset-y-0 w-20 sm:w-1/6 z-[65] flex items-center justify-end pr-4 sm:pr-6 cursor-pointer"
               onClick={handleNextImage}
@@ -409,23 +409,28 @@ const SafariPhotoGallery = () => {
               </div>
             </div>
 
-            {/* Image Wrapper (Handles Swipe Gestures) */}
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={galleryIndex}
-                src={selectedPhoto.relatedImages[galleryIndex]}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.7} // Adds slightly more resistance for a native feel
-                onDragEnd={handleDragEnd}
-                className="w-full h-full object-contain cursor-grab active:cursor-grabbing z-[60] px-0 sm:px-16"
-                alt={`Gallery visual ${galleryIndex + 1}`}
-              />
-            </AnimatePresence>
+            {/* Image Wrapper (Handles Swipe Gestures & Overlapping Crossfade) */}
+            <div className="relative w-full h-full flex items-center justify-center">
+              <AnimatePresence>
+                <motion.img
+                  key={galleryIndex}
+                  src={selectedPhoto.relatedImages[galleryIndex]}
+                  // Soft crossfade replacing the harsh horizontal movement
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.04 }}
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.7}
+                  onDragEnd={handleDragEnd}
+                  // Absolute positioning forces images to overlap during the transition
+                  // will-change properties prevent mobile rendering flickers
+                  className="absolute w-full h-full object-contain cursor-grab active:cursor-grabbing z-[60] px-0 sm:px-16 will-change-transform will-change-opacity"
+                  alt={`Gallery visual ${galleryIndex + 1}`}
+                />
+              </AnimatePresence>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
