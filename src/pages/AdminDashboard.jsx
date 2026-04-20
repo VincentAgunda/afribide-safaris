@@ -35,6 +35,11 @@ const IMAGE_OPTIONS = [
   { label: "Firewood", value: "/firewood.jpeg" },
   { label: "Goose on water", value: "/goose2.jpeg" },
   { label: "Zebra outside", value: "/zebra-outside.jpeg" },
+  { label: "Jeep", value: "/gallery/jeep.jpeg" },
+  { label: "Cottage", value: "/gallery/hotel1.jpeg" },
+  { label: "Bush Cottage", value: "/gallery/hotel2.jpeg" },
+  { label: "Horizon", value: "/horizon.jpeg" },
+  { label: "Lion", value: "/lion1.jpeg" },
 ];
 
 const AdminDashboard = () => {
