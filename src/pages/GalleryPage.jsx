@@ -126,7 +126,7 @@ const SafariPhotoGallery = () => {
   
   // States
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [galleryIndex, setGalleryIndex] = useState(null); // Tracks the index of the full screen image
+  const [galleryIndex, setGalleryIndex] = useState(null);
 
   // Lock body scroll when any lightbox is open
   useEffect(() => {
@@ -186,12 +186,14 @@ const SafariPhotoGallery = () => {
     );
   };
 
-  // Drag handler for swipe functionality
-  const handleDragEnd = (e, { offset }) => {
-    const swipeThreshold = 50; // Minimum distance to trigger swipe
-    if (offset.x < -swipeThreshold) {
+  // Drag handler for swipe functionality (Optimized for Mobile)
+  const handleDragEnd = (e, { offset, velocity }) => {
+    const swipeThreshold = 40; // Lowered threshold for easier swiping
+    const swipeVelocity = 400; // Consider fast swipes even if distance is short
+
+    if (offset.x < -swipeThreshold || velocity.x < -swipeVelocity) {
       handleNextImage();
-    } else if (offset.x > swipeThreshold) {
+    } else if (offset.x > swipeThreshold || velocity.x > swipeVelocity) {
       handlePrevImage();
     }
   };
@@ -258,7 +260,7 @@ const SafariPhotoGallery = () => {
           </motion.div>
         </div>
 
-        {/* Navigation Arrows - External */}
+        {/* Navigation Arrows - Main Carousel */}
         <div className="flex justify-end gap-4 mt-2 pr-2">
           <button
             onClick={() => scroll("left")}
@@ -277,24 +279,24 @@ const SafariPhotoGallery = () => {
         </div>
       </div>
 
-      {/* Expanded Lightbox / Modal */}
+      {/* Expanded Lightbox / Modal (Grid View) */}
       <AnimatePresence>
         {selectedPhoto && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedPhoto(null)} // Clicking backdrop closes modal
+            onClick={() => setSelectedPhoto(null)} 
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 backdrop-blur-xl bg-black/80"
           >
-            {/* Don't show close button for main modal if fullscreen gallery is active */}
+            {/* Don't show close button for grid modal if fullscreen image is active */}
             {galleryIndex === null && (
               <motion.button
                 onClick={() => setSelectedPhoto(null)}
-                className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-md transition-colors"
+                className="absolute top-6 right-6 z-50 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-md transition-colors"
                 aria-label="Close modal"
               >
-                <X size={24} />
+                <X size={20} className="md:w-6 md:h-6" />
               </motion.button>
             )}
 
@@ -303,40 +305,40 @@ const SafariPhotoGallery = () => {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside
-              className={`relative max-w-5xl w-full max-h-[90vh] overflow-y-auto rounded-[2rem] p-8 md:p-12 shadow-2xl ${selectedPhoto.bgColor} ${selectedPhoto.textColor} [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
+              onClick={(e) => e.stopPropagation()} 
+              className={`relative max-w-5xl w-full max-h-[90vh] overflow-y-auto rounded-[2rem] p-6 md:p-12 shadow-2xl ${selectedPhoto.bgColor} ${selectedPhoto.textColor} [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
             >
-              {/* Top Section: Header & Hero Image */}
-              <div className="flex flex-col md:flex-row gap-8 items-center mb-16">
-                <div className="flex-1">
+              {/* Top Section */}
+              <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center mb-12 md:mb-16">
+                <div className="flex-1 text-center md:text-left">
                   <span className="block text-sm font-semibold mb-2 uppercase tracking-wider opacity-80">
                     {selectedPhoto.category}
                   </span>
-                  <h3 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
+                  <h3 className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">
                     {selectedPhoto.title}
                   </h3>
-                  <p className="text-lg opacity-80 max-w-md">
+                  <p className="text-base md:text-lg opacity-80 max-w-md mx-auto md:mx-0">
                     Dive deeper into this collection. Explore the environment, 
                     the movement, and the breathtaking details captured in the wild.
                   </p>
                 </div>
-                <div className="flex-1 w-full flex justify-center bg-black/5 rounded-[2rem] p-6">
+                <div className="flex-1 w-full flex justify-center bg-black/5 rounded-[2rem] p-4 md:p-6">
                   <img
                     src={selectedPhoto.src}
                     alt={selectedPhoto.title}
-                    className="max-h-[40vh] object-contain drop-shadow-2xl"
+                    className="max-h-[30vh] md:max-h-[40vh] object-contain drop-shadow-2xl"
                   />
                 </div>
               </div>
 
-              {/* Bottom Section: 12 Hardcoded Related Images Grid */}
+              {/* Bottom Section: Grid */}
               <div>
-                <div className="flex items-center justify-between mb-8 border-b border-current pb-4 opacity-90">
-                  <h4 className="text-2xl font-semibold">Gallery Collection</h4>
+                <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-current pb-4 opacity-90">
+                  <h4 className="text-xl md:text-2xl font-semibold">Gallery Collection</h4>
                   <span className="text-sm font-medium">{selectedPhoto.relatedImages.length} Photos</span>
                 </div>
                 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
                   {selectedPhoto.relatedImages.map((imgSrc, idx) => (
                     <motion.div
                       key={idx}
@@ -352,9 +354,8 @@ const SafariPhotoGallery = () => {
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         loading="lazy"
                       />
-                      {/* Hover overlay for each grid image */}
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                         <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-md font-medium">View</span>
+                         <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-md font-medium text-sm md:text-base">View</span>
                       </div>
                     </motion.div>
                   ))}
@@ -372,56 +373,56 @@ const SafariPhotoGallery = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-black flex items-center justify-center overflow-hidden"
+            className="fixed inset-0 z-[60] bg-black flex items-center justify-center overflow-hidden touch-none"
           >
             {/* Top Bar Controls */}
             <div className="absolute top-0 inset-x-0 p-4 sm:p-6 flex justify-between items-center z-[70] bg-gradient-to-b from-black/60 to-transparent pointer-events-none">
-              <span className="text-white/80 font-medium tracking-wide pointer-events-auto">
+              <span className="text-white/80 font-medium tracking-wide pointer-events-auto text-sm sm:text-base drop-shadow-md">
                 {galleryIndex + 1} / {selectedPhoto.relatedImages.length}
               </span>
               <button
                 onClick={() => setGalleryIndex(null)}
-                className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors pointer-events-auto"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors pointer-events-auto"
                 aria-label="Close full screen"
               >
-                <X size={24} />
+                <X size={20} className="sm:w-6 sm:h-6" />
               </button>
             </div>
 
-            {/* Left Nav Area */}
+            {/* Left Nav Area - NOW VISIBLE ON MOBILE */}
             <div 
-              className="absolute left-0 inset-y-0 w-1/6 z-[65] hidden md:flex items-center pl-6 cursor-pointer"
+              className="absolute left-0 inset-y-0 w-20 sm:w-1/6 z-[65] flex items-center justify-start pl-4 sm:pl-6 cursor-pointer"
               onClick={handlePrevImage}
             >
-              <div className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors">
-                <ChevronLeft size={32} />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/30 sm:bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors shadow-lg">
+                <ChevronLeft size={20} className="sm:w-8 sm:h-8" />
               </div>
             </div>
 
-            {/* Right Nav Area */}
+            {/* Right Nav Area - NOW VISIBLE ON MOBILE */}
             <div 
-              className="absolute right-0 inset-y-0 w-1/6 z-[65] hidden md:flex items-center justify-end pr-6 cursor-pointer"
+              className="absolute right-0 inset-y-0 w-20 sm:w-1/6 z-[65] flex items-center justify-end pr-4 sm:pr-6 cursor-pointer"
               onClick={handleNextImage}
             >
-              <div className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors">
-                <ChevronRight size={32} />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/30 sm:bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors shadow-lg">
+                <ChevronRight size={20} className="sm:w-8 sm:h-8" />
               </div>
             </div>
 
-            {/* Image Wrapper (handles swipe gesture) */}
+            {/* Image Wrapper (Handles Swipe Gestures) */}
             <AnimatePresence mode="wait">
               <motion.img
                 key={galleryIndex}
                 src={selectedPhoto.relatedImages[galleryIndex]}
-                initial={{ opacity: 0, x: 50 }}
+                initial={{ opacity: 0, x: 100 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.2 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.8}
+                dragElastic={0.7} // Adds slightly more resistance for a native feel
                 onDragEnd={handleDragEnd}
-                className="max-w-full max-h-full object-contain cursor-grab active:cursor-grabbing z-[60]"
+                className="w-full h-full object-contain cursor-grab active:cursor-grabbing z-[60] px-0 sm:px-16"
                 alt={`Gallery visual ${galleryIndex + 1}`}
               />
             </AnimatePresence>
