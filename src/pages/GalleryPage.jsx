@@ -3,72 +3,118 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, ChevronLeft, ChevronRight, X } from "lucide-react";
 
 /* ------------------ Configuration ------------------ */
-// Expanded dataset with #F5F5F7 and #FAFAFA colors integrated.
-// Ensure your image sources (.png) have transparent backgrounds for the floating effect.
 const galleryData = [
-  { 
-    id: 1, 
-    src: "/majestic-elephant.png", 
-    category: "Wildlife", 
-    title: "Majestic Elephant.", 
-    bgColor: "bg-[#000000]", 
-    textColor: "text-white" 
+  {
+    id: 1,
+    src: "/majestic-elephant.png",
+    category: "Wildlife",
+    title: "Majestic Elephant.",
+    bgColor: "bg-[#000000]",
+    textColor: "text-white",
+    relatedImages: [
+      "/gallery/wildlife-1.jpg", "/gallery/wildlife-2.jpg", "/gallery/wildlife-3.jpg",
+      "/gallery/wildlife-4.jpg", "/gallery/wildlife-5.jpg", "/gallery/wildlife-6.jpg",
+      "/gallery/wildlife-7.jpg", "/gallery/wildlife-8.jpg", "/gallery/wildlife-9.jpg",
+      "/gallery/wildlife-10.jpg", "/gallery/wildlife-11.jpg", "/gallery/wildlife-12.jpg"
+    ],
   },
-  { 
-    id: 2, 
-    src: "/RhinoT.png", 
-    category: "Exploration", 
-    title: "Venture into the wild.", 
-    bgColor: "bg-[#1d1d1f]", 
-    textColor: "text-white" 
+  {
+    id: 2,
+    src: "/RhinoT.png",
+    category: "Exploration",
+    title: "Venture into the wild.",
+    bgColor: "bg-[#F5F5F7]",
+    textColor: "text-black",
+    relatedImages: [
+      "/gallery/explore-1.jpg", "/gallery/explore-2.jpg", "/gallery/explore-3.jpg",
+      "/gallery/explore-4.jpg", "/gallery/explore-5.jpg", "/gallery/explore-6.jpg",
+      "/gallery/explore-7.jpg", "/gallery/explore-8.jpg", "/gallery/explore-9.jpg",
+      "/gallery/explore-10.jpg", "/gallery/explore-11.jpg", "/gallery/explore-12.jpg"
+    ],
   },
-  { 
-    id: 3, 
-    src: "/cheetahT.png", 
-    category: "Speed", 
-    title: "The fastest on land.", 
-    bgColor: "bg-[#F5F5F7]", 
-    textColor: "text-black" 
+  {
+    id: 3,
+    src: "/cheetahT.png",
+    category: "Speed",
+    title: "The fastest on land.",
+    bgColor: "bg-[#979797]",
+    textColor: "text-white",
+    relatedImages: [
+      "/gallery/speed-1.jpg", "/gallery/speed-2.jpg", "/gallery/speed-3.jpg",
+      "/gallery/speed-4.jpg", "/gallery/speed-5.jpg", "/gallery/speed-6.jpg",
+      "/gallery/speed-7.jpg", "/gallery/speed-8.jpg", "/gallery/speed-9.jpg",
+      "/gallery/speed-10.jpg", "/gallery/speed-11.jpg", "/gallery/speed-12.jpg"
+    ],
   },
-  { 
-    id: 4, 
-    src: "/parachute.png", 
-    category: "Lodges", 
-    title: "Rest in luxury.", 
-    bgColor: "bg-[#FAFAFA]", 
-    textColor: "text-black" 
+  {
+    id: 4,
+    src: "/parachute.png",
+    category: "Lodges",
+    title: "Rest in luxury.",
+    bgColor: "bg-[#FAFAFA]",
+    textColor: "text-black",
+    relatedImages: [
+      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
+      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
+      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
+    ],
   },
-  { 
-    id: 5, 
-    src: "/horizonT.png", 
-    category: "Landscape", 
-    title: "Endless horizons.", 
-    bgColor: "bg-[#F5F5F7]", 
-    textColor: "text-black" 
+  {
+    id: 5,
+    src: "/horizonT.png",
+    category: "Landscape",
+    title: "Endless horizons.",
+    bgColor: "bg-[#F5F5F7]",
+    textColor: "text-black",
+    relatedImages: [
+      "/gallery/landscape-1.jpg", "/gallery/landscape-2.jpg", "/gallery/landscape-3.jpg",
+      "/gallery/landscape-4.jpg", "/gallery/landscape-5.jpg", "/gallery/landscape-6.jpg",
+      "/gallery/landscape-7.jpg", "/gallery/landscape-8.jpg", "/gallery/landscape-9.jpg",
+      "/gallery/landscape-10.jpg", "/gallery/landscape-11.jpg", "/gallery/landscape-12.jpg"
+    ],
   },
-  { 
-    id: 6, 
-    src: "/mud-rhinoT.png", 
-    category: "Predators", 
-    title: "Silent hunters.", 
-    bgColor: "bg-[#000000]", 
-    textColor: "text-white" 
+  {
+    id: 6,
+    src: "/mud-rhinoT.png",
+    category: "Predators",
+    title: "Silent hunters.",
+    bgColor: "bg-[#000000]",
+    textColor: "text-white",
+    relatedImages: [
+      "/gallery/predator-1.jpg", "/gallery/predator-2.jpg", "/gallery/predator-3.jpg",
+      "/gallery/predator-4.jpg", "/gallery/predator-5.jpg", "/gallery/predator-6.jpg",
+      "/gallery/predator-7.jpg", "/gallery/predator-8.jpg", "/gallery/predator-9.jpg",
+      "/gallery/predator-10.jpg", "/gallery/predator-11.jpg", "/gallery/predator-12.jpg"
+    ],
   },
-  { 
-    id: 7, 
-    src: "/gooseT.png", 
-    category: "Avian", 
-    title: "Masters of the sky.", 
-    bgColor: "bg-[#FAFAFA]", 
-    textColor: "text-black" 
+  {
+    id: 7,
+    src: "/gooseT.png",
+    category: "Avian",
+    title: "Masters of the sky.",
+    bgColor: "bg-[#FAFAFA]",
+    textColor: "text-black",
+    relatedImages: [
+      "/gallery/avian-1.jpg", "/gallery/avian-2.jpg", "/gallery/avian-3.jpg",
+      "/gallery/avian-4.jpg", "/gallery/avian-5.jpg", "/gallery/avian-6.jpg",
+      "/gallery/avian-7.jpg", "/gallery/avian-8.jpg", "/gallery/avian-9.jpg",
+      "/gallery/avian-10.jpg", "/gallery/avian-11.jpg", "/gallery/avian-12.jpg"
+    ],
   },
-  { 
-    id: 8, 
-    src: "/jeep.png", 
-    category: "Safari", 
-    title: "Journey together.", 
-    bgColor: "bg-[#1d1d1f]", 
-    textColor: "text-white" 
+  {
+    id: 8,
+    src: "/jeep.png",
+    category: "Safari",
+    title: "Journey together.",
+    bgColor: "bg-[#979797]",
+    textColor: "text-white",
+    relatedImages: [
+      "/gallery/safari-1.jpg", "/gallery/safari-2.jpg", "/gallery/safari-3.jpg",
+      "/gallery/safari-4.jpg", "/gallery/safari-5.jpg", "/gallery/safari-6.jpg",
+      "/gallery/safari-7.jpg", "/gallery/safari-8.jpg", "/gallery/safari-9.jpg",
+      "/gallery/safari-10.jpg", "/gallery/safari-11.jpg", "/gallery/safari-12.jpg"
+    ],
   },
 ];
 
@@ -77,11 +123,14 @@ const galleryData = [
 =========================== */
 const SafariPhotoGallery = () => {
   const scrollContainerRef = useRef(null);
+  
+  // States
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [galleryIndex, setGalleryIndex] = useState(null); // Tracks the index of the full screen image
 
-  // Lock body scroll when lightbox is open
+  // Lock body scroll when any lightbox is open
   useEffect(() => {
-    if (selectedPhoto) {
+    if (selectedPhoto || galleryIndex !== null) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -89,27 +138,67 @@ const SafariPhotoGallery = () => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedPhoto]);
+  }, [selectedPhoto, galleryIndex]);
 
-  // Optimized scroll function to prevent unnecessary re-renders
+  // Keyboard navigation for full screen gallery
+  useEffect(() => {
+    if (galleryIndex === null || !selectedPhoto) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight") handleNextImage();
+      if (e.key === "ArrowLeft") handlePrevImage();
+      if (e.key === "Escape") setGalleryIndex(null);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [galleryIndex, selectedPhoto]);
+
+  // Optimized scroll function for main carousel
   const scroll = useCallback((direction) => {
     if (scrollContainerRef.current) {
       const { scrollLeft, clientWidth } = scrollContainerRef.current;
-      // Scroll by roughly one card width (card width + gap)
-      const scrollAmount = clientWidth > 768 ? 420 : clientWidth * 0.85; 
-      const scrollTo = direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount;
-      
-      scrollContainerRef.current.scrollTo({ 
-        left: scrollTo, 
-        behavior: "smooth" 
+      const scrollAmount = clientWidth > 768 ? 420 : clientWidth * 0.85;
+      const scrollTo =
+        direction === "left"
+          ? scrollLeft - scrollAmount
+          : scrollLeft + scrollAmount;
+
+      scrollContainerRef.current.scrollTo({
+        left: scrollTo,
+        behavior: "smooth",
       });
     }
   }, []);
 
+  // Handlers for full screen slide navigation
+  const handleNextImage = (e) => {
+    if (e) e.stopPropagation();
+    setGalleryIndex((prev) => 
+      (prev + 1) % selectedPhoto.relatedImages.length
+    );
+  };
+
+  const handlePrevImage = (e) => {
+    if (e) e.stopPropagation();
+    setGalleryIndex((prev) => 
+      prev === 0 ? selectedPhoto.relatedImages.length - 1 : prev - 1
+    );
+  };
+
+  // Drag handler for swipe functionality
+  const handleDragEnd = (e, { offset }) => {
+    const swipeThreshold = 50; // Minimum distance to trigger swipe
+    if (offset.x < -swipeThreshold) {
+      handleNextImage();
+    } else if (offset.x > swipeThreshold) {
+      handlePrevImage();
+    }
+  };
+
   return (
     <section className="py-16 sm:py-24 bg-white min-h-screen font-sans antialiased">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Header */}
         <div className="mb-8 sm:mb-12">
           <motion.h2
@@ -123,10 +212,10 @@ const SafariPhotoGallery = () => {
 
         {/* Carousel Container */}
         <div className="relative">
-          <motion.div 
+          <motion.div
             ref={scrollContainerRef}
             layout
-            // Hide scrollbar natively across browsers using Tailwind arbitrary variants
+            // Hide scrollbar natively across browsers
             className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {galleryData.map((item) => (
@@ -134,7 +223,8 @@ const SafariPhotoGallery = () => {
                 key={item.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className={`relative flex-shrink-0 w-[85vw] sm:w-[320px] md:w-[400px] h-[500px] rounded-[2rem] overflow-hidden snap-start ${item.bgColor} shadow-sm border border-gray-100`}
+                onClick={() => setSelectedPhoto(item)}
+                className={`relative flex-shrink-0 w-[85vw] sm:w-[320px] md:w-[400px] h-[500px] rounded-[2rem] overflow-hidden snap-start cursor-pointer ${item.bgColor} shadow-sm border border-gray-100 group`}
               >
                 {/* Text Content - Top Left */}
                 <div className={`absolute top-8 left-8 right-8 z-20 ${item.textColor}`}>
@@ -151,16 +241,14 @@ const SafariPhotoGallery = () => {
                   <img
                     src={item.src}
                     alt={item.title}
-                    // object-contain ensures it fits without distortion, object-bottom anchors it
-                    className="w-full h-full object-contain object-bottom transform transition-transform duration-700 hover:scale-105"
+                    className="w-full h-full object-contain object-bottom transform transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
                 </div>
 
                 {/* Plus Button - Bottom Right */}
-                <button 
-                  onClick={() => setSelectedPhoto(item)}
-                  className="absolute bottom-6 right-6 z-30 w-10 h-10 bg-white rounded-full flex items-center justify-center text-black shadow-[0_2px_10px_rgba(0,0,0,0.1)] hover:scale-105 hover:bg-gray-50 transition-all duration-200"
+                <button
+                  className="absolute bottom-6 right-6 z-30 w-10 h-10 bg-white rounded-full flex items-center justify-center text-black shadow-[0_2px_10px_rgba(0,0,0,0.1)] group-hover:scale-105 group-hover:bg-gray-50 transition-all duration-200"
                   aria-label="View Details"
                 >
                   <Plus size={24} strokeWidth={2.5} />
@@ -172,14 +260,14 @@ const SafariPhotoGallery = () => {
 
         {/* Navigation Arrows - External */}
         <div className="flex justify-end gap-4 mt-2 pr-2">
-          <button 
+          <button
             onClick={() => scroll("left")}
             className="w-10 h-10 rounded-full bg-[#e8e8ed] text-[#1d1d1f] flex items-center justify-center hover:bg-[#d2d2d7] transition-colors"
             aria-label="Scroll Left"
           >
             <ChevronLeft size={24} />
           </button>
-          <button 
+          <button
             onClick={() => scroll("right")}
             className="w-10 h-10 rounded-full bg-[#e8e8ed] text-[#1d1d1f] flex items-center justify-center hover:bg-[#d2d2d7] transition-colors"
             aria-label="Scroll Right"
@@ -189,45 +277,154 @@ const SafariPhotoGallery = () => {
         </div>
       </div>
 
-      {/* Lightbox / Modal */}
+      {/* Expanded Lightbox / Modal */}
       <AnimatePresence>
         {selectedPhoto && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedPhoto(null)} // Clicking the backdrop closes the modal
+            onClick={() => setSelectedPhoto(null)} // Clicking backdrop closes modal
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 backdrop-blur-xl bg-black/80"
           >
-            <motion.button
-              onClick={() => setSelectedPhoto(null)}
-              className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-md transition-colors"
-              aria-label="Close modal"
-            >
-              <X size={24} />
-            </motion.button>
+            {/* Don't show close button for main modal if fullscreen gallery is active */}
+            {galleryIndex === null && (
+              <motion.button
+                onClick={() => setSelectedPhoto(null)}
+                className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 backdrop-blur-md transition-colors"
+                aria-label="Close modal"
+              >
+                <X size={24} />
+              </motion.button>
+            )}
 
-            <motion.div 
+            {/* Scrollable Detail Container */}
+            <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside the content box
-              className={`relative max-w-2xl w-full rounded-[2rem] p-10 overflow-hidden shadow-2xl ${selectedPhoto.bgColor} ${selectedPhoto.textColor}`}
+              onClick={(e) => e.stopPropagation()} // Prevents closing when clicking inside
+              className={`relative max-w-5xl w-full max-h-[90vh] overflow-y-auto rounded-[2rem] p-8 md:p-12 shadow-2xl ${selectedPhoto.bgColor} ${selectedPhoto.textColor} [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
             >
-               <span className="block text-sm font-semibold mb-2">
-                  {selectedPhoto.category}
-                </span>
-                <h3 className="text-3xl md:text-4xl font-semibold tracking-tight mb-8">
-                  {selectedPhoto.title}
-                </h3>
-                <div className="w-full flex justify-center">
+              {/* Top Section: Header & Hero Image */}
+              <div className="flex flex-col md:flex-row gap-8 items-center mb-16">
+                <div className="flex-1">
+                  <span className="block text-sm font-semibold mb-2 uppercase tracking-wider opacity-80">
+                    {selectedPhoto.category}
+                  </span>
+                  <h3 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
+                    {selectedPhoto.title}
+                  </h3>
+                  <p className="text-lg opacity-80 max-w-md">
+                    Dive deeper into this collection. Explore the environment, 
+                    the movement, and the breathtaking details captured in the wild.
+                  </p>
+                </div>
+                <div className="flex-1 w-full flex justify-center bg-black/5 rounded-[2rem] p-6">
                   <img
                     src={selectedPhoto.src}
                     alt={selectedPhoto.title}
-                    className="max-h-[50vh] object-contain drop-shadow-2xl"
+                    className="max-h-[40vh] object-contain drop-shadow-2xl"
                   />
                 </div>
+              </div>
+
+              {/* Bottom Section: 12 Hardcoded Related Images Grid */}
+              <div>
+                <div className="flex items-center justify-between mb-8 border-b border-current pb-4 opacity-90">
+                  <h4 className="text-2xl font-semibold">Gallery Collection</h4>
+                  <span className="text-sm font-medium">{selectedPhoto.relatedImages.length} Photos</span>
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                  {selectedPhoto.relatedImages.map((imgSrc, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      onClick={() => setGalleryIndex(idx)}
+                      className="aspect-square rounded-2xl overflow-hidden bg-black/10 relative group cursor-pointer"
+                    >
+                      <img
+                        src={imgSrc}
+                        alt={`${selectedPhoto.category} detail ${idx + 1}`}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        loading="lazy"
+                      />
+                      {/* Hover overlay for each grid image */}
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                         <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-md font-medium">View</span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Full Screen Slide Gallery Overlay */}
+      <AnimatePresence>
+        {galleryIndex !== null && selectedPhoto && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] bg-black flex items-center justify-center overflow-hidden"
+          >
+            {/* Top Bar Controls */}
+            <div className="absolute top-0 inset-x-0 p-4 sm:p-6 flex justify-between items-center z-[70] bg-gradient-to-b from-black/60 to-transparent pointer-events-none">
+              <span className="text-white/80 font-medium tracking-wide pointer-events-auto">
+                {galleryIndex + 1} / {selectedPhoto.relatedImages.length}
+              </span>
+              <button
+                onClick={() => setGalleryIndex(null)}
+                className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors pointer-events-auto"
+                aria-label="Close full screen"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Left Nav Area */}
+            <div 
+              className="absolute left-0 inset-y-0 w-1/6 z-[65] hidden md:flex items-center pl-6 cursor-pointer"
+              onClick={handlePrevImage}
+            >
+              <div className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors">
+                <ChevronLeft size={32} />
+              </div>
+            </div>
+
+            {/* Right Nav Area */}
+            <div 
+              className="absolute right-0 inset-y-0 w-1/6 z-[65] hidden md:flex items-center justify-end pr-6 cursor-pointer"
+              onClick={handleNextImage}
+            >
+              <div className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center backdrop-blur-md transition-colors">
+                <ChevronRight size={32} />
+              </div>
+            </div>
+
+            {/* Image Wrapper (handles swipe gesture) */}
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={galleryIndex}
+                src={selectedPhoto.relatedImages[galleryIndex]}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.2 }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.8}
+                onDragEnd={handleDragEnd}
+                className="max-w-full max-h-full object-contain cursor-grab active:cursor-grabbing z-[60]"
+                alt={`Gallery visual ${galleryIndex + 1}`}
+              />
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>

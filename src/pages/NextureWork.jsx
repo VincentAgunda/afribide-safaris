@@ -38,7 +38,7 @@ const fadeUp = {
 const cardColors = [
   { bg: "#000000", text: "text-white", button: "light" },
   { bg: "#F5F5F7", text: "text-[#F5F5F7]", button: "light" },
-  { bg: "#2C3E50", text: "text-white", button: "light" },
+  { bg: "#979797", text: "text-white", button: "light" },
   { bg: "#FAFAFA", text: "text-[#F5F5F7]", button: "light" },
 ];
 
@@ -46,10 +46,10 @@ const cardColors = [
 const defaultGalleryImages = [
   "/cottage.jpeg", // parachute
   "/zebra.jpeg", // Lion
-  "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=fo", // Giraffe
+  "gallery/hotel1.jpeg", // Giraffe
   "lion1.jpeg", // Zebra
-  "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=800&h=600", // Rhino
-  "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?auto=format&fit=crop&q=80&w=800&h=600", // Leopard
+  "zebra-outside.jpeg", // Rhino
+  "gallery/jeep.jpeg", // Leopard
   "elephant1.jpeg", // Cheetah
   "horizon.jpeg", // Safari jeep
   "cottage1.jpeg", // Landscape sunset

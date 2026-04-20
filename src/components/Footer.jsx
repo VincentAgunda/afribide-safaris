@@ -74,7 +74,7 @@ function Footer() {
               <li className="flex items-center gap-4 group">
                 <FaPhoneAlt className="text-white/40 group-hover:text-white transition-colors duration-300" />
                 <a href="tel:+254123456789" className="group-hover:text-white transition-colors duration-300">
-                  +254 123 456 789
+                  +254 113 073 535
                 </a>
               </li>
               <li className="flex items-center gap-4 group">
