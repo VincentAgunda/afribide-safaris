@@ -114,8 +114,17 @@ const Home = () => {
             />
           </motion.div>
 
+          {/* Background Gradient Split - Mobile (60% solid for better text fit) */}
           <div 
-            className="absolute inset-0 z-10"
+            className="absolute inset-0 z-10 md:hidden"
+            style={{
+              background: "linear-gradient(103deg, #E5E5E5 60%, transparent 60.1%)",
+            }}
+          />
+          
+          {/* Background Gradient Split - Desktop (50% solid) */}
+          <div 
+            className="absolute inset-0 z-10 hidden md:block"
             style={{
               background: "linear-gradient(103deg, #E5E5E5 50%, transparent 50.1%)",
             }}
@@ -126,30 +135,32 @@ const Home = () => {
               variants={containerVariants}
               initial="hidden"
               animate="show"
-              className="flex flex-col justify-center pt-10 pb-6 md:py-0"
+              // Constrain max-width on mobile so it doesn't cross over the transparent part
+              className="flex flex-col justify-center pt-10 pb-6 md:py-0 max-w-[60%] md:max-w-none pr-2 md:pr-0"
             >
               <motion.h2
                 variants={textVariants}
-                className="text-2xl md:text-4xl font-semibold text-gray-900 mb-4"
+                className="text-xl sm:text-2xl md:text-4xl font-semibold text-gray-900 mb-2 md:mb-4"
               >
                 Welcome to
               </motion.h2>
 
               <motion.h1
                 variants={textVariants}
-                className="text-5xl sm:text-6xl md:text-[80px] font-bold text-black tracking-tight leading-none mb-4"
+                // Responsive font sizes to prevent word breaks overlapping the image
+                className="text-4xl sm:text-5xl md:text-[80px] font-bold text-black tracking-tight leading-tight md:leading-none mb-3 md:mb-4 break-words"
               >
                 Afribide Safaris
               </motion.h1>
 
               <motion.h3
                 variants={textVariants}
-                className="text-xl md:text-3xl font-medium text-gray-500 mb-10"
+                className="text-base sm:text-xl md:text-3xl font-medium text-gray-500 mb-6 md:mb-10 leading-snug"
               >
                 Experience the wild like never before
               </motion.h3>
 
-              <motion.div variants={textVariants} className="flex gap-4">
+              <motion.div variants={textVariants} className="flex gap-3 md:gap-4 flex-wrap">
                 {[
                   { icon: FaInstagram, link: "#" },
                   { icon: FaFacebookF, link: "#" },
@@ -160,7 +171,7 @@ const Home = () => {
                     href={link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 flex items-center justify-center bg-gray-300/60 hover:bg-black hover:text-white rounded-lg transition-all duration-300 hover:-translate-y-1"
+                    className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-gray-300/60 hover:bg-black hover:text-white rounded-lg transition-all duration-300 hover:-translate-y-1"
                   >
                     <Icon size={20} />
                   </a>
@@ -177,13 +188,14 @@ const Home = () => {
         </div>
 
         <div id="gallery-section" className="scroll-mt-24">
-  <NextureWork />
-</div>
+          <NextureWork />
+        </div>
 
-{/* NEW GALLERY PAGE SECTION */}
-<div id="full-gallery-section" className="scroll-mt-24">
-  <GalleryPage />
-</div>
+        {/* NEW GALLERY PAGE SECTION */}
+        <div id="full-gallery-section" className="scroll-mt-24">
+          <GalleryPage />
+        </div>
+        
         {/* TESTIMONIALS SECTION - ADDED */}
         <div id="testimonials-section" className="scroll-mt-24">
           {/* <Testimonials /> */}
