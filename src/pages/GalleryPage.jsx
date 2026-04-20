@@ -12,10 +12,10 @@ const galleryData = [
     bgColor: "bg-[#000000]",
     textColor: "text-white",
     relatedImages: [
-      "/gallery/wildlife-1.jpg", "/gallery/wildlife-2.jpg", "/gallery/wildlife-3.jpg",
-      "/gallery/wildlife-4.jpg", "/gallery/wildlife-5.jpg", "/gallery/wildlife-6.jpg",
-      "/gallery/wildlife-7.jpg", "/gallery/wildlife-8.jpg", "/gallery/wildlife-9.jpg",
-      "/gallery/wildlife-10.jpg", "/gallery/wildlife-11.jpg", "/gallery/wildlife-12.jpg"
+      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
+      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
+      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
   {
@@ -26,10 +26,10 @@ const galleryData = [
     bgColor: "bg-[#F5F5F7]",
     textColor: "text-black",
     relatedImages: [
-      "/gallery/explore-1.jpg", "/gallery/explore-2.jpg", "/gallery/explore-3.jpg",
-      "/gallery/explore-4.jpg", "/gallery/explore-5.jpg", "/gallery/explore-6.jpg",
-      "/gallery/explore-7.jpg", "/gallery/explore-8.jpg", "/gallery/explore-9.jpg",
-      "/gallery/explore-10.jpg", "/gallery/explore-11.jpg", "/gallery/explore-12.jpg"
+      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
+      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
+      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
   {
@@ -40,10 +40,10 @@ const galleryData = [
     bgColor: "bg-[#979797]",
     textColor: "text-white",
     relatedImages: [
-      "/gallery/speed-1.jpg", "/gallery/speed-2.jpg", "/gallery/speed-3.jpg",
-      "/gallery/speed-4.jpg", "/gallery/speed-5.jpg", "/gallery/speed-6.jpg",
-      "/gallery/speed-7.jpg", "/gallery/speed-8.jpg", "/gallery/speed-9.jpg",
-      "/gallery/speed-10.jpg", "/gallery/speed-11.jpg", "/gallery/speed-12.jpg"
+      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
+      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
+      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
   {
@@ -68,10 +68,10 @@ const galleryData = [
     bgColor: "bg-[#F5F5F7]",
     textColor: "text-black",
     relatedImages: [
-      "/gallery/landscape-1.jpg", "/gallery/landscape-2.jpg", "/gallery/landscape-3.jpg",
-      "/gallery/landscape-4.jpg", "/gallery/landscape-5.jpg", "/gallery/landscape-6.jpg",
-      "/gallery/landscape-7.jpg", "/gallery/landscape-8.jpg", "/gallery/landscape-9.jpg",
-      "/gallery/landscape-10.jpg", "/gallery/landscape-11.jpg", "/gallery/landscape-12.jpg"
+      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
+      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
+      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
   {
@@ -82,10 +82,10 @@ const galleryData = [
     bgColor: "bg-[#000000]",
     textColor: "text-white",
     relatedImages: [
-      "/gallery/predator-1.jpg", "/gallery/predator-2.jpg", "/gallery/predator-3.jpg",
-      "/gallery/predator-4.jpg", "/gallery/predator-5.jpg", "/gallery/predator-6.jpg",
-      "/gallery/predator-7.jpg", "/gallery/predator-8.jpg", "/gallery/predator-9.jpg",
-      "/gallery/predator-10.jpg", "/gallery/predator-11.jpg", "/gallery/predator-12.jpg"
+     "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
+      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
+      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
   {
@@ -96,10 +96,10 @@ const galleryData = [
     bgColor: "bg-[#FAFAFA]",
     textColor: "text-black",
     relatedImages: [
-      "/gallery/avian-1.jpg", "/gallery/avian-2.jpg", "/gallery/avian-3.jpg",
-      "/gallery/avian-4.jpg", "/gallery/avian-5.jpg", "/gallery/avian-6.jpg",
-      "/gallery/avian-7.jpg", "/gallery/avian-8.jpg", "/gallery/avian-9.jpg",
-      "/gallery/avian-10.jpg", "/gallery/avian-11.jpg", "/gallery/avian-12.jpg"
+      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
+      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
+      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
   {
@@ -110,10 +110,10 @@ const galleryData = [
     bgColor: "bg-[#979797]",
     textColor: "text-white",
     relatedImages: [
-      "/gallery/safari-1.jpg", "/gallery/safari-2.jpg", "/gallery/safari-3.jpg",
-      "/gallery/safari-4.jpg", "/gallery/safari-5.jpg", "/gallery/safari-6.jpg",
-      "/gallery/safari-7.jpg", "/gallery/safari-8.jpg", "/gallery/safari-9.jpg",
-      "/gallery/safari-10.jpg", "/gallery/safari-11.jpg", "/gallery/safari-12.jpg"
+      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
+      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
+      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
 ];
