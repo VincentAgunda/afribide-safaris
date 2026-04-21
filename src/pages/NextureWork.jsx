@@ -44,16 +44,16 @@ const cardColors = [
 
 /* ------------------ Hardcoded Gallery Fallback ------------------ */
 const defaultGalleryImages = [
-  "/cottage.jpeg", // parachute
+  "/Animals/2ducks.jpeg", // parachute
   "/zebra.jpeg", // Lion
-  "gallery/hotel1.jpeg", // Giraffe
+  "/Animals/2ducks1.jpeg", // Giraffe
   "lion1.jpeg", // Zebra
   "zebra-outside.jpeg", // Rhino
-  "gallery/jeep.jpeg", // Leopard
+  "/Animals/bird1.jpeg", // Leopard
   "elephant1.jpeg", // Cheetah
-  "horizon.jpeg", // Safari jeep
-  "cottage1.jpeg", // Landscape sunset
-  "parachute.jpeg"  // Hippo
+  "/Animals/bird2.jpeg", // Safari jeep
+  "/Animals/bird3.jpeg", // Landscape sunset
+  "/Animals/4zebras.jpeg"  // Hippo
 ];
 
 /* ===========================
