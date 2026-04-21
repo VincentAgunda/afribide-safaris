@@ -225,8 +225,11 @@ const Header = React.memo(() => {
 
   return (
     <>
+      {/* 1. MAIN HEADER BAR 
+        This is kept separate so the CSS transform doesn't trap the mobile menu.
+      */}
       <motion.header
-        className={`fixed top-0 left-0 w-full z-[50] transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-[900] transition-all duration-300 ${
           isScrolled
             ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50"
             : "bg-transparent"
@@ -369,108 +372,113 @@ const Header = React.memo(() => {
             </motion.button>
           </div>
         </nav>
+      </motion.header>
 
-        {/* MOBILE MENU DROPDOWN */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[999] md:hidden"
-                onClick={closeAllMenus}
-              />
-              <motion.div
-                ref={menuRef}
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="fixed top-0 right-0 w-[80%] max-w-sm h-full z-[1000] bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-6 overflow-y-auto border-l border-white/20 dark:border-gray-800"
-              >
-                <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Menu</h2>
-                  <button onClick={toggleMobileMenu} className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full">
-                    <FaTimes size={18} className="text-gray-800 dark:text-white" />
-                  </button>
-                </div>
+      {/* 2. MOBILE MENU OVERLAY & SIDEBAR
+        Moved outside the <motion.header> to prevent CSS transforms from clipping the height.
+      */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[999] md:hidden"
+              onClick={closeAllMenus}
+            />
+            
+            {/* Sidebar Panel */}
+            <motion.div
+              ref={menuRef}
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed top-0 right-0 w-[80%] max-w-sm h-[100dvh] z-[1000] bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-6 overflow-y-auto border-l border-white/20 dark:border-gray-800"
+            >
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Menu</h2>
+                <button onClick={toggleMobileMenu} className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full">
+                  <FaTimes size={18} className="text-gray-800 dark:text-white" />
+                </button>
+              </div>
 
-                {currentUser && (
-                  <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl flex items-center space-x-3 border border-gray-100 dark:border-gray-700">
-                    {currentUser.photoURL ? (
-                      <img src={currentUser.photoURL} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
-                    ) : (
-                      <FaUserCircle size={40} className="text-gray-400" />
-                    )}
-                    <div className="flex-1 overflow-hidden">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                        {currentUser.displayName || "User"}
-                      </p>
-                      <p className="text-xs text-gray-500 truncate">{currentUser.email}</p>
-                    </div>
-                  </div>
-                )}
-
-                <ul className="space-y-2">
-                  {renderMobileMenuLinks}
-
-                  {/* ADMIN LINK IN MOBILE - MADE PROMINENT */}
-                  {isAdmin && (
-                    <motion.li
-                      initial={{ x: 20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.25 }}
-                      className="mt-4"
-                    >
-                      <Link
-                        to="/admin"
-                        className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md transition-all"
-                        onClick={closeAllMenus}
-                      >
-                        <FaShieldAlt /> Admin Dashboard
-                      </Link>
-                    </motion.li>
+              {currentUser && (
+                <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl flex items-center space-x-3 border border-gray-100 dark:border-gray-700">
+                  {currentUser.photoURL ? (
+                    <img src={currentUser.photoURL} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+                  ) : (
+                    <FaUserCircle size={40} className="text-gray-400" />
                   )}
+                  <div className="flex-1 overflow-hidden">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      {currentUser.displayName || "User"}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">{currentUser.email}</p>
+                  </div>
+                </div>
+              )}
 
-                  <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+              <ul className="space-y-2">
+                {renderMobileMenuLinks}
+
+                {/* ADMIN LINK IN MOBILE */}
+                {isAdmin && (
+                  <motion.li
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.25 }}
+                    className="mt-4"
+                  >
                     <Link
-                      to="/#contact"
-                      className="block py-3 px-4 mt-2 bg-black text-white text-sm font-medium text-center rounded-xl shadow-md"
-                      onClick={(e) => handleNavClick(e, "/#contact")}
+                      to="/admin"
+                      className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md transition-all"
+                      onClick={closeAllMenus}
                     >
-                      Contact Us
+                      <FaShieldAlt /> Admin Dashboard
                     </Link>
                   </motion.li>
+                )}
 
-                  {/* MOBILE AUTH ACTION */}
-                  <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
-                    {currentUser ? (
-                      <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center justify-center py-3 px-4 mt-3 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 text-sm font-medium text-center rounded-xl transition-colors"
-                      >
-                        <FaSignOutAlt className="mr-2" /> Logout
-                      </button>
-                    ) : (
-                      <Link
-                        to="/login"
-                        onClick={closeAllMenus}
-                        className="block py-3 px-4 mt-3 bg-blue-600 text-white text-sm font-medium text-center rounded-xl shadow-md"
-                      >
-                        Login
-                      </Link>
-                    )}
-                  </motion.li>
-                </ul>
+                <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+                  <Link
+                    to="/#contact"
+                    className="block py-3 px-4 mt-2 bg-black text-white text-sm font-medium text-center rounded-xl shadow-md"
+                    onClick={(e) => handleNavClick(e, "/#contact")}
+                  >
+                    Contact Us
+                  </Link>
+                </motion.li>
 
-                {/* Extra spacer to ensure scrollability */}
-                <div className="h-8" />
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </motion.header>
+                {/* MOBILE AUTH ACTION */}
+                <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
+                  {currentUser ? (
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center justify-center py-3 px-4 mt-3 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 text-sm font-medium text-center rounded-xl transition-colors"
+                    >
+                      <FaSignOutAlt className="mr-2" /> Logout
+                    </button>
+                  ) : (
+                    <Link
+                      to="/login"
+                      onClick={closeAllMenus}
+                      className="block py-3 px-4 mt-3 bg-blue-600 text-white text-sm font-medium text-center rounded-xl shadow-md"
+                    >
+                      Login
+                    </Link>
+                  )}
+                </motion.li>
+              </ul>
+
+              {/* Extra spacer to ensure scrollability */}
+              <div className="h-8" />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 });

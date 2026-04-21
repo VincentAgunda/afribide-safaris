@@ -27,19 +27,20 @@ import {
 
 // Pre‑existing images
 const IMAGE_OPTIONS = [
-  { label: "Parachute over Mara", value: "/parachute.jpeg" },
+  { label: "Bird1", value: "/bird1.jpeg" },
   { label: "Zebra Herd", value: "/zebra.jpeg" },
   { label: "Geese at Lake", value: "/goose.jpeg" },
-  { label: "Helicopter", value: "/helicopter.jpeg" },
+  { label: "Rhino", value: "/Animals/mudrhino.jpeg" },
   { label: "Chimpanzee", value: "/chimpanzee.jpeg" },
   { label: "Firewood", value: "/firewood.jpeg" },
   { label: "Goose on water", value: "/goose2.jpeg" },
   { label: "Zebra outside", value: "/zebra-outside.jpeg" },
   { label: "Jeep", value: "/gallery/jeep.jpeg" },
-  { label: "Cottage", value: "/gallery/hotel1.jpeg" },
-  { label: "Bush Cottage", value: "/gallery/hotel2.jpeg" },
-  { label: "Horizon", value: "/horizon.jpeg" },
+  { label: "leopard3", value: "/Animals/3leopard.jpeg" },
+  { label: "3rhinos", value: "/Animals/3rhinos.jpeg" },
+  { label: "Ducks", value: "/Animals/2ducks.jpeg" },
   { label: "Lion", value: "/lion1.jpeg" },
+  { label: "4Zebras", value: "/Animals/4zebras.jpeg" },
 ];
 
 const AdminDashboard = () => {
