@@ -26,10 +26,10 @@ const galleryData = [
     bgColor: "bg-[#F5F5F7]",
     textColor: "text-black",
     relatedImages: [
-      "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
-      "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
+      "/Animals/2ducks.jpeg", "/Animals/4zebras.jpeg", "/Animals/3rhinos.jpeg",
+      "/chimpanzee.jpeg", "/Animals/3leopard.jpeg", "/giraffe1.jpeg",
       "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
-      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
+      "/Leopard.jpeg", "/goose2.jpeg", "/Animals/mudrhino.jpeg"
     ],
   },
   {
