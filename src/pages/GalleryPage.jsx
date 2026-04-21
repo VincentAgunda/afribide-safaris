@@ -6,16 +6,16 @@ import { Plus, ChevronLeft, ChevronRight, X } from "lucide-react";
 const galleryData = [
   {
     id: 1,
-    src: "/gallery/jeepT.png",
+    src: "/lion1.jpeg",
     category: "Safari",
     title: "Journey together.",
     bgColor: "bg-[#979797]",
     textColor: "text-white",
     relatedImages: [
-      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/gallery/jeep.jpeg", "/horizon.jpeg", "/giraffe1.jpeg",
-      "/gallery/hotel2.jpeg", "/lion1.jpeg", "/zebra.jpeg",
-      "/Leopard.jpeg", "/goose2.jpeg", "/gallery/hotel1.jpeg"
+      "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
+      "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
   {
@@ -26,9 +26,9 @@ const galleryData = [
     bgColor: "bg-[#F5F5F7]",
     textColor: "text-black",
     relatedImages: [
-      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
-      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
+      "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
       "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
@@ -40,9 +40,9 @@ const galleryData = [
     bgColor: "bg-[#000000]",
     textColor: "text-white",
     relatedImages: [
-      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
-      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
+      "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
       "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
@@ -54,9 +54,9 @@ const galleryData = [
     bgColor: "bg-[#FAFAFA]",
     textColor: "text-black",
     relatedImages: [
-      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
-      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
+      "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
       "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
@@ -68,9 +68,9 @@ const galleryData = [
     bgColor: "bg-[#F5F5F7]",
     textColor: "text-black",
     relatedImages: [
-      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
-      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
+      "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
       "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
@@ -82,9 +82,9 @@ const galleryData = [
     bgColor: "bg-[#000000]",
     textColor: "text-white",
     relatedImages: [
-     "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
-      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+     "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
+      "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
       "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
@@ -96,9 +96,9 @@ const galleryData = [
     bgColor: "bg-[#FAFAFA]",
     textColor: "text-black",
     relatedImages: [
-      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/majestic-elephant.png", "/horizonT.png", "/giraffe1.jpeg",
-      "/gooseT.png", "/lion1.jpeg", "/zebra.jpeg",
+      "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
+      "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
       "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
@@ -110,10 +110,10 @@ const galleryData = [
     bgColor: "bg-[#979797]",
     textColor: "text-white",
     relatedImages: [
-      "/parachute.jpeg", "/cottage.jpeg", "/cottage1.jpeg",
-      "/gallery/jeep.jpeg", "/horizon.jpeg", "/giraffe1.jpeg",
-      "/gallery/hotel2.jpeg", "/lion1.jpeg", "/zebra.jpeg",
-      "/Leopard.jpeg", "/goose2.jpeg", "/gallery/hotel1.jpeg"
+     "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
+      "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
+      "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
     ],
   },
 ];
