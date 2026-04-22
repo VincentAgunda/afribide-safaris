@@ -1,94 +1,92 @@
-// BookingModal.jsx
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 import emailjs from "@emailjs/browser";
+import MapIcon from "@mui/icons-material/Map"; // fallback icon
 
-/* ================================
-   SAFARI PACKAGES (for dropdown)
-================================ */
-const safaris = [
-  { id: 1, title: "The Ultimate Northern & Masai Mara Journey" },
-  { id: 2, title: "Kenya Signature Safari: 7 Days Iconic Parks" },
-  { id: 3, title: "Kenya Signature Safari: 8 Days Iconic Parks" },
-  { id: 4, title: "The Ultimate Bush & Beach Escape" },
-  { id: "custom", title: "Custom Safari Quote" },
-];
+// Default fallbacks when modal is opened without a specific service/theme
+const DEFAULT_SERVICE = {
+  title: "Custom Safari",
+  description: "Tailor your own African adventure",
+  icon: MapIcon,
+  features: [],
+};
 
-const BookingModal = ({ initialPackage = "", isModalOpen = false, onClose }) => {
-  const [open, setOpen] = useState(isModalOpen);
-  const [isMobile, setIsMobile] = useState(false);
+const DEFAULT_THEME = {
+  bg: "#F5F5F7",
+  text: "text-gray-900",
+  subText: "text-gray-700 font-normal",
+  iconBg: "bg-gray-200",
+  iconColor: "text-gray-900",
+  btnBg: "bg-black hover:bg-[#002D62]",
+  btnText: "text-white",
+  plusBorder: "border-[#0b1b32] text-[#0b1b32]",
+  divider: "border-gray-300",
+};
+
+const BookingModal = ({ isOpen, onClose, service, theme }) => {
+  const finalService = service || DEFAULT_SERVICE;
+  const finalTheme = theme || DEFAULT_THEME;
+
   const [status, setStatus] = useState(null);
   const [errors, setErrors] = useState({});
+  const formRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     message: "",
-    package: initialPackage,
+    package: "",
     adults: "",
     children: "",
     travel_date: "",
   });
 
-  const formRef = useRef(null);
-
+  // Auto-fill the package when modal opens
   useEffect(() => {
-    if (initialPackage) {
-      setFormData((prev) => ({ ...prev, package: initialPackage }));
+    if (isOpen) {
+      setFormData((prev) => ({ ...prev, package: finalService.title }));
     }
-  }, [initialPackage]);
-
-  useEffect(() => {
-    setOpen(isModalOpen);
-  }, [isModalOpen]);
-
-  const handleClose = useCallback(() => {
-    setOpen(false);
-    if (onClose) onClose();
-  }, [onClose]);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-    setIsMobile(mediaQuery.matches);
-    const handleMediaChange = (e) => setIsMobile(e.matches);
-    mediaQuery.addEventListener("change", handleMediaChange);
-    return () => mediaQuery.removeEventListener("change", handleMediaChange);
-  }, []);
+  }, [isOpen, finalService.title]);
 
   const validate = useCallback(() => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.email.match(/^\S+@\S+\.\S+$/)) newErrors.email = "Valid email required";
-    if (!formData.package) newErrors.package = "Select a package";
+    if (!formData.email.match(/^\S+@\S+\.\S+$/))
+      newErrors.email = "Valid email required";
     if (!formData.travel_date) newErrors.travel_date = "Select a travel date";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [formData]);
 
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: null }));
-  }, [errors]);
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (errors[e.target.name]) {
+      setErrors((prev) => ({ ...prev, [e.target.name]: null }));
+    }
+  };
 
-  const handleWhatsApp = useCallback(() => {
-    const phoneNumber = "+254113073535"; // Replace with actual number
+  const handleWhatsApp = () => {
+    const phoneNumber = "+254113073535";
     const text = `Hello! I'm interested in a safari and would like a quote.\n\n*Package:* ${
-      formData.package || "Not selected yet"
+      formData.package || "Not selected"
     }\n*Travel Date:* ${formData.travel_date || "Not decided"}\n*Adults:* ${
       formData.adults || "0"
     }\n*Children:* ${formData.children || "0"}\n\n*Name:* ${
       formData.name || "Not provided"
     }\n*Message:* ${formData.message || "None"}`;
+
     const encodedText = encodeURIComponent(text);
     window.open(`https://wa.me/${phoneNumber}?text=${encodedText}`, "_blank");
-  }, [formData]);
+  };
 
   const sendEmail = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     setStatus("sending");
+
     try {
       await emailjs.sendForm(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -97,208 +95,189 @@ const BookingModal = ({ initialPackage = "", isModalOpen = false, onClose }) => 
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
       setStatus("success");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        message: "",
-        package: "",
-        adults: "",
-        children: "",
-        travel_date: "",
-      });
-      setTimeout(() => {
-        setStatus(null);
-        handleClose();
-      }, 2000);
+      setTimeout(() => onClose(), 3000);
     } catch (err) {
-      console.error("EmailJS Error:", err);
       setStatus("error");
     }
   };
 
+  if (!isOpen) return null;
+
+  const isDarkTheme = finalTheme.text === "text-white";
+  const inputClass = `w-full px-4 py-3 rounded-xl border outline-none transition-colors ${
+    isDarkTheme
+      ? "bg-white/10 border-white/20 text-white placeholder:text-gray-300 focus:bg-white/20"
+      : "bg-white border-gray-200 text-gray-900 focus:border-[#0b1b32]"
+  }`;
+
   return (
     <AnimatePresence>
-      {open && (
+      {isOpen && (
         <motion.div
-          className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-[100] px-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 md:p-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={handleClose}
-          transition={{ duration: 0.3 }}
+          onClick={onClose}
         >
           <motion.div
             onClick={(e) => e.stopPropagation()}
-            initial={isMobile ? { y: "100%" } : { scale: 0.95, opacity: 0, y: 30 }}
-            animate={isMobile ? { y: 0 } : { scale: 1, opacity: 1, y: 0 }}
-            exit={isMobile ? { y: "100%" } : { scale: 0.95, opacity: 0, y: 30 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className={`bg-white shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto will-change-transform ${
-              isMobile ? "fixed bottom-0 rounded-t-3xl p-6" : "rounded-3xl p-8 md:p-10"
-            }`}
+            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+            style={{ backgroundColor: finalTheme.bg }}
+            className={`relative w-full max-w-5xl max-h-[95vh] rounded-[32px] shadow-2xl flex flex-col md:flex-row overflow-hidden ${finalTheme.text}`}
           >
-            <h3 className="text-3xl font-semibold mb-2 tracking-tight">
-              Plan Your Safari
-            </h3>
-            <p className="text-neutral-500 mb-6">
-              Fill in your details and request a quotation.
-            </p>
+            {/* Close Button */}
+            <button
+              onClick={onClose}
+              className={`absolute top-4 right-4 z-20 p-2 rounded-full backdrop-blur-md ${
+                isDarkTheme ? "bg-white/10 hover:bg-white/20" : "bg-black/5 hover:bg-black/10"
+              } transition`}
+            >
+              <X size={20} />
+            </button>
 
-            <form ref={formRef} onSubmit={sendEmail} className="space-y-4">
-              <div>
-                <select
-                  name="package"
-                  value={formData.package}
-                  onChange={handleChange}
-                  className={`w-full text-base border px-4 py-3 rounded-2xl transition-colors focus:outline-none focus:ring-2 focus:ring-black/5 ${
-                    errors.package ? "border-red-500" : "border-neutral-200"
-                  }`}
-                >
-                  <option value="">Select Package</option>
-                  {safaris.map((pkg) => (
-                    <option key={pkg.id} value={pkg.title}>
-                      {pkg.title}
-                    </option>
-                  ))}
-                </select>
-                {errors.package && <span className="text-red-500 text-xs ml-2 mt-1 block">{errors.package}</span>}
-              </div>
+            {/* Left Side: Form */}
+            <div className="w-full md:w-1/2 p-6 md:p-10 overflow-y-auto max-h-[95vh] scrollbar-hide">
+              <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
+                Book Your Adventure
+              </h3>
+              <p className={`mb-8 ${finalTheme.subText}`}>
+                You are requesting:{" "}
+                <span className="font-semibold">{finalService.title}</span>
+              </p>
 
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="number"
-                  name="adults"
-                  value={formData.adults}
-                  placeholder="Adults"
-                  min="1"
-                  onChange={handleChange}
-                  className="text-base border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5"
-                />
-                <input
-                  type="number"
-                  name="children"
-                  value={formData.children}
-                  placeholder="Children"
-                  min="0"
-                  onChange={handleChange}
-                  className="text-base border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5"
-                />
-              </div>
+              <form ref={formRef} onSubmit={sendEmail} className="space-y-4">
+                <input type="hidden" name="package" value={formData.package} />
 
-              <div className="flex flex-col">
-                <label className="text-sm text-neutral-500 ml-2 mb-1">
-                  When would you like to start your vacation?
-                </label>
-                <input
-                  type="date"
-                  name="travel_date"
-                  value={formData.travel_date}
-                  onChange={handleChange}
-                  className={`w-full text-base border px-4 py-3 rounded-2xl text-neutral-600 focus:outline-none focus:ring-2 focus:ring-black/5 ${
-                    errors.travel_date ? "border-red-500" : "border-neutral-200"
-                  }`}
-                />
-              </div>
+                {/* People */}
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="number"
+                    name="adults"
+                    value={formData.adults}
+                    placeholder="Adults"
+                    min="1"
+                    onChange={handleChange}
+                    className={inputClass}
+                  />
+                  <input
+                    type="number"
+                    name="children"
+                    value={formData.children}
+                    placeholder="Children"
+                    min="0"
+                    onChange={handleChange}
+                    className={inputClass}
+                  />
+                </div>
 
-              <div>
+                {/* Date */}
+                <div className="flex flex-col">
+                  <label className={`text-sm ml-2 mb-1 ${finalTheme.subText}`}>
+                    When would you like to start your vacation?
+                  </label>
+                  <input
+                    type="date"
+                    name="travel_date"
+                    value={formData.travel_date}
+                    onChange={handleChange}
+                    className={`${inputClass} ${
+                      errors.travel_date ? "border-red-500" : ""
+                    }`}
+                  />
+                </div>
+
+                {/* Contact */}
                 <input
                   name="name"
                   value={formData.name}
-                  placeholder="Name"
+                  placeholder="Full Name"
                   onChange={handleChange}
-                  className={`w-full text-base border px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 ${
-                    errors.name ? "border-red-500" : "border-neutral-200"
-                  }`}
+                  className={`${inputClass} ${errors.name ? "border-red-500" : ""}`}
                 />
-              </div>
 
-              <div>
                 <input
                   name="email"
                   value={formData.email}
-                  placeholder="Email"
+                  placeholder="Email Address"
                   type="email"
                   onChange={handleChange}
-                  className={`w-full text-base border px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 ${
-                    errors.email ? "border-red-500" : "border-neutral-200"
-                  }`}
+                  className={`${inputClass} ${errors.email ? "border-red-500" : ""}`}
                 />
-              </div>
 
-              <input
-                name="phone"
-                value={formData.phone}
-                placeholder="Phone"
-                onChange={handleChange}
-                className="w-full text-base border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5"
-              />
+                <input
+                  name="phone"
+                  value={formData.phone}
+                  placeholder="Phone Number"
+                  onChange={handleChange}
+                  className={inputClass}
+                />
 
-              <textarea
-                name="message"
-                value={formData.message}
-                rows="3"
-                placeholder="Special requests or custom ideas..."
-                onChange={handleChange}
-                className="w-full text-base border border-neutral-200 px-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-black/5 resize-none"
-              />
+                {/* Message */}
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  rows="3"
+                  placeholder="Special requests or custom ideas..."
+                  onChange={handleChange}
+                  className={inputClass}
+                />
 
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 pb-2">
-                <button
-                  type="button"
-                  onClick={handleClose}
-                  className="text-neutral-500 w-full sm:w-auto text-center order-3 sm:order-1 hover:text-black transition-colors"
-                >
-                  Cancel
-                </button>
-
-                <div className="flex w-full sm:w-auto gap-3 flex-col sm:flex-row order-1 sm:order-2">
-                  <motion.button
-                    whileTap={{ scale: 0.96 }}
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
+                  <button
                     type="button"
-                    onClick={handleWhatsApp}
-                    className="px-6 py-3 rounded-full bg-[#25D366] text-white flex justify-center items-center gap-2 font-medium shadow-md hover:bg-[#20bd5a] transition-colors"
+                    onClick={onClose}
+                    className={`w-full sm:w-auto text-center order-3 sm:order-1 ${finalTheme.subText} hover:opacity-70`}
                   >
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
-                    </svg>
-                    <span className="hidden sm:inline">WhatsApp</span>
-                  </motion.button>
+                    Cancel
+                  </button>
 
-                  <motion.button
-                    whileTap={{ scale: 0.96 }}
-                    type="submit"
-                    disabled={status === "sending"}
-                    className="px-8 py-3 rounded-full bg-black text-white font-medium whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed transition-opacity"
-                  >
-                    {status === "sending" ? "Requesting..." : "Email Quote"}
-                  </motion.button>
+                  <div className="flex w-full sm:w-auto gap-3 flex-col sm:flex-row order-1 sm:order-2">
+                    <motion.button
+                      whileTap={{ scale: 0.96 }}
+                      type="button"
+                      onClick={handleWhatsApp}
+                      className="px-6 py-3 rounded-full bg-[#25D366] text-white flex justify-center items-center gap-2 font-medium shadow-md hover:bg-[#20bd5a] transition-colors"
+                    >
+                      WhatsApp Quote
+                    </motion.button>
+
+                    <motion.button
+                      whileTap={{ scale: 0.96 }}
+                      type="submit"
+                      className={`px-8 py-3 rounded-full font-medium whitespace-nowrap shadow-md transition-colors ${finalTheme.btnBg} ${finalTheme.btnText}`}
+                    >
+                      {status === "sending" ? "Requesting..." : "Email Quote"}
+                    </motion.button>
+                  </div>
                 </div>
-              </div>
 
-              <AnimatePresence mode="wait">
+                {/* Status Feedback */}
                 {status === "success" && (
-                  <motion.p
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="text-green-600 text-sm text-center"
-                  >
-                    ✅ You’ll be contacted shortly.
-                  </motion.p>
+                  <p className="text-green-500 text-sm text-center pt-2 font-medium">
+                    ✅ Request sent! We will contact you shortly.
+                  </p>
                 )}
                 {status === "error" && (
-                  <motion.p
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="text-red-500 text-sm text-center"
-                  >
+                  <p className="text-red-500 text-sm text-center pt-2 font-medium">
                     ❌ Failed to send. Please try again or use WhatsApp.
-                  </motion.p>
+                  </p>
                 )}
-              </AnimatePresence>
-            </form>
+              </form>
+            </div>
+
+            {/* Right Side: Image */}
+            <div className="hidden md:flex w-1/2 relative bg-gray-100 items-center justify-center p-8">
+              <div className="absolute inset-0 bg-gradient-to-br from-black/5 to-black/20 z-0"></div>
+              <img
+                src="/calltoaction.png"
+                alt="Safari Adventure"
+                className="w-full max-w-md object-contain z-10 drop-shadow-2xl"
+              />
+            </div>
           </motion.div>
         </motion.div>
       )}

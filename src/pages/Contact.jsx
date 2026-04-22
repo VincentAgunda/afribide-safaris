@@ -3,6 +3,14 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import BookingModal from "../components/BookingModal";
 
+// Minimal service object for the modal when opened from Contact
+const getContactService = (packageTitle = "Custom Safari") => ({
+  title: packageTitle,
+  description: "Tailor your own African adventure",
+  icon: null, // Not used in modal's display
+  features: [],
+});
+
 const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
   const [open, setOpen] = useState(isModalOpen);
   const [isMobile, setIsMobile] = useState(false);
@@ -35,8 +43,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
     const handleMediaChange = (e) => setIsMobile(e.matches);
     mediaQuery.addEventListener("change", handleMediaChange);
 
-    return () =>
-      mediaQuery.removeEventListener("change", handleMediaChange);
+    return () => mediaQuery.removeEventListener("change", handleMediaChange);
   }, []);
 
   /* ================================
@@ -93,7 +100,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
             </h2>
 
             <p className="text-xl text-neutral-800 mb-10 max-w-md leading-relaxed font-medium">
-              Choose your safari, tell us your dates, and we’ll craft your
+              Choose your safari, tell us your dates, and we'll craft your
               perfect journey.
             </p>
 
@@ -120,12 +127,12 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
       </section>
 
       {/* ================================
-         Booking Modal
+         Booking Modal (updated props)
       ================================= */}
       <BookingModal
-        isModalOpen={open}
+        isOpen={open}
         onClose={handleClose}
-        initialPackage={initialPackage}
+        service={getContactService(initialPackage)}
       />
     </>
   );

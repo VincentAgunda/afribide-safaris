@@ -33,7 +33,6 @@ const textVariants = {
 
 const Home = () => {
   const location = useLocation();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   /* HASH SCROLL */
@@ -64,7 +63,6 @@ const Home = () => {
       >
         {/* ================= HERO ================= */}
         <section className="relative w-full min-h-[100svh] md:min-h-screen flex items-center overflow-hidden pt-16 md:pt-0">
-
           {/* IMAGE */}
           <motion.div
             initial={{ scale: 1.08, opacity: 0 }}
@@ -97,7 +95,6 @@ const Home = () => {
           />
 
           <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 px-6 lg:px-12 relative z-20">
-
             {/* TEXT */}
             <motion.div
               variants={containerVariants}
@@ -112,7 +109,6 @@ const Home = () => {
                 Welcome to
               </motion.h2>
 
-              {/* ✅ FLUID HERO TEXT */}
               <motion.h1
                 variants={textVariants}
                 className="font-semibold tracking-[-0.02em] leading-[1] mb-4 whitespace-nowrap"
@@ -133,7 +129,6 @@ const Home = () => {
               {/* CTA + SOCIAL */}
               <motion.div
                 variants={textVariants}
-                // ✅ UPDATED CLASSES HERE: flex-col on mobile, flex-row on desktop
                 className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-4"
               >
                 <motion.button
@@ -146,17 +141,15 @@ const Home = () => {
                 </motion.button>
 
                 <div className="flex gap-3">
-                  {[FaInstagram, FaFacebookF, FaWhatsapp].map(
-                    (Icon, i) => (
-                      <motion.div
-                        key={i}
-                        whileHover={{ y: -4, scale: 1.05 }}
-                        className="w-11 h-11 flex items-center justify-center rounded-xl bg-white border border-black/10 shadow-sm hover:bg-blue-700 hover:text-white transition"
-                      >
-                        <Icon size={18} />
-                      </motion.div>
-                    )
-                  )}
+                  {[FaInstagram, FaFacebookF, FaWhatsapp].map((Icon, i) => (
+                    <motion.div
+                      key={i}
+                      whileHover={{ y: -4, scale: 1.05 }}
+                      className="w-11 h-11 flex items-center justify-center rounded-xl bg-white border border-black/10 shadow-sm hover:bg-blue-700 hover:text-white transition"
+                    >
+                      <Icon size={18} />
+                    </motion.div>
+                  ))}
                 </div>
               </motion.div>
             </motion.div>
@@ -166,18 +159,25 @@ const Home = () => {
         </section>
 
         {/* ================= SECTIONS ================= */}
-        <div id="about-section"><Comprehensive /></div>
-        <div id="gallery-section"><NextureWork /></div>
-        <div id="full-gallery-section"><GalleryPage /></div>
-        <div id="safariheros-section"><Services /></div>
+        <div id="about-section">
+          <Comprehensive />
+        </div>
+        <div id="gallery-section">
+          <NextureWork />
+        </div>
+        <div id="full-gallery-section">
+          <GalleryPage />
+        </div>
+        <div id="safariheros-section">
+          <Services />
+        </div>
         <Questions />
-        <div id="contact-section"><Contact /></div>
+        <div id="contact-section">
+          <Contact />
+        </div>
 
         {/* ================= BOOKING MODAL ================= */}
-        <BookingModal
-          isModalOpen={isModalOpen}
-          onClose={closeModal}
-        />
+        <BookingModal isOpen={isModalOpen} onClose={closeModal} />
       </motion.div>
     </LayoutGroup>
   );

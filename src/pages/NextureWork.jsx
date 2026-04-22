@@ -14,7 +14,7 @@ import {
   MapPin,
   Home,
   Utensils,
-  ZoomIn // Added Lucide ZoomIn
+  ZoomIn
 } from "lucide-react";
 import { db } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
@@ -243,7 +243,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
                     <h4 className="text-xl font-bold tracking-tight text-[#1d1d1f] mt-8 mb-4">
                       Gallery Highlights
                     </h4>
-                    {/* Updated Grid: Fewer columns for larger images */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                       {gallery.map((imgUrl, idx) => (
                         <motion.div
@@ -263,7 +262,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
                             height="400"
                           />
                           
-                          {/* New Hover Overlay */}
                           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center text-white z-10 pointer-events-none">
                             <ZoomIn size={40} strokeWidth={1.5} className="mb-2" />
                             <span className="text-sm font-semibold tracking-wide uppercase">View</span>
@@ -298,7 +296,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
                               {day.desc}
                             </p>
 
-                            {/* Accommodation & Meal Plan per day */}
                             <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
                               {day.accommodation && (
                                 <div className="flex items-start gap-2">
@@ -409,7 +406,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
             onClick={() => setLightboxIndex(null)}
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl"
           >
-            {/* Close Button */}
             <button
               onClick={() => setLightboxIndex(null)}
               className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-[110] bg-white/10 hover:bg-white/20 p-2 rounded-full"
@@ -417,7 +413,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
               <X size={28} />
             </button>
 
-            {/* Prev Button */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -428,7 +423,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
               <ChevronLeft size={32} />
             </button>
 
-            {/* Next Button */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -439,7 +433,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
               <ChevronRight size={32} />
             </button>
 
-            {/* Main Image Container */}
             <div className="relative w-full h-full flex items-center justify-center p-4 sm:p-12 md:p-24 overflow-hidden outline-none">
               <AnimatePresence mode="wait">
                 <motion.img
@@ -457,7 +450,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
               </AnimatePresence>
             </div>
 
-            {/* Counter */}
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 font-medium tracking-widest text-sm bg-black/40 px-4 py-2 rounded-full backdrop-blur-md">
               {lightboxIndex + 1} / {gallery.length}
             </div>
@@ -709,10 +701,18 @@ const SafariGalleryPage = () => {
         )}
       </AnimatePresence>
 
+      {/* Updated BookingModal with correct props */}
       <BookingModal
-        isModalOpen={!!bookingItem}
+        isOpen={!!bookingItem}
         onClose={() => setBookingItem(null)}
-        initialPackage={bookingItem?.title || ""}
+        service={
+          bookingItem
+            ? {
+                title: bookingItem.title,
+                description: bookingItem.description,
+              }
+            : undefined
+        }
       />
     </section>
   );
