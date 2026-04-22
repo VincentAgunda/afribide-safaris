@@ -6,7 +6,7 @@ import { Plus, ChevronLeft, ChevronRight, X } from "lucide-react";
 const galleryData = [
   {
     id: 1,
-    src: "/lion1.jpeg",
+    src: "/Animals/lion1T.png",
     category: "Safari",
     title: "Journey together.",
     bgColor: "bg-[#979797]",

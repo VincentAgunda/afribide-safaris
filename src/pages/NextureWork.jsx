@@ -14,6 +14,7 @@ import {
   MapPin,
   Home,
   Utensils,
+  ZoomIn // Added Lucide ZoomIn
 } from "lucide-react";
 import { db } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
@@ -44,16 +45,16 @@ const cardColors = [
 
 /* ------------------ Hardcoded Gallery Fallback ------------------ */
 const defaultGalleryImages = [
-  "/Animals/2ducks.jpeg", // parachute
-  "/zebra.jpeg", // Lion
-  "/Animals/2ducks1.jpeg", // Giraffe
-  "lion1.jpeg", // Zebra
-  "zebra-outside.jpeg", // Rhino
-  "/Animals/bird1.jpeg", // Leopard
-  "elephant1.jpeg", // Cheetah
-  "/Animals/bird2.jpeg", // Safari jeep
-  "/Animals/bird3.jpeg", // Landscape sunset
-  "/Animals/4zebras.jpeg"  // Hippo
+  "/Animals/2ducks.jpeg",
+  "/zebra.jpeg",
+  "/Animals/2ducks1.jpeg",
+  "lion1.jpeg",
+  "zebra-outside.jpeg",
+  "/Animals/bird1.jpeg",
+  "elephant1.jpeg",
+  "/Animals/bird2.jpeg",
+  "/Animals/bird3.jpeg",
+  "/Animals/4zebras.jpeg" 
 ];
 
 /* ===========================
@@ -61,8 +62,15 @@ const defaultGalleryImages = [
 =========================== */
 const SafariModal = memo(({ item, onClose, onBookNow }) => {
   const [activeTab, setActiveTab] = useState("overview");
+  const [lightboxIndex, setLightboxIndex] = useState(null);
   const isPresent = useIsPresent();
 
+  const gallery = useMemo(
+    () => (item.gallery?.length ? item.gallery : defaultGalleryImages),
+    [item.gallery]
+  );
+
+  // Lock body scroll when modal or lightbox is open
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -70,301 +78,393 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
     };
   }, []);
 
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight") {
+        setLightboxIndex((prev) => (prev + 1) % gallery.length);
+      }
+      if (e.key === "ArrowLeft") {
+        setLightboxIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
+      }
+      if (e.key === "Escape") {
+        setLightboxIndex(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxIndex, gallery.length]);
+
   const tabs = useMemo(() => [
     { id: "overview", label: "Overview", icon: ImageIcon },
     { id: "itinerary", label: "Itinerary", icon: Map },
     { id: "pricing", label: "Pricing & Inclusions", icon: Banknote },
   ], []);
 
-  const gallery = useMemo(
-    () => (item.gallery?.length ? item.gallery : defaultGalleryImages),
-    [item.gallery]
-  );
-
   return (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 font-sans antialiased"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.25, ease: "easeInOut" }}
-    >
+    <>
       <motion.div
-        onClick={onClose}
-        className="absolute inset-0 bg-black/40 backdrop-blur-md"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 font-sans antialiased"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-      />
-
-      <motion.div
-        layoutId={`card-${item.id}`}
-        transition={spring}
-        className="relative z-10 w-full max-w-5xl h-full max-h-[85vh] flex flex-col rounded-[2rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-white will-change-transform"
+        transition={{ duration: 0.25, ease: "easeInOut" }}
       >
-        <motion.button
+        <motion.div
           onClick={onClose}
-          className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-white/20 backdrop-blur-xl border border-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-all duration-300"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <X size={20} strokeWidth={2.5} />
-        </motion.button>
+          className="absolute inset-0 bg-black/40 backdrop-blur-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        />
 
-        <div className="overflow-y-auto w-full h-full scrollbar-hide overscroll-contain pb-12 translate-z-0">
-          <motion.div
-            layoutId={`image-${item.id}`}
-            transition={spring}
-            className="h-[250px] sm:h-[350px] w-full relative shrink-0 overflow-hidden will-change-transform"
-            style={{ backgroundColor: item.bg || "#000" }}
+        <motion.div
+          layoutId={`card-${item.id}`}
+          transition={spring}
+          className="relative z-10 w-full max-w-5xl h-full max-h-[85vh] flex flex-col rounded-[2rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-white will-change-transform"
+        >
+          <motion.button
+            onClick={onClose}
+            className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-white/20 backdrop-blur-xl border border-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <img
-              src={item.image || defaultGalleryImages[0]}
-              alt={item.title}
-              className="w-full h-full object-cover"
-              width="1200"
-              height="800"
-              decoding="async"
-              loading="eager"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 p-6 sm:p-8 text-white w-full max-w-3xl">
-              <motion.span
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="block text-sm sm:text-base font-semibold uppercase tracking-[0.2em] mb-2 sm:mb-3 text-white/90"
+            <X size={20} strokeWidth={2.5} />
+          </motion.button>
+
+          <div className="overflow-y-auto w-full h-full scrollbar-hide overscroll-contain pb-12 translate-z-0">
+            <motion.div
+              layoutId={`image-${item.id}`}
+              transition={spring}
+              className="h-[250px] sm:h-[350px] w-full relative shrink-0 overflow-hidden will-change-transform"
+              style={{ backgroundColor: item.bg || "#000" }}
+            >
+              <img
+                src={item.image || defaultGalleryImages[0]}
+                alt={item.title}
+                className="w-full h-full object-cover"
+                width="1200"
+                height="800"
+                decoding="async"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-6 sm:p-8 text-white w-full max-w-3xl">
+                <motion.span
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                  className="block text-sm sm:text-base font-semibold uppercase tracking-[0.2em] mb-2 sm:mb-3 text-white/90"
+                >
+                  {item.category}
+                </motion.span>
+                <motion.h3
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.1]"
+                >
+                  {item.title}
+                </motion.h3>
+                {item.duration && (
+                  <p className="mt-2 text-white/80 text-sm flex items-center gap-1">
+                    <Calendar size={14} /> {item.duration}
+                  </p>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Sticky Tabs + Book Now */}
+            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-200/60 px-4 sm:px-8 pt-4 pb-0 flex gap-2 overflow-x-auto scrollbar-hide">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className="relative px-4 py-3 text-sm font-semibold transition-colors whitespace-nowrap outline-none"
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="active-tab-indicator"
+                        className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#1d1d1f] rounded-t-full"
+                        transition={spring}
+                      />
+                    )}
+                    <span
+                      className={`relative z-10 flex items-center gap-2 ${
+                        isActive
+                          ? "text-[#1d1d1f]"
+                          : "text-gray-400 hover:text-gray-700"
+                      }`}
+                    >
+                      <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                      {tab.label}
+                    </span>
+                  </button>
+                );
+              })}
+              <button
+                onClick={() => {
+                  onClose();
+                  onBookNow(item);
+                }}
+                className="ml-auto px-5 py-2 bg-black text-white rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
               >
-                {item.category}
-              </motion.span>
-              <motion.h3
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.1]"
-              >
-                {item.title}
-              </motion.h3>
-              {item.duration && (
-                <p className="mt-2 text-white/80 text-sm flex items-center gap-1">
-                  <Calendar size={14} /> {item.duration}
-                </p>
-              )}
+                Book Now
+              </button>
+            </div>
+
+            <div className="px-4 sm:px-8 py-8 max-w-5xl mx-auto min-h-[300px]">
+              <AnimatePresence mode="wait">
+                {activeTab === "overview" && (
+                  <motion.div key="overview" {...fadeUp} className="max-w-4xl">
+                    <p className="text-lg sm:text-xl text-[#545454] font-medium leading-relaxed tracking-tight mb-8">
+                      {item.description}
+                    </p>
+                    
+                    {/* Journey at a Glance in Overview */}
+                    {item.journeyAtAGlance && (
+                      <div className="mt-8 p-6 rounded-2xl bg-gray-50 border border-gray-100">
+                        <h4 className="text-xl font-bold text-[#1d1d1f] mb-3 flex items-center gap-2">
+                          <MapPin className="text-blue-500" size={22} />
+                          Journey at a Glance
+                        </h4>
+                        <p className="text-[#545454] leading-relaxed whitespace-pre-line">
+                          {item.journeyAtAGlance}
+                        </p>
+                      </div>
+                    )}
+
+                    <h4 className="text-xl font-bold tracking-tight text-[#1d1d1f] mt-8 mb-4">
+                      Gallery Highlights
+                    </h4>
+                    {/* Updated Grid: Fewer columns for larger images */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                      {gallery.map((imgUrl, idx) => (
+                        <motion.div
+                          key={idx}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          transition={spring}
+                          onClick={() => setLightboxIndex(idx)}
+                          className="group relative aspect-[3/2] rounded-xl overflow-hidden bg-gray-100 shadow-sm ring-1 ring-black/5 will-change-transform cursor-pointer"
+                        >
+                          <img
+                            src={imgUrl}
+                            alt={`${item.title} gallery ${idx + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                            loading="lazy"
+                            decoding="async"
+                            width="600"
+                            height="400"
+                          />
+                          
+                          {/* New Hover Overlay */}
+                          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center text-white z-10 pointer-events-none">
+                            <ZoomIn size={40} strokeWidth={1.5} className="mb-2" />
+                            <span className="text-sm font-semibold tracking-wide uppercase">View</span>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {activeTab === "itinerary" && (
+                  <motion.div key="itinerary" {...fadeUp} className="max-w-3xl mx-auto">
+                    <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-[2px] before:bg-gray-200">
+                      {item.itinerary?.map((day, idx) => (
+                        <div
+                          key={idx}
+                          className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group"
+                        >
+                          <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-[#1d1d1f] text-white shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-transform duration-300 hover:scale-110">
+                            <span className="text-xs font-bold tracking-tighter">
+                              {day.day.replace("Day ", "")}
+                            </span>
+                          </div>
+                          <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:shadow-[0_6px_25px_rgba(0,0,0,0.06)] transition-shadow duration-300">
+                            <span className="inline-block px-3 py-1 bg-gray-100 text-gray-800 text-[10px] font-bold uppercase tracking-wider rounded-full mb-3">
+                              {day.day}
+                            </span>
+                            <h4 className="text-lg font-bold text-[#1d1d1f] tracking-tight mb-2">
+                              {day.title}
+                            </h4>
+                            <p className="text-[#86868b] text-sm leading-relaxed">
+                              {day.desc}
+                            </p>
+
+                            {/* Accommodation & Meal Plan per day */}
+                            <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
+                              {day.accommodation && (
+                                <div className="flex items-start gap-2">
+                                  <Home className="text-green-600 mt-0.5 shrink-0" size={14} />
+                                  <span className="text-sm text-[#545454]">
+                                    <span className="font-medium">Accommodation:</span> {day.accommodation}
+                                  </span>
+                                </div>
+                              )}
+                              {day.mealPlan && (
+                                <div className="flex items-start gap-2">
+                                  <Utensils className="text-orange-500 mt-0.5 shrink-0" size={14} />
+                                  <span className="text-sm text-[#545454]">
+                                    <span className="font-medium">Meal Plan:</span> {day.mealPlan}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {activeTab === "pricing" && (
+                  <motion.div
+                    key="pricing"
+                    {...fadeUp}
+                    className="grid lg:grid-cols-12 gap-8"
+                  >
+                    <div className="lg:col-span-7 space-y-6">
+                      <div>
+                        <h4 className="text-2xl font-bold tracking-tight text-[#1d1d1f] mb-4 flex items-center gap-3">
+                          <div className="p-2 bg-green-50 rounded-xl">
+                            <Banknote className="text-green-600" size={20} />
+                          </div>
+                          Package Pricing
+                        </h4>
+                        <div className="space-y-3">
+                          {item.pricing?.map((price, idx) => (
+                            <div
+                              key={idx}
+                              className="p-5 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors duration-300"
+                            >
+                              <h5 className="text-base font-bold text-[#1d1d1f] tracking-tight mb-1">
+                                {price.title}
+                              </h5>
+                              <p className="text-[#86868b] text-sm leading-relaxed">
+                                {price.details}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-xs text-gray-400 mt-4 font-medium">
+                          * Rates are based on persons traveling in a private 4x4 safari vehicle.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="lg:col-span-5 space-y-6">
+                      <div className="p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+                        <h4 className="text-lg font-bold tracking-tight text-[#1d1d1f] mb-4 flex items-center gap-2">
+                          <CheckCircle2 className="text-green-500" size={18} /> Included
+                        </h4>
+                        <ul className="space-y-2">
+                          {item.included?.map((inc, idx) => (
+                            <li
+                              key={idx}
+                              className="flex items-start gap-2 text-sm text-[#86868b]"
+                            >
+                              <span className="text-green-500 mt-0.5">•</span> {inc}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+                        <h4 className="text-lg font-bold tracking-tight text-[#1d1d1f] mb-4 flex items-center gap-2">
+                          <XCircle className="text-red-500" size={18} /> Not Included
+                        </h4>
+                        <ul className="space-y-2">
+                          {item.excluded?.map((exc, idx) => (
+                            <li
+                              key={idx}
+                              className="flex items-start gap-2 text-sm text-[#86868b]"
+                            >
+                              <span className="text-red-400 mt-0.5">✕</span> {exc}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Lightbox / Fullscreen Gallery */}
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setLightboxIndex(null)}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl"
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setLightboxIndex(null)}
+              className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-[110] bg-white/10 hover:bg-white/20 p-2 rounded-full"
+            >
+              <X size={28} />
+            </button>
+
+            {/* Prev Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
+              }}
+              className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-all hover:scale-110 z-[110] bg-black/40 hover:bg-black/60 p-3 rounded-full backdrop-blur-md"
+            >
+              <ChevronLeft size={32} />
+            </button>
+
+            {/* Next Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex((prev) => (prev + 1) % gallery.length);
+              }}
+              className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-all hover:scale-110 z-[110] bg-black/40 hover:bg-black/60 p-3 rounded-full backdrop-blur-md"
+            >
+              <ChevronRight size={32} />
+            </button>
+
+            {/* Main Image Container */}
+            <div className="relative w-full h-full flex items-center justify-center p-4 sm:p-12 md:p-24 overflow-hidden outline-none">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={lightboxIndex}
+                  initial={{ opacity: 0, scale: 0.95, x: 20 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, x: -20 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  src={gallery[lightboxIndex]}
+                  alt={`Gallery full view ${lightboxIndex + 1}`}
+                  className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                  onClick={(e) => e.stopPropagation()} 
+                  draggable={false}
+                />
+              </AnimatePresence>
+            </div>
+
+            {/* Counter */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 font-medium tracking-widest text-sm bg-black/40 px-4 py-2 rounded-full backdrop-blur-md">
+              {lightboxIndex + 1} / {gallery.length}
             </div>
           </motion.div>
-
-          {/* Sticky Tabs + Book Now */}
-          <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-200/60 px-4 sm:px-8 pt-4 pb-0 flex gap-2 overflow-x-auto scrollbar-hide">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className="relative px-4 py-3 text-sm font-semibold transition-colors whitespace-nowrap outline-none"
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="active-tab-indicator"
-                      className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#1d1d1f] rounded-t-full"
-                      transition={spring}
-                    />
-                  )}
-                  <span
-                    className={`relative z-10 flex items-center gap-2 ${
-                      isActive
-                        ? "text-[#1d1d1f]"
-                        : "text-gray-400 hover:text-gray-700"
-                    }`}
-                  >
-                    <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-                    {tab.label}
-                  </span>
-                </button>
-              );
-            })}
-            <button
-              onClick={() => {
-                onClose();
-                onBookNow(item);
-              }}
-              className="ml-auto px-5 py-2 bg-black text-white rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
-            >
-              Book Now
-            </button>
-          </div>
-
-          <div className="px-4 sm:px-8 py-8 max-w-5xl mx-auto min-h-[300px]">
-            <AnimatePresence mode="wait">
-              {activeTab === "overview" && (
-                <motion.div key="overview" {...fadeUp} className="max-w-4xl">
-                  <p className="text-lg sm:text-xl text-[#545454] font-medium leading-relaxed tracking-tight mb-8">
-                    {item.description}
-                  </p>
-                  
-                  {/* Journey at a Glance in Overview */}
-                  {item.journeyAtAGlance && (
-                    <div className="mt-8 p-6 rounded-2xl bg-gray-50 border border-gray-100">
-                      <h4 className="text-xl font-bold text-[#1d1d1f] mb-3 flex items-center gap-2">
-                        <MapPin className="text-blue-500" size={22} />
-                        Journey at a Glance
-                      </h4>
-                      <p className="text-[#545454] leading-relaxed whitespace-pre-line">
-                        {item.journeyAtAGlance}
-                      </p>
-                    </div>
-                  )}
-
-                  <h4 className="text-xl font-bold tracking-tight text-[#1d1d1f] mt-8 mb-4">
-                    Gallery Highlights
-                  </h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                    {gallery.map((imgUrl, idx) => (
-                      <motion.div
-                        key={idx}
-                        whileHover={{ scale: 1.02, y: -2 }}
-                        transition={spring}
-                        className="aspect-[4/5] rounded-xl overflow-hidden bg-gray-100 shadow-sm ring-1 ring-black/5 will-change-transform"
-                      >
-                        <img
-                          src={imgUrl}
-                          alt={`${item.title} gallery ${idx + 1}`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          decoding="async"
-                          width="400"
-                          height="500"
-                        />
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {activeTab === "itinerary" && (
-                <motion.div key="itinerary" {...fadeUp} className="max-w-3xl mx-auto">
-                  <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-[2px] before:bg-gray-200">
-                    {item.itinerary?.map((day, idx) => (
-                      <div
-                        key={idx}
-                        className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group"
-                      >
-                        <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-[#1d1d1f] text-white shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-transform duration-300 hover:scale-110">
-                          <span className="text-xs font-bold tracking-tighter">
-                            {day.day.replace("Day ", "")}
-                          </span>
-                        </div>
-                        <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:shadow-[0_6px_25px_rgba(0,0,0,0.06)] transition-shadow duration-300">
-                          <span className="inline-block px-3 py-1 bg-gray-100 text-gray-800 text-[10px] font-bold uppercase tracking-wider rounded-full mb-3">
-                            {day.day}
-                          </span>
-                          <h4 className="text-lg font-bold text-[#1d1d1f] tracking-tight mb-2">
-                            {day.title}
-                          </h4>
-                          <p className="text-[#86868b] text-sm leading-relaxed">
-                            {day.desc}
-                          </p>
-
-                          {/* Accommodation & Meal Plan per day */}
-                          <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
-                            {day.accommodation && (
-                              <div className="flex items-start gap-2">
-                                <Home className="text-green-600 mt-0.5 shrink-0" size={14} />
-                                <span className="text-sm text-[#545454]">
-                                  <span className="font-medium">Accommodation:</span> {day.accommodation}
-                                </span>
-                              </div>
-                            )}
-                            {day.mealPlan && (
-                              <div className="flex items-start gap-2">
-                                <Utensils className="text-orange-500 mt-0.5 shrink-0" size={14} />
-                                <span className="text-sm text-[#545454]">
-                                  <span className="font-medium">Meal Plan:</span> {day.mealPlan}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {activeTab === "pricing" && (
-                <motion.div
-                  key="pricing"
-                  {...fadeUp}
-                  className="grid lg:grid-cols-12 gap-8"
-                >
-                  <div className="lg:col-span-7 space-y-6">
-                    <div>
-                      <h4 className="text-2xl font-bold tracking-tight text-[#1d1d1f] mb-4 flex items-center gap-3">
-                        <div className="p-2 bg-green-50 rounded-xl">
-                          <Banknote className="text-green-600" size={20} />
-                        </div>
-                        Package Pricing
-                      </h4>
-                      <div className="space-y-3">
-                        {item.pricing?.map((price, idx) => (
-                          <div
-                            key={idx}
-                            className="p-5 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors duration-300"
-                          >
-                            <h5 className="text-base font-bold text-[#1d1d1f] tracking-tight mb-1">
-                              {price.title}
-                            </h5>
-                            <p className="text-[#86868b] text-sm leading-relaxed">
-                              {price.details}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                      <p className="text-xs text-gray-400 mt-4 font-medium">
-                        * Rates are based on persons traveling in a private 4x4 safari vehicle.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="lg:col-span-5 space-y-6">
-                    <div className="p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-                      <h4 className="text-lg font-bold tracking-tight text-[#1d1d1f] mb-4 flex items-center gap-2">
-                        <CheckCircle2 className="text-green-500" size={18} /> Included
-                      </h4>
-                      <ul className="space-y-2">
-                        {item.included?.map((inc, idx) => (
-                          <li
-                            key={idx}
-                            className="flex items-start gap-2 text-sm text-[#86868b]"
-                          >
-                            <span className="text-green-500 mt-0.5">•</span> {inc}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="p-6 rounded-2xl bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-                      <h4 className="text-lg font-bold tracking-tight text-[#1d1d1f] mb-4 flex items-center gap-2">
-                        <XCircle className="text-red-500" size={18} /> Not Included
-                      </h4>
-                      <ul className="space-y-2">
-                        {item.excluded?.map((exc, idx) => (
-                          <li
-                            key={idx}
-                            className="flex items-start gap-2 text-sm text-[#86868b]"
-                          >
-                            <span className="text-red-400 mt-0.5">✕</span> {exc}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 });
 SafariModal.displayName = "SafariModal";

@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExpandMore } from "@mui/icons-material";
 
-const easing = [0.16, 1, 0.3, 1];
+const easing = [0.22, 1, 0.36, 1];
 
 const FAQ_DATA = [
   {
@@ -27,36 +27,38 @@ const FAQ_DATA = [
   },
   {
     q: "Can you customize a private itinerary?",
-    a: "Absolutely. We specialize in bespoke digital transformation of the traditional safari. We can tailor every detail—from private bush flights to specific dietary requirements and exclusive-use conservancies."
+    a: "Absolutely. We specialize in bespoke safari experiences. Every detail can be tailored—from private bush flights to exclusive-use conservancies and personalized services."
   }
 ];
 
 const FAQItem = ({ item, index, isActive, onClick }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ delay: index * 0.05, duration: 0.6, ease: easing }}
-      className="relative"
+      transition={{ delay: index * 0.06, duration: 0.7, ease: easing }}
     >
-      <div className="rounded-2xl bg-white/70 backdrop-blur-xl border border-black/[0.04] shadow-[0_4px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)]">
-        
+      <div className="relative rounded-2xl border border-black/[0.05] bg-white/60 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_50px_rgba(0,0,0,0.08)] transition-all duration-500">
+
+        {/* subtle glow */}
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+
         <button
           onClick={() => onClick(index)}
-          className="w-full flex justify-between items-center text-left px-8 py-7 group"
+          className="relative w-full flex justify-between items-center text-left px-8 py-7 group"
         >
-          <h3 className="text-[17px] md:text-[19px] font-medium text-[#1d1d1f] tracking-tight pr-8">
+          <h3 className="text-[18px] md:text-[20px] font-medium text-[#1d1d1f] tracking-tight leading-snug pr-8">
             {item.q}
           </h3>
 
           <motion.div
             animate={{ rotate: isActive ? 180 : 0 }}
-            transition={{ duration: 0.4, ease: easing }}
+            transition={{ duration: 0.5, ease: easing }}
             className="text-[#86868b] group-hover:text-[#1d1d1f] transition-colors"
           >
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 group-hover:bg-gray-100">
-                <ExpandMore fontSize="medium" />
+            <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 backdrop-blur-md shadow-sm group-hover:scale-110 transition-all">
+              <ExpandMore fontSize="medium" />
             </span>
           </motion.div>
         </button>
@@ -68,11 +70,11 @@ const FAQItem = ({ item, index, isActive, onClick }) => {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: easing }}
+              transition={{ duration: 0.45, ease: easing }}
               className="overflow-hidden"
             >
               <div className="px-8 pb-8">
-                <p className="text-[#6e6e73] text-[15px] md:text-[16px] leading-relaxed">
+                <p className="text-[#6e6e73] text-[16px] leading-relaxed tracking-[0.2px]">
                   {item.a}
                 </p>
               </div>
@@ -92,21 +94,31 @@ const Questions = () => {
   }, []);
 
   return (
-    <section className="relative py-32 px-6 bg-[#fafafa] overflow-hidden">  
-      <div className="max-w-3xl mx-auto">
+    <section className="relative py-36 px-6 bg-[#fafafa] overflow-hidden">
+
+      {/* PREMIUM BACKGROUND LIGHTING */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-3xl mx-auto relative z-10">
+        
         <motion.div
-          className="text-center mb-24"
-          initial={{ opacity: 0, y: 24 }}
+          className="text-center mb-28"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: easing }}
+          transition={{ duration: 0.9, ease: easing }}
         >
-          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1d1d1f] mb-6">
-            <span className="text-blue-600 ">Common</span> Questions
+          <h2 className="text-4xl md:text-6xl font-semibold tracking-tight text-[#1d1d1f] mb-6">
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
+              Common
+            </span>{" "}
+            Questions
           </h2>
-          <p className=" text-[#6e6e73] text-2xl max-w-xl mx-auto leading-relaxed">
+
+          <p className="text-[#6e6e73] text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed">
             Everything you need to know about planning your next 
-            unforgettable African wilderness expedition.
+            luxury African wilderness experience.
           </p>
         </motion.div>
 
