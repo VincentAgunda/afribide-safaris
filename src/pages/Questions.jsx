@@ -31,18 +31,31 @@ const FAQ_DATA = [
   }
 ];
 
+// 1. Define variants for the parent container to handle staggering
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08, // Controls the delay between each item
+    }
+  }
+};
+
+// 2. Define variants for the individual items
+const itemVariants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.45, ease: easing } 
+  }
+};
+
 const FAQItem = memo(({ item, index, isActive, onClick }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{
-        duration: 0.45,
-        delay: index * 0.03,
-        ease: easing
-      }}
-    >
+    // 3. Remove whileInView here. The parent handles the trigger now.
+    <motion.div variants={itemVariants}>
       <div className="relative overflow-hidden rounded-2xl border border-black/[0.06] bg-white/85 shadow-[0_8px_24px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_14px_34px_rgba(0,0,0,0.07)]">
         <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-white/30 to-transparent pointer-events-none" />
 
@@ -109,7 +122,7 @@ const Questions = () => {
           className="mb-16 md:mb-20 text-center"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "100px" }} // Pre-trigger before it hits the viewport
           transition={{ duration: 0.55, ease: easing }}
         >
           <div className="mx-auto mb-5 inline-flex items-center gap-3 rounded-full border border-black/[0.06] bg-white/70 px-4 py-2 text-[12px] font-medium tracking-[0.18em] uppercase text-[#6e6e73] backdrop-blur-md">
@@ -117,7 +130,6 @@ const Questions = () => {
             FAQ
           </div>
 
-          {/* SAME LINE */}
           <h2 className="mx-auto text-center text-5xl md:text-7xl font-semibold tracking-[-0.06em] text-[#1d1d1f] leading-[0.95] whitespace-nowrap">
             <span>Common </span>
             <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
@@ -131,7 +143,14 @@ const Questions = () => {
           </p>
         </motion.div>
 
-        <div className="space-y-4">
+        {/* 4. Wrap the list in a motion.div to control the stagger centrally */}
+        <motion.div 
+          className="space-y-4"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "150px" }} // Triggers 150px BEFORE scrolling into view
+        >
           {FAQ_DATA.map((item, index) => (
             <FAQItem
               key={index}
@@ -141,7 +160,7 @@ const Questions = () => {
               onClick={toggleFAQ}
             />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

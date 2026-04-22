@@ -85,7 +85,7 @@ const Home = () => {
             className="absolute inset-0 z-10 md:hidden"
             style={{
               background:
-                "linear-gradient(103deg, #F5F5F7 60%, rgba(229,229,229,0) 60.2%)",
+                "linear-gradient(103deg, #E5E5E5 60%, rgba(229,229,229,0) 60.2%)",
             }}
           />
           <div
@@ -133,7 +133,8 @@ const Home = () => {
               {/* CTA + SOCIAL */}
               <motion.div
                 variants={textVariants}
-                className="flex items-center gap-4 flex-wrap"
+                // ✅ UPDATED CLASSES HERE: flex-col on mobile, flex-row on desktop
+                className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-4"
               >
                 <motion.button
                   whileHover={{ scale: 1.03 }}
