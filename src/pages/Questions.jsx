@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExpandMore } from "@mui/icons-material";
 
@@ -7,57 +7,59 @@ const easing = [0.22, 1, 0.36, 1];
 const FAQ_DATA = [
   {
     q: "What is the best time of year to go on a safari?",
-    a: "The 'best' time depends on the destination. For the Great Migration in the Masai Mara, July to October is ideal. Generally, the dry season (June to October) offers the best wildlife viewing as animals congregate around water sources."
+    a: "The best time depends on the destination. For the Great Migration in the Masai Mara, July to October is ideal. Generally, the dry season (June to October) offers the best wildlife viewing as animals gather around water sources."
   },
   {
     q: "Are your safari tours family-friendly?",
-    a: "Yes, we curate specific family-oriented itineraries. These include child-friendly lodges, specialized junior ranger programs, and shorter game drives to ensure a comfortable and engaging experience for all ages."
+    a: "Yes, we curate family-oriented itineraries with child-friendly lodges, junior ranger programs, and shorter game drives for comfort and engagement."
   },
   {
     q: "What should I pack for my bush expedition?",
-    a: "We recommend neutral-colored clothing (khaki, beige, green), a high-quality camera, binoculars, sun protection, and comfortable walking shoes. We provide a detailed, destination-specific packing list upon booking."
+    a: "We recommend neutral-colored clothing, a quality camera, binoculars, sun protection, and comfortable walking shoes. A destination-specific list is provided after booking."
   },
   {
     q: "Is it safe to go on a guided safari?",
-    a: "Safety is our absolute priority. Our guides are highly trained professionals with years of experience in animal behavior. We use custom-built, high-safety vehicles and partner only with secure, top-tier luxury lodges."
+    a: "Safety is our highest priority. Our guides are highly trained professionals with years of field experience. We also use premium custom safari vehicles and trusted luxury lodges."
   },
   {
     q: "Do I need specific vaccinations or travel insurance?",
-    a: "Requirements vary by country (e.g., Yellow Fever or Malaria precautions). We strongly advise consulting a travel clinic 4–6 weeks before departure. Comprehensive travel insurance is mandatory for all our expeditions."
+    a: "Requirements vary by country. We recommend visiting a travel clinic 4–6 weeks before departure. Comprehensive travel insurance is required."
   },
   {
     q: "Can you customize a private itinerary?",
-    a: "Absolutely. We specialize in bespoke safari experiences. Every detail can be tailored—from private bush flights to exclusive-use conservancies and personalized services."
+    a: "Absolutely. We specialize in bespoke safari journeys tailored to your style, pace, and preferred experiences."
   }
 ];
 
-const FAQItem = ({ item, index, isActive, onClick }) => {
+const FAQItem = memo(({ item, index, isActive, onClick }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ delay: index * 0.06, duration: 0.7, ease: easing }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{
+        duration: 0.45,
+        delay: index * 0.03,
+        ease: easing
+      }}
     >
-      <div className="relative rounded-2xl border border-black/[0.05] bg-white/60 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_50px_rgba(0,0,0,0.08)] transition-all duration-500">
-
-        {/* subtle glow */}
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+      <div className="relative overflow-hidden rounded-2xl border border-black/[0.06] bg-white/85 shadow-[0_8px_24px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_14px_34px_rgba(0,0,0,0.07)]">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-white/30 to-transparent pointer-events-none" />
 
         <button
           onClick={() => onClick(index)}
-          className="relative w-full flex justify-between items-center text-left px-8 py-7 group"
+          className="relative w-full flex items-center justify-between text-left px-6 md:px-8 py-5 md:py-6 gap-5"
         >
-          <h3 className="text-[18px] md:text-[20px] font-medium text-[#1d1d1f] tracking-tight leading-snug pr-8">
+          <h3 className="text-[17px] md:text-[19px] font-medium text-[#1d1d1f] leading-[1.3] tracking-[-0.02em] max-w-[34ch]">
             {item.q}
           </h3>
 
           <motion.div
             animate={{ rotate: isActive ? 180 : 0 }}
-            transition={{ duration: 0.5, ease: easing }}
-            className="text-[#86868b] group-hover:text-[#1d1d1f] transition-colors"
+            transition={{ duration: 0.32, ease: easing }}
+            className="shrink-0"
           >
-            <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 backdrop-blur-md shadow-sm group-hover:scale-110 transition-all">
+            <span className="flex items-center justify-center w-10 h-10 rounded-full bg-[#f5f5f7] text-[#6e6e73] shadow-sm">
               <ExpandMore fontSize="medium" />
             </span>
           </motion.div>
@@ -66,15 +68,17 @@ const FAQItem = ({ item, index, isActive, onClick }) => {
         <AnimatePresence initial={false}>
           {isActive && (
             <motion.div
-              key="content"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.45, ease: easing }}
+              transition={{
+                height: { duration: 0.28, ease: easing },
+                opacity: { duration: 0.2 }
+              }}
               className="overflow-hidden"
             >
-              <div className="px-8 pb-8">
-                <p className="text-[#6e6e73] text-[16px] leading-relaxed tracking-[0.2px]">
+              <div className="px-6 md:px-8 pb-6">
+                <p className="text-[#6e6e73] text-[15px] md:text-[16px] leading-[1.75] max-w-2xl">
                   {item.a}
                 </p>
               </div>
@@ -84,7 +88,9 @@ const FAQItem = ({ item, index, isActive, onClick }) => {
       </div>
     </motion.div>
   );
-};
+});
+
+FAQItem.displayName = "FAQItem";
 
 const Questions = () => {
   const [activeFAQ, setActiveFAQ] = useState(null);
@@ -94,35 +100,38 @@ const Questions = () => {
   }, []);
 
   return (
-    <section className="relative py-36 px-6 bg-[#fafafa] overflow-hidden">
+    <section className="relative overflow-hidden bg-[#fafafa] py-28 md:py-36 px-6">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[360px] h-[360px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* PREMIUM BACKGROUND LIGHTING */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-3xl mx-auto relative z-10">
-        
+      <div className="relative z-10 mx-auto max-w-4xl">
         <motion.div
-          className="text-center mb-28"
-          initial={{ opacity: 0, y: 30 }}
+          className="mb-16 md:mb-20 text-center"
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.9, ease: easing }}
+          transition={{ duration: 0.55, ease: easing }}
         >
-          <h2 className="text-4xl md:text-6xl font-semibold tracking-tight text-[#1d1d1f] mb-6">
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
-              Common
-            </span>{" "}
-            Questions
+          <div className="mx-auto mb-5 inline-flex items-center gap-3 rounded-full border border-black/[0.06] bg-white/70 px-4 py-2 text-[12px] font-medium tracking-[0.18em] uppercase text-[#6e6e73] backdrop-blur-md">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+            FAQ
+          </div>
+
+          {/* SAME LINE */}
+          <h2 className="mx-auto text-center text-5xl md:text-7xl font-semibold tracking-[-0.06em] text-[#1d1d1f] leading-[0.95] whitespace-nowrap">
+            <span>Common </span>
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
+              Questions
+            </span>
           </h2>
 
-          <p className="text-[#6e6e73] text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed">
-            Everything you need to know about planning your next 
-            luxury African wilderness experience.
+          <p className="mt-6 mx-auto max-w-2xl text-[17px] md:text-[20px] leading-[1.7] tracking-[-0.01em] text-[#6e6e73]">
+            Everything you need to know about planning your next luxury African
+            wilderness experience.
           </p>
         </motion.div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {FAQ_DATA.map((item, index) => (
             <FAQItem
               key={index}

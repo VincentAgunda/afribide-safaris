@@ -22,7 +22,7 @@ const Article = React.lazy(() => import("@mui/icons-material/Article"));
 
 const CARD_THEMES = [
   {
-    bg: "#fafafa",
+    bg: "#F5F5F7",
     text: "text-gray-900",
     subText: "text-gray-700 font-normal",
     iconBg: "bg-gray-200",
