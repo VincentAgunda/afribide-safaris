@@ -129,22 +129,24 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             style={{ backgroundColor: finalTheme.bg }}
-            className={`relative w-full max-w-5xl max-h-[95vh] rounded-[32px] shadow-2xl flex flex-col md:flex-row overflow-hidden ${finalTheme.text}`}
+            // Reduced maximum height to avoid covering full viewport
+            className={`relative w-full max-w-5xl max-h-[85vh] rounded-[32px] shadow-2xl flex flex-col md:flex-row overflow-hidden ${finalTheme.text}`}
           >
-            {/* Close Button */}
+            {/* Close Button – now with improved visibility */}
             <button
               onClick={onClose}
-              className={`absolute top-4 right-4 z-20 p-2 rounded-full backdrop-blur-md ${
+              className={`absolute top-3 right-3 z-20 p-2 rounded-full backdrop-blur-md shadow-md ${
                 isDarkTheme
-                  ? "bg-white/10 hover:bg-white/20"
-                  : "bg-black/5 hover:bg-black/10"
-              } transition`}
+                  ? "bg-white/20 hover:bg-white/30 text-white"
+                  : "bg-black/20 hover:bg-black/30 text-gray-900"
+              } transition-all`}
+              aria-label="Close modal"
             >
-              <X size={20} />
+              <X size={22} />
             </button>
 
             {/* Left Side: Form */}
-            <div className="w-full md:w-1/2 p-6 md:p-10 overflow-y-auto max-h-[95vh] scrollbar-hide">
+            <div className="w-full md:w-1/2 p-6 md:p-10 overflow-y-auto max-h-[85vh] scrollbar-hide">
               <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
                 Book Your Adventure
               </h3>
