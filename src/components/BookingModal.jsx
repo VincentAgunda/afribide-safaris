@@ -1,4 +1,6 @@
+// BookingModal.jsx
 import React, { useRef, useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import emailjs from "@emailjs/browser";
@@ -110,11 +112,12 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
       : "bg-white border-gray-200 text-gray-900 focus:border-[#0b1b32]"
   }`;
 
-  return (
+  // Render via Portal to body, with very high z-index
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 md:p-6"
+          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 md:p-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -132,7 +135,9 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
             <button
               onClick={onClose}
               className={`absolute top-4 right-4 z-20 p-2 rounded-full backdrop-blur-md ${
-                isDarkTheme ? "bg-white/10 hover:bg-white/20" : "bg-black/5 hover:bg-black/10"
+                isDarkTheme
+                  ? "bg-white/10 hover:bg-white/20"
+                  : "bg-black/5 hover:bg-black/10"
               } transition`}
             >
               <X size={20} />
@@ -281,7 +286,8 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 
