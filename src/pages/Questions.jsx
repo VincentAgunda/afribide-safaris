@@ -2,6 +2,8 @@ import React, { useState, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExpandMore } from "@mui/icons-material";
 
+const easing = [0.22, 1, 0.36, 1];
+
 const FAQ_DATA = [
   {
     q: "What is the best time of year to go on a safari?",
@@ -31,8 +33,18 @@ const FAQ_DATA = [
 
 const FAQItem = memo(({ item, index, isActive, onClick }) => {
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0.95, y: 10 }} // never fully hidden
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.35,
+        ease: easing,
+        delay: index * 0.015 // subtle stagger (fast)
+      }}
+    >
       <div className="relative overflow-hidden rounded-2xl border border-black/[0.06] bg-white/85 shadow-[0_8px_24px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_14px_34px_rgba(0,0,0,0.07)]">
+
+        {/* subtle glass gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-white/30 to-transparent pointer-events-none" />
 
         <button
@@ -43,15 +55,15 @@ const FAQItem = memo(({ item, index, isActive, onClick }) => {
             {item.q}
           </h3>
 
-          <div
-            className={`shrink-0 transition-transform duration-300 ease-in-out ${
-              isActive ? "rotate-180" : "rotate-0"
-            }`}
+          <motion.div
+            animate={{ rotate: isActive ? 180 : 0 }}
+            transition={{ duration: 0.25, ease: easing }}
+            className="shrink-0"
           >
             <span className="flex items-center justify-center w-10 h-10 rounded-full bg-[#f5f5f7] text-[#6e6e73] shadow-sm">
               <ExpandMore fontSize="medium" />
             </span>
-          </div>
+          </motion.div>
         </button>
 
         <AnimatePresence initial={false}>
@@ -61,8 +73,8 @@ const FAQItem = memo(({ item, index, isActive, onClick }) => {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{
-                height: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
-                opacity: { duration: 0.2 }
+                height: { duration: 0.25, ease: easing },
+                opacity: { duration: 0.18 }
               }}
               className="overflow-hidden"
             >
@@ -75,7 +87,7 @@ const FAQItem = memo(({ item, index, isActive, onClick }) => {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 });
 
@@ -90,11 +102,20 @@ const Questions = () => {
 
   return (
     <section className="relative overflow-hidden bg-[#fafafa] py-28 md:py-36 px-6">
+
+      {/* ambient background */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[360px] h-[360px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 mx-auto max-w-4xl">
-        <div className="mb-16 md:mb-20 text-center">
+
+        {/* HEADER */}
+        <motion.div
+          className="mb-16 md:mb-20 text-center"
+          initial={{ opacity: 0.9, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: easing }}
+        >
           <div className="mx-auto mb-5 inline-flex items-center gap-3 rounded-full border border-black/[0.06] bg-white/70 px-4 py-2 text-[12px] font-medium tracking-[0.18em] uppercase text-[#6e6e73] backdrop-blur-md">
             <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
             FAQ
@@ -111,8 +132,9 @@ const Questions = () => {
             Everything you need to know about planning your next luxury African
             wilderness experience.
           </p>
-        </div>
+        </motion.div>
 
+        {/* FAQ LIST */}
         <div className="space-y-4">
           {FAQ_DATA.map((item, index) => (
             <FAQItem
@@ -124,6 +146,7 @@ const Questions = () => {
             />
           ))}
         </div>
+
       </div>
     </section>
   );
