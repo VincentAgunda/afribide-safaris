@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /* ================================================= */
-/* DATA (MINIMAL GRID CARDS)                         */
+/* DATA                                              */
 /* ================================================= */
 
 const items = [
@@ -43,10 +43,6 @@ const items = [
   },
 ];
 
-/* ================================================= */
-/* TESTIMONIALS                                      */
-/* ================================================= */
-
 const testimonials = [
   {
     name: "Vincent. A",
@@ -67,10 +63,6 @@ const testimonials = [
     avatar: "/gallery/jeep.jpeg",
   },
 ];
-
-/* ================================================= */
-/* BLOGS                                             */
-/* ================================================= */
 
 const blogs = [
   {
@@ -124,17 +116,17 @@ const SafariGrid = () => {
 
   return (
     <section className="bg-[#e5e5e5] min-h-screen py-6 px-4">
+      {/* GRID */}
       <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-
         {items.map((item, index) => (
           <motion.div
             key={index}
-            whileHover={{ scale: 1.01 }}
+            whileHover={{ scale: 1.02 }}
             className={`h-[420px] md:h-[480px] rounded-2xl overflow-hidden flex flex-col justify-between items-center text-center ${item.bg}`}
           >
             {/* TEXT */}
             <div className="pt-10 px-6">
-              <h2 className="text-2xl md:text-3xl font-semibold">
+              <h2 className="text-2xl md:text-3xl font-semibold whitespace-pre-line">
                 {item.title}
               </h2>
 
@@ -144,7 +136,7 @@ const SafariGrid = () => {
 
               <button
                 onClick={() => setActive(item)}
-                className="mt-4 px-5 py-2 rounded-full bg-black text-white text-sm"
+                className="mt-4 px-5 py-2 rounded-full bg-black text-white text-sm hover:opacity-80"
               >
                 {item.button}
               </button>
@@ -154,103 +146,107 @@ const SafariGrid = () => {
             <div className="w-full flex justify-center items-end pb-6">
               <img
                 src={item.image}
-                className="max-h-[220px] object-contain"
+                alt=""
+                className="max-h-[200px] md:max-h-[220px] object-contain"
               />
             </div>
           </motion.div>
         ))}
-
       </div>
 
       {/* ================= MODAL ================= */}
       <AnimatePresence>
         {active && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-lg"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-lg p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeModal}
           >
             <motion.div
-              className="w-full max-w-3xl bg-white rounded-3xl overflow-hidden"
+              className="relative w-full max-w-3xl max-h-[90vh] bg-white rounded-3xl overflow-hidden flex flex-col"
               initial={{ scale: 0.92 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* CLOSE */}
+              {/* CLOSE BUTTON */}
               <button
                 onClick={closeModal}
-                className="absolute top-6 right-6 bg-gray-100 w-10 h-10 rounded-full"
+                className="absolute top-4 right-4 bg-gray-100 w-9 h-9 rounded-full z-10 hover:bg-gray-200"
               >
                 ✕
               </button>
 
-              {/* TESTIMONIALS VIEW */}
-              {active.type === "testimonials" && (
-                <div className="p-10 space-y-8">
-                  <h3 className="text-2xl font-semibold">
-                    What Our Guests Say
-                  </h3>
-
-                  {testimonials.map((t, i) => (
-                    <div key={i} className="flex gap-4 items-center">
-                      <img
-                        src={t.avatar}
-                        className="w-14 h-14 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="text-gray-700 text-sm italic">
-                          "{t.quote}"
-                        </p>
-                        <span className="text-xs font-semibold">
-                          {t.name}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* BLOG VIEW */}
-              {active.type === "blog" && (
-                <div>
-                  <img
-                    src={blogs[active.blogIndex].image}
-                    className="h-64 w-full object-cover"
-                  />
-
-                  <div className="p-10 space-y-6">
-                    <h3 className="text-2xl font-semibold">
-                      {blogs[active.blogIndex].title}
+              {/* SCROLLABLE CONTENT */}
+              <div className="overflow-y-auto">
+                {/* TESTIMONIALS */}
+                {active.type === "testimonials" && (
+                  <div className="p-5 md:p-10 space-y-6">
+                    <h3 className="text-xl md:text-2xl font-semibold">
+                      What Our Guests Say
                     </h3>
 
-                    <p className="text-gray-700">
-                      {blogs[active.blogIndex].content}
-                    </p>
+                    {testimonials.map((t, i) => (
+                      <div key={i} className="flex gap-4 items-center">
+                        <img
+                          src={t.avatar}
+                          alt=""
+                          className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover"
+                        />
+                        <div>
+                          <p className="text-gray-700 text-sm italic">
+                            "{t.quote}"
+                          </p>
+                          <span className="text-xs font-semibold">
+                            {t.name}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
-                    <div>
-                      <h4 className="font-semibold mb-2">Highlights</h4>
-                      <ul className="space-y-2">
-                        {blogs[active.blogIndex].highlights.map((h, i) => (
-                          <li key={i}>• {h}</li>
-                        ))}
-                      </ul>
-                    </div>
+                {/* BLOG */}
+                {active.type === "blog" && (
+                  <div>
+                    <img
+                      src={blogs[active.blogIndex].image}
+                      alt=""
+                      className="h-48 md:h-64 w-full object-cover"
+                    />
 
-                    <div>
-                      <h4 className="font-semibold mb-2">Tips</h4>
-                      <ul className="space-y-2">
-                        {blogs[active.blogIndex].tips.map((t, i) => (
-                          <li key={i}>• {t}</li>
-                        ))}
-                      </ul>
+                    <div className="p-5 md:p-10 space-y-5">
+                      <h3 className="text-xl md:text-2xl font-semibold">
+                        {blogs[active.blogIndex].title}
+                      </h3>
+
+                      <p className="text-gray-700 text-sm md:text-base">
+                        {blogs[active.blogIndex].content}
+                      </p>
+
+                      <div>
+                        <h4 className="font-semibold mb-2">Highlights</h4>
+                        <ul className="space-y-2 text-sm md:text-base">
+                          {blogs[active.blogIndex].highlights.map((h, i) => (
+                            <li key={i}>• {h}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold mb-2">Tips</h4>
+                        <ul className="space-y-2 text-sm md:text-base">
+                          {blogs[active.blogIndex].tips.map((t, i) => (
+                            <li key={i}>• {t}</li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-
+                )}
+              </div>
             </motion.div>
           </motion.div>
         )}
