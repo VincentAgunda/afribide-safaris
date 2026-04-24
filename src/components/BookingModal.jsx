@@ -4,7 +4,11 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import emailjs from "@emailjs/browser";
-import MapIcon from "@mui/icons-material/Map"; // fallback icon
+import MapIcon from "@mui/icons-material/Map";
+
+// 🔥 Firestore imports
+import { db } from "../firebase"; // adjust path if needed
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 // Default fallbacks when modal is opened without a specific service/theme
 const DEFAULT_SERVICE = {
@@ -32,6 +36,7 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
 
   const [status, setStatus] = useState(null);
   const [errors, setErrors] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
   const formRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -70,7 +75,33 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
     }
   };
 
-  const handleWhatsApp = () => {
+  // 🔥 Save booking to Firestore
+  const saveBookingToFirestore = async () => {
+    try {
+      const docData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || "",
+        packageTitle: formData.package,
+        adults: formData.adults || "",
+        children: formData.children || "",
+        travelDate: formData.travel_date,
+        message: formData.message || "",
+        createdAt: serverTimestamp(),
+        source: "website_booking",
+      };
+      await addDoc(collection(db, "queries"), docData);
+      return true;
+    } catch (error) {
+      console.error("Firestore write failed:", error);
+      return false;
+    }
+  };
+
+  const handleWhatsApp = async () => {
+    // Save to Firestore for WhatsApp inquiries too
+    await saveBookingToFirestore();
+
     const phoneNumber = "+254113073535";
     const text = `Hello! I'm interested in a safari and would like a quote.\n\n*Package:* ${
       formData.package || "Not selected"
@@ -87,8 +118,19 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
   const sendEmail = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    setStatus("sending");
 
+    // Save to Firestore before sending email
+    setIsSaving(true);
+    const saved = await saveBookingToFirestore();
+    setIsSaving(false);
+
+    if (!saved) {
+      setStatus("error");
+      alert("Failed to record your booking. Please try again.");
+      return;
+    }
+
+    setStatus("sending");
     try {
       await emailjs.sendForm(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -100,6 +142,7 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
       setTimeout(() => onClose(), 3000);
     } catch (err) {
       setStatus("error");
+      // Firestore record already exists, so admin can still see the inquiry
     }
   };
 
@@ -129,10 +172,9 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             style={{ backgroundColor: finalTheme.bg }}
-            // Reduced maximum height to avoid covering full viewport
             className={`relative w-full max-w-5xl max-h-[85vh] rounded-[32px] shadow-2xl flex flex-col md:flex-row overflow-hidden ${finalTheme.text}`}
           >
-            {/* Close Button – now with improved visibility */}
+            {/* Close Button */}
             <button
               onClick={onClose}
               className={`absolute top-3 right-3 z-20 p-2 rounded-full backdrop-blur-md shadow-md ${
@@ -255,9 +297,12 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
                     <motion.button
                       whileTap={{ scale: 0.96 }}
                       type="submit"
-                      className={`px-8 py-3 rounded-full font-medium whitespace-nowrap shadow-md transition-colors ${finalTheme.btnBg} ${finalTheme.btnText}`}
+                      disabled={isSaving}
+                      className={`px-8 py-3 rounded-full font-medium whitespace-nowrap shadow-md transition-colors ${finalTheme.btnBg} ${finalTheme.btnText} ${
+                        isSaving ? "opacity-70 cursor-not-allowed" : ""
+                      }`}
                     >
-                      {status === "sending" ? "Requesting..." : "Email Quote"}
+                      {isSaving ? "Saving..." : status === "sending" ? "Requesting..." : "Email Quote"}
                     </motion.button>
                   </div>
                 </div>

@@ -1,100 +1,74 @@
 // Contact.jsx
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import React, { useState, useEffect, useCallback } from "react";
 import BookingModal from "../components/BookingModal";
 
-// Minimal service object for the modal when opened from Contact
+/* ================================================= */
+/* SERVICE                                           */
+/* ================================================= */
+
 const getContactService = (packageTitle = "Custom Safari") => ({
   title: packageTitle,
   description: "Tailor your own African adventure",
-  icon: null, // Not used in modal's display
+  icon: null,
   features: [],
 });
 
+/* ================================================= */
+/* COMPONENT                                         */
+/* ================================================= */
+
 const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
   const [open, setOpen] = useState(isModalOpen);
-  const [isMobile, setIsMobile] = useState(false);
-
-  const sectionRef = useRef(null);
+  const [visible, setVisible] = useState(false);
 
   /* ================================
-     Modal Sync (robust)
+     Modal Sync
   ================================= */
   useEffect(() => {
-    setOpen(isModalOpen);
+    if (isModalOpen) {
+      setOpen(true);
+      setVisible(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      handleClose();
+    }
   }, [isModalOpen]);
 
   const handleOpen = useCallback(() => {
     setOpen(true);
+    setTimeout(() => setVisible(true), 10);
+    document.body.style.overflow = "hidden";
   }, []);
 
   const handleClose = useCallback(() => {
-    setOpen(false);
-    if (onClose) onClose();
+    setVisible(false);
+    document.body.style.overflow = "auto";
+
+    setTimeout(() => {
+      setOpen(false);
+      if (onClose) onClose();
+    }, 260);
   }, [onClose]);
-
-  /* ================================
-     Responsive Check
-  ================================= */
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 1024px)");
-    setIsMobile(mediaQuery.matches);
-
-    const handleMediaChange = (e) => setIsMobile(e.matches);
-    mediaQuery.addEventListener("change", handleMediaChange);
-
-    return () => mediaQuery.removeEventListener("change", handleMediaChange);
-  }, []);
-
-  /* ================================
-     Scroll Animation
-  ================================= */
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "center start"],
-  });
-
-  const scale = useTransform(scrollYProgress, [0, 1], [0.97, 1]);
-  const rotateX = useTransform(scrollYProgress, [0, 1], [6, 0]);
-  const y = useTransform(scrollYProgress, [0, 1], [60, 0]);
 
   return (
     <>
-      <section
-        ref={sectionRef}
-        className="relative max-w-7xl mx-auto my-40 rounded-[40px] overflow-visible"
-        style={{ perspective: 1400 }}
-      >
-        {/* ================================
-           Background Gradient (Smooth Blend)
-        ================================= */}
-        <motion.div
+      {/* ================================
+         SECTION (NO SCROLL ANIMATION)
+      ================================= */}
+      <section className="relative max-w-7xl mx-auto my-32 rounded-[40px] overflow-hidden">
+        {/* Background */}
+        <div
           className="absolute inset-0 rounded-[40px]"
           style={{
             background:
               "linear-gradient(115deg, #d8d9dd 0%, #d8d9dd 35%, #d0c7bf 50%, #d89a6a 65%, #e26c22 85%, #e26c22 100%)",
-            zIndex: 0,
           }}
         />
 
-        {/* ================================
-           Content Card
-        ================================= */}
-        <motion.div
-          style={{
-            ...(isMobile
-              ? {}
-              : {
-                  scale,
-                  rotateX,
-                  y,
-                }),
-            transformStyle: "preserve-3d",
-          }}
-          className="relative z-10 grid grid-cols-1 lg:grid-cols-2 items-center gap-12 px-8 md:px-16 py-28 bg-[#d8d9dd] rounded-[40px] shadow-[0_40px_120px_rgba(0,0,0,0.12)]"
-        >
-          {/* Left Content */}
-          <div className="relative z-20">
+        {/* Content */}
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 items-center gap-12 px-8 md:px-16 py-24 bg-[#d8d9dd] rounded-[40px] shadow-[0_40px_120px_rgba(0,0,0,0.12)]">
+          {/* Text */}
+          <div>
             <h2 className="text-5xl md:text-7xl font-semibold tracking-tight text-neutral-900 leading-[1.05] mb-8">
               Your wild adventure <br /> begins here.
             </h2>
@@ -104,36 +78,48 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
               perfect journey.
             </p>
 
-            <motion.button
-              whileHover={{ y: -3 }}
-              whileTap={{ scale: 0.96 }}
+            <button
               onClick={handleOpen}
-              className="relative z-30 bg-black text-white px-10 py-4 rounded-full text-lg font-medium shadow-xl hover:bg-neutral-800 transition-all duration-300"
+              className="bg-black text-white px-10 py-4 rounded-full text-lg font-medium shadow-md hover:bg-neutral-800 transition-colors duration-200"
             >
               Plan Your Safari
-            </motion.button>
+            </button>
           </div>
 
-          {/* Right Image */}
-          <div className="relative z-10 flex justify-center lg:justify-end pointer-events-none">
+          {/* Image */}
+          <div className="flex justify-center lg:justify-end pointer-events-none">
             <img
               src="/calltoaction.png"
               alt="Safari Journey Concept"
-              className="w-72 md:w-[450px] object-contain drop-shadow-2xl select-none"
+              className="w-72 md:w-[450px] object-contain select-none"
               loading="lazy"
             />
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* ================================
-         Booking Modal (updated props)
+         MODAL (ONLY ANIMATION HERE)
       ================================= */}
-      <BookingModal
-        isOpen={open}
-        onClose={handleClose}
-        service={getContactService(initialPackage)}
-      />
+      {open && (
+        <div
+          onClick={handleClose}
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300
+          ${visible ? "opacity-100 bg-black/40" : "opacity-0 bg-black/0"}`}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`w-full max-w-2xl transform transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
+            ${visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-[0.98]"}`}
+          >
+            <BookingModal
+              isOpen={true}
+              onClose={handleClose}
+              service={getContactService(initialPackage)}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };

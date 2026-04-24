@@ -1,9 +1,7 @@
 import React, { useState, useCallback, memo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ExpandMore } from "@mui/icons-material";
 
-const easing = [0.22, 1, 0.36, 1];
-
+/* ------------------ DATA ------------------ */
 const FAQ_DATA = [
   {
     q: "What is the best time of year to go on a safari?",
@@ -19,11 +17,11 @@ const FAQ_DATA = [
   },
   {
     q: "Is it safe to go on a guided safari?",
-    a: "Safety is our highest priority. Our guides are highly trained professionals with years of field experience. We also use premium custom safari vehicles and trusted luxury lodges."
+    a: "Safety is our highest priority. Our guides are highly trained professionals with years of field experience."
   },
   {
     q: "Do I need specific vaccinations or travel insurance?",
-    a: "Requirements vary by country. We recommend visiting a travel clinic 4–6 weeks before departure. Comprehensive travel insurance is required."
+    a: "Requirements vary by country. We recommend visiting a travel clinic 4–6 weeks before departure."
   },
   {
     q: "Can you customize a private itinerary?",
@@ -31,122 +29,89 @@ const FAQ_DATA = [
   }
 ];
 
-const FAQItem = memo(({ item, index, isActive, onClick }) => {
+/* ------------------ ITEM ------------------ */
+const FAQItem = memo(({ item, isActive, onClick }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0.95, y: 10 }} // never fully hidden
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.35,
-        ease: easing,
-        delay: index * 0.015 // subtle stagger (fast)
-      }}
-    >
-      <div className="relative overflow-hidden rounded-2xl border border-black/[0.06] bg-white/85 shadow-[0_8px_24px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_14px_34px_rgba(0,0,0,0.07)]">
+    <div className="border-b border-black/10 last:border-none">
+      <button
+        onClick={onClick}
+        className="w-full flex items-center justify-between py-6 text-left group"
+      >
+        <h3 className="text-[18px] md:text-[20px] font-medium text-[#1d1d1f] tracking-[-0.015em] max-w-[42ch]">
+          {item.q}
+        </h3>
 
-        {/* subtle glass gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-white/30 to-transparent pointer-events-none" />
-
-        <button
-          onClick={() => onClick(index)}
-          className="relative w-full flex items-center justify-between text-left px-6 md:px-8 py-5 md:py-6 gap-5"
+        <span
+          className={`ml-4 flex items-center justify-center w-9 h-9 rounded-full bg-white/70 backdrop-blur-sm border border-black/10 transition-transform duration-300 ${
+            isActive ? "rotate-180" : ""
+          }`}
         >
-          <h3 className="text-[17px] md:text-[19px] font-medium text-[#1d1d1f] leading-[1.3] tracking-[-0.02em] max-w-[34ch]">
-            {item.q}
-          </h3>
+          <ExpandMore fontSize="small" />
+        </span>
+      </button>
 
-          <motion.div
-            animate={{ rotate: isActive ? 180 : 0 }}
-            transition={{ duration: 0.25, ease: easing }}
-            className="shrink-0"
-          >
-            <span className="flex items-center justify-center w-10 h-10 rounded-full bg-[#f5f5f7] text-[#6e6e73] shadow-sm">
-              <ExpandMore fontSize="medium" />
-            </span>
-          </motion.div>
-        </button>
-
-        <AnimatePresence initial={false}>
-          {isActive && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{
-                height: { duration: 0.25, ease: easing },
-                opacity: { duration: 0.18 }
-              }}
-              className="overflow-hidden"
-            >
-              <div className="px-6 md:px-8 pb-6">
-                <p className="text-[#6e6e73] text-[15px] md:text-[16px] leading-[1.75] max-w-2xl">
-                  {item.a}
-                </p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <div
+        className={`grid transition-all duration-300 ease-out ${
+          isActive ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <p className="pb-6 text-[15.5px] md:text-[16px] leading-[1.7] text-[#6e6e73] max-w-2xl">
+            {item.a}
+          </p>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 });
 
 FAQItem.displayName = "FAQItem";
 
+/* ------------------ MAIN ------------------ */
 const Questions = () => {
-  const [activeFAQ, setActiveFAQ] = useState(null);
+  const [active, setActive] = useState(null);
 
-  const toggleFAQ = useCallback((index) => {
-    setActiveFAQ((prev) => (prev === index ? null : index));
+  const toggle = useCallback((i) => {
+    setActive((prev) => (prev === i ? null : i));
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-[#fafafa] py-28 md:py-36 px-6">
+    <section className="bg-[#f5f5f7] py-28 px-6">
+      <div className="max-w-6xl mx-auto">
 
-      {/* ambient background */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[360px] h-[360px] bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+        {/* TITLE */}
+        <h2 className="text-[34px] md:text-[48px] font-semibold tracking-[-0.02em] text-[#1d1d1f] mb-16">
+          Take a closer look.
+        </h2>
 
-      <div className="relative z-10 mx-auto max-w-4xl">
+        {/* GRADIENT CONTAINER (APPLE STYLE) */}
+        <div className="relative rounded-[32px] overflow-hidden">
 
-        {/* HEADER */}
-        <motion.div
-          className="mb-16 md:mb-20 text-center"
-          initial={{ opacity: 0.9, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: easing }}
-        >
-          <div className="mx-auto mb-5 inline-flex items-center gap-3 rounded-full border border-black/[0.06] bg-white/70 px-4 py-2 text-[12px] font-medium tracking-[0.18em] uppercase text-[#6e6e73] backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-            FAQ
+          {/* smooth blend background */}
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#e5e5e7_0%,#e5e5e7_40%,#f6a96b_75%,#e67e22_100%)]" />
+
+          {/* subtle noise-free overlay */}
+          <div className="absolute inset-0 bg-white/10" />
+
+          <div className="relative z-10 px-8 md:px-16 py-14 md:py-20 max-w-3xl">
+
+            <h3 className="text-[22px] md:text-[28px] font-medium text-[#1d1d1f] tracking-[-0.02em] mb-10">
+              Everything you need to know
+            </h3>
+
+            {/* FAQ LIST */}
+            <div className="divide-y divide-black/10">
+              {FAQ_DATA.map((item, i) => (
+                <FAQItem
+                  key={i}
+                  item={item}
+                  isActive={active === i}
+                  onClick={() => toggle(i)}
+                />
+              ))}
+            </div>
           </div>
-
-          <h2 className="mx-auto text-center text-5xl md:text-7xl font-semibold tracking-[-0.06em] text-[#1d1d1f] leading-[0.95] whitespace-nowrap">
-            <span>Common </span>
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
-              Questions
-            </span>
-          </h2>
-
-          <p className="mt-6 mx-auto max-w-2xl text-[17px] md:text-[20px] leading-[1.7] tracking-[-0.01em] text-[#6e6e73]">
-            Everything you need to know about planning your next luxury African
-            wilderness experience.
-          </p>
-        </motion.div>
-
-        {/* FAQ LIST */}
-        <div className="space-y-4">
-          {FAQ_DATA.map((item, index) => (
-            <FAQItem
-              key={index}
-              item={item}
-              index={index}
-              isActive={activeFAQ === index}
-              onClick={toggleFAQ}
-            />
-          ))}
         </div>
-
       </div>
     </section>
   );

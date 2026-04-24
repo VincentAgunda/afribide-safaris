@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 /* ================================================= */
 /* DATA                                              */
@@ -20,7 +19,7 @@ const items = [
     title: "Packing Guide",
     subtitle: "What to bring on safari.",
     image: "/gallery/jeep.jpeg",
-    bg: "bg-gradient-to-r from-blue-100 to-blue-200",
+    bg: "bg-[linear-gradient(90deg,#e5e5e7_0%,#e5e5e7_40%,#f6a96b_75%,#e67e22_100%)]",
     button: "Read",
   },
   {
@@ -107,26 +106,35 @@ const blogs = [
 
 const SafariGrid = () => {
   const [active, setActive] = useState(null);
+  const [visible, setVisible] = useState(false);
 
-  const closeModal = () => setActive(null);
-
+  // Handle smooth mount/unmount
   useEffect(() => {
-    document.body.style.overflow = active ? "hidden" : "auto";
+    if (active) {
+      setVisible(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
   }, [active]);
 
+  const handleClose = () => {
+    setVisible(false);
+    setTimeout(() => setActive(null), 260); // match animation duration
+  };
+
   return (
-    <section className="bg-[#e5e5e5] min-h-screen py-6 px-4">
+    <section className="bg-[#e5e5e5] min-h-screen py-8 px-4">
       {/* GRID */}
-      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
         {items.map((item, index) => (
-          <motion.div
+          <div
             key={index}
-            whileHover={{ scale: 1.02 }}
-            className={`h-[420px] md:h-[480px] rounded-2xl overflow-hidden flex flex-col justify-between items-center text-center ${item.bg}`}
+            className={`h-[420px] md:h-[480px] rounded-2xl overflow-hidden flex flex-col justify-between items-center text-center ${item.bg}
+            transition-transform duration-300 ease-out hover:scale-[1.015]`}
           >
-            {/* TEXT */}
             <div className="pt-10 px-6">
-              <h2 className="text-2xl md:text-3xl font-semibold whitespace-pre-line">
+              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
                 {item.title}
               </h2>
 
@@ -136,121 +144,114 @@ const SafariGrid = () => {
 
               <button
                 onClick={() => setActive(item)}
-                className="mt-4 px-5 py-2 rounded-full bg-black text-white text-sm hover:opacity-80"
+                className="mt-5 px-5 py-2 rounded-full bg-black text-white text-sm transition-opacity duration-200 hover:opacity-80"
               >
                 {item.button}
               </button>
             </div>
 
-            {/* IMAGE */}
             <div className="w-full flex justify-center items-end pb-6">
               <img
                 src={item.image}
                 alt=""
+                loading="lazy"
                 className="max-h-[200px] md:max-h-[220px] object-contain"
               />
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 
       {/* ================= MODAL ================= */}
-      <AnimatePresence>
-        {active && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-lg p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeModal}
+      {active && (
+        <div
+          onClick={handleClose}
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300
+          ${visible ? "opacity-100 bg-black/40" : "opacity-0 bg-black/0"}`}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`relative w-full max-w-3xl max-h-[90vh] bg-white rounded-3xl overflow-hidden flex flex-col
+            transform transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
+            ${visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-[0.98]"}`}
           >
-            <motion.div
-              className="relative w-full max-w-3xl max-h-[90vh] bg-white rounded-3xl overflow-hidden flex flex-col"
-              initial={{ scale: 0.92 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.95 }}
-              onClick={(e) => e.stopPropagation()}
+            {/* CLOSE */}
+            <button
+              onClick={handleClose}
+              className="absolute top-4 right-4 bg-gray-100 w-9 h-9 rounded-full hover:bg-gray-200 transition"
             >
-              {/* CLOSE BUTTON */}
-              <button
-                onClick={closeModal}
-                className="absolute top-4 right-4 bg-gray-100 w-9 h-9 rounded-full z-10 hover:bg-gray-200"
-              >
-                ✕
-              </button>
+              ✕
+            </button>
 
-              {/* SCROLLABLE CONTENT */}
-              <div className="overflow-y-auto">
-                {/* TESTIMONIALS */}
-                {active.type === "testimonials" && (
-                  <div className="p-5 md:p-10 space-y-6">
-                    <h3 className="text-xl md:text-2xl font-semibold">
-                      What Our Guests Say
-                    </h3>
+            {/* CONTENT */}
+            <div className="overflow-y-auto">
+              {active.type === "testimonials" && (
+                <div className="p-6 md:p-10 space-y-6">
+                  <h3 className="text-xl md:text-2xl font-semibold">
+                    What Our Guests Say
+                  </h3>
 
-                    {testimonials.map((t, i) => (
-                      <div key={i} className="flex gap-4 items-center">
-                        <img
-                          src={t.avatar}
-                          alt=""
-                          className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover"
-                        />
-                        <div>
-                          <p className="text-gray-700 text-sm italic">
-                            "{t.quote}"
-                          </p>
-                          <span className="text-xs font-semibold">
-                            {t.name}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* BLOG */}
-                {active.type === "blog" && (
-                  <div>
-                    <img
-                      src={blogs[active.blogIndex].image}
-                      alt=""
-                      className="h-48 md:h-64 w-full object-cover"
-                    />
-
-                    <div className="p-5 md:p-10 space-y-5">
-                      <h3 className="text-xl md:text-2xl font-semibold">
-                        {blogs[active.blogIndex].title}
-                      </h3>
-
-                      <p className="text-gray-700 text-sm md:text-base">
-                        {blogs[active.blogIndex].content}
-                      </p>
-
+                  {testimonials.map((t, i) => (
+                    <div key={i} className="flex gap-4 items-center">
+                      <img
+                        src={t.avatar}
+                        alt=""
+                        className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover"
+                      />
                       <div>
-                        <h4 className="font-semibold mb-2">Highlights</h4>
-                        <ul className="space-y-2 text-sm md:text-base">
-                          {blogs[active.blogIndex].highlights.map((h, i) => (
-                            <li key={i}>• {h}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h4 className="font-semibold mb-2">Tips</h4>
-                        <ul className="space-y-2 text-sm md:text-base">
-                          {blogs[active.blogIndex].tips.map((t, i) => (
-                            <li key={i}>• {t}</li>
-                          ))}
-                        </ul>
+                        <p className="text-gray-700 text-sm italic">
+                          "{t.quote}"
+                        </p>
+                        <span className="text-xs font-semibold">
+                          {t.name}
+                        </span>
                       </div>
                     </div>
+                  ))}
+                </div>
+              )}
+
+              {active.type === "blog" && (
+                <div>
+                  <img
+                    src={blogs[active.blogIndex].image}
+                    alt=""
+                    className="h-52 md:h-64 w-full object-cover"
+                  />
+
+                  <div className="p-6 md:p-10 space-y-5">
+                    <h3 className="text-xl md:text-2xl font-semibold">
+                      {blogs[active.blogIndex].title}
+                    </h3>
+
+                    <p className="text-gray-700 text-sm md:text-base leading-relaxed">
+                      {blogs[active.blogIndex].content}
+                    </p>
+
+                    <div>
+                      <h4 className="font-semibold mb-2">Highlights</h4>
+                      <ul className="space-y-2 text-sm md:text-base">
+                        {blogs[active.blogIndex].highlights.map((h, i) => (
+                          <li key={i}>• {h}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold mb-2">Tips</h4>
+                      <ul className="space-y-2 text-sm md:text-base">
+                        {blogs[active.blogIndex].tips.map((t, i) => (
+                          <li key={i}>• {t}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

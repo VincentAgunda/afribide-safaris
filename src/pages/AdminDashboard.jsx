@@ -665,34 +665,44 @@ const AdminDashboard = () => {
             <h3 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b">
               Recent Bookings & Quotes
             </h3>
-            <div className="min-w-full">
-              <table className="w-full text-left border-collapse">
+            <div className="min-w-[1200px] lg:min-w-full">
+              <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="bg-gray-100 text-gray-700 text-sm">
+                  <tr className="bg-gray-100 text-gray-700">
                     <th className="p-3 font-semibold border-b">Name</th>
                     <th className="p-3 font-semibold border-b">Email</th>
+                    <th className="p-3 font-semibold border-b">Phone</th>
                     <th className="p-3 font-semibold border-b">Package</th>
-                    <th className="p-3 font-semibold border-b">Date</th>
+                    <th className="p-3 font-semibold border-b">Adults</th>
+                    <th className="p-3 font-semibold border-b">Children</th>
+                    <th className="p-3 font-semibold border-b">Travel Date</th>
+                    <th className="p-3 font-semibold border-b">Message</th>
+                    <th className="p-3 font-semibold border-b">Received</th>
                   </tr>
                 </thead>
                 <tbody>
                   {queries.map((q) => (
                     <tr key={q.id} className="border-b border-gray-100 hover:bg-gray-50">
-                      <td className="p-3 text-sm font-medium">{q.name}</td>
-                      <td className="p-3 text-sm text-gray-600">{q.email}</td>
-                      <td className="p-3 text-sm text-blue-600 font-medium">
-                        {q.packageTitle}
+                      <td className="p-3 font-medium">{q.name || "—"}</td>
+                      <td className="p-3 text-gray-600">{q.email || "—"}</td>
+                      <td className="p-3 text-gray-600">{q.phone || "—"}</td>
+                      <td className="p-3 text-blue-600 font-medium">{q.packageTitle || "—"}</td>
+                      <td className="p-3">{q.adults || "—"}</td>
+                      <td className="p-3">{q.children || "—"}</td>
+                      <td className="p-3">{q.travelDate || "—"}</td>
+                      <td className="p-3 max-w-xs truncate" title={q.message}>
+                        {q.message || "—"}
                       </td>
-                      <td className="p-3 text-sm text-gray-500">
+                      <td className="p-3 text-gray-500 whitespace-nowrap">
                         {q.createdAt?.toDate
-                          ? new Date(q.createdAt.toDate()).toLocaleDateString()
+                          ? new Date(q.createdAt.toDate()).toLocaleString()
                           : "N/A"}
                       </td>
                     </tr>
                   ))}
                   {queries.length === 0 && (
                     <tr>
-                      <td colSpan="4" className="p-8 text-center text-gray-500">
+                      <td colSpan="9" className="p-8 text-center text-gray-500">
                         No booking requests yet.
                       </td>
                     </tr>

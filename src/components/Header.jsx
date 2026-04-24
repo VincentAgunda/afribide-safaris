@@ -1,4 +1,3 @@
-// components/Header.jsx
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { FaUserCircle, FaBars, FaTimes, FaChevronDown, FaSignOutAlt, FaShieldAlt } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
@@ -9,8 +8,8 @@ import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
   { path: "/#about", label: "About Us" },
-  { path: "/#gallery", label: "Explore" },       // Scrolls to NextureWork (id="gallery-section")
-  { path: "/#full-gallery", label: "Gallery" },  // Scrolls to GalleryPage (id="full-gallery-section")
+  { path: "/#gallery", label: "Explore" },
+  { path: "/#full-gallery", label: "Gallery" },
   {
     label: "Testimonials & Blogs",
     isDropdown: true,
@@ -76,7 +75,6 @@ const Header = React.memo(() => {
   const isScrolled = scrollY > 10;
   const isAdmin = userRole === "admin";
 
-  // Debug: log admin status (remove in production)
   useEffect(() => {
     console.log("Auth status:", { currentUser: !!currentUser, userRole, isAdmin });
   }, [currentUser, userRole, isAdmin]);
@@ -85,30 +83,30 @@ const Header = React.memo(() => {
     navLinks.map((link, idx) => {
       if (link.isDropdown) {
         return (
-          <li key={idx} className="relative" ref={navDropdownRef}>
+          <li key={idx} className="relative h-full flex items-center" ref={navDropdownRef}>
             <button
               onClick={() => setNavDropdownOpen(!navDropdownOpen)}
-              className={`flex items-center px-2 py-1 transition-colors duration-200 group outline-none ${
-                isScrolled ? "text-gray-800 hover:text-black dark:text-gray-300 dark:hover:text-white" : "text-gray-300 hover:text-white"
+              className={`flex items-center px-4 h-full text-sm tracking-wide transition-colors duration-200 outline-none ${
+                isScrolled ? "text-gray-900 hover:text-[#8A4413]" : "text-white hover:text-gray-200"
               }`}
             >
               {link.label}
-              <FaChevronDown className={`ml-1 text-xs transition-transform duration-200 ${navDropdownOpen ? "rotate-180" : ""}`} />
+              <FaChevronDown className={`ml-2 text-[10px] transition-transform duration-200 ${navDropdownOpen ? "rotate-180" : ""}`} />
             </button>
             <AnimatePresence>
               {navDropdownOpen && (
                 <motion.ul
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute top-full left-0 mt-2 w-48 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl shadow-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 5 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-full left-0 w-48 bg-[#F5F5F7] shadow-md border border-gray-200 rounded-sm overflow-hidden"
                 >
                   {link.subLinks.map((subLink) => (
                     <li key={subLink.path}>
                       <Link
                         to={subLink.path}
-                        className="block px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                        className="block px-4 py-3 text-sm text-gray-800 hover:bg-[#8A4413] hover:text-white transition-colors"
                         onClick={(e) => handleNavClick(e, subLink.path)}
                       >
                         {subLink.label}
@@ -126,18 +124,17 @@ const Header = React.memo(() => {
                        (link.path.includes(location.hash) && location.hash !== "");
 
       return (
-        <li key={link.path}>
+        <li key={link.path} className="h-full">
           <Link
             to={link.path}
-            className={`relative px-2 py-1 transition-colors duration-200 group ${
-              isActive ? "font-medium" : ""
-            } ${isScrolled ? "text-gray-800 hover:text-black dark:text-gray-300 dark:hover:text-white" : "text-gray-300 hover:text-white"}`}
+            className={`flex items-center px-6 h-full text-sm tracking-wide transition-colors duration-300 ${
+              isActive
+                ? (isScrolled ? "bg-[#8A4413] text-white" : "bg-white/20 text-white")
+                : (isScrolled ? "text-gray-900 hover:bg-gray-100" : "text-white hover:bg-white/10")
+            }`}
             onClick={(e) => handleNavClick(e, link.path)}
           >
             {link.label}
-            <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ${
-              isActive ? "w-full" : "w-0 group-hover:w-full"
-            }`}></span>
           </Link>
         </li>
       );
@@ -148,8 +145,8 @@ const Header = React.memo(() => {
     navLinks.map((link, index) => {
       if (link.isDropdown) {
         return (
-          <div key={index}>
-            <p className="block py-2 px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          <div key={index} className="mb-2">
+            <p className="block py-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-widest">
               {link.label}
             </p>
             {link.subLinks.map((subLink, subIdx) => (
@@ -158,11 +155,11 @@ const Header = React.memo(() => {
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: index * 0.05 + 0.1 + (subIdx * 0.05) }}
-                className="ml-4 border-l border-gray-200 dark:border-gray-800"
+                className="ml-4 border-l border-gray-300"
               >
                 <Link
                   to={subLink.path}
-                  className="block py-2 px-4 text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
+                  className="block py-2 px-4 text-sm text-gray-700 hover:text-[#8A4413]"
                   onClick={(e) => handleNavClick(e, subLink.path)}
                 >
                   {subLink.label}
@@ -185,10 +182,10 @@ const Header = React.memo(() => {
         >
           <Link
             to={link.path}
-            className={`block py-3 px-4 rounded-xl transition-colors text-sm font-medium ${
+            className={`block py-3 px-4 transition-colors text-sm tracking-wide ${
               isActive
-                ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+                ? "bg-[#8A4413] text-white"
+                : "text-gray-800 hover:bg-gray-100"
             }`}
             onClick={(e) => handleNavClick(e, link.path)}
           >
@@ -226,37 +223,37 @@ const Header = React.memo(() => {
   return (
     <>
       <motion.header
-        className={`fixed top-0 left-0 w-full z-[50] transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-[50] transition-colors duration-300 ${
           isScrolled
-            ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50"
-            : "bg-transparent"
+            ? "bg-[#F5F5F7] shadow-sm"
+            : "bg-transparent border-b border-white/20"
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <nav className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center h-20 md:h-24">
+        <nav className="w-full flex justify-between items-center h-20 md:h-24">
           {/* LOGO */}
-          <motion.div className="flex items-center" whileHover={{ scale: 1.02 }}>
+          <div className={`h-full flex items-center px-6 lg:px-12 transition-colors duration-300 ${isScrolled ? "bg-transparent" : "bg-white"}`}>
             <Link to="/" onClick={(e) => handleNavClick(e, "/")} className="flex items-center">
               <img
-                src="/logo.png"
+                src="/afribide-logo.png"
                 alt="Afribide Safaris"
-                className="h-8 md:h-10 w-auto object-contain"
+                className="h-8 md:h-12 w-auto object-contain"
               />
             </Link>
-          </motion.div>
+          </div>
 
           {/* DESKTOP LINKS */}
-          <div className="hidden md:flex flex-1 justify-end items-center space-x-8 pr-8">
-            <ul className="flex space-x-6 items-center">
+          <div className="hidden md:flex flex-1 justify-end items-center h-full">
+            <ul className="flex h-full items-center m-0 p-0">
               {renderNavLinks}
               {isAdmin && (
-                <li>
+                <li className="h-full">
                   <Link
                     to="/admin"
-                    className={`flex items-center gap-1 px-2 py-1 transition-colors duration-200 ${
-                      isScrolled ? "text-gray-800 hover:text-black" : "text-gray-300 hover:text-white"
+                    className={`flex items-center gap-2 px-6 h-full text-sm tracking-wide transition-colors duration-200 ${
+                      isScrolled ? "text-gray-900 hover:bg-gray-100" : "text-white hover:bg-white/10"
                     }`}
                     onClick={closeAllMenus}
                   >
@@ -267,106 +264,106 @@ const Header = React.memo(() => {
               )}
             </ul>
 
-            <div className="flex items-center space-x-4 border-l border-gray-300/30 pl-8">
+            <div className={`flex items-center h-full px-6 border-l ${isScrolled ? "border-gray-300" : "border-white/30"}`}>
               <Link
                 to="/#contact"
                 onClick={(e) => handleNavClick(e, "/#contact")}
-                className={`px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-300 ${
+                className={`px-6 py-2 border text-sm tracking-widest uppercase transition-all duration-300 rounded-sm ${
                   isScrolled
-                    ? "bg-black text-white hover:bg-gray-800 shadow-md hover:shadow-lg"
-                    : "bg-white text-black hover:bg-gray-100 shadow-lg"
+                    ? "border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white"
+                    : "border-white text-white hover:bg-white hover:text-black"
                 }`}
               >
                 Contact Us
               </Link>
 
-              {currentUser ? (
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
-                      isScrolled ? "bg-gray-100 hover:bg-gray-200 text-gray-800" : "bg-white/20 hover:bg-white/30 text-white"
+              <div className="ml-6">
+                {currentUser ? (
+                  <div className="relative" ref={dropdownRef}>
+                    <button
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      className={`flex items-center justify-center w-10 h-10 transition-colors rounded-sm ${
+                        isScrolled ? "bg-gray-200 hover:bg-gray-300 text-gray-800" : "bg-white/20 hover:bg-white/30 text-white"
+                      }`}
+                    >
+                      {currentUser.photoURL ? (
+                        <img src={currentUser.photoURL} alt="Profile" className="w-full h-full object-cover rounded-sm" />
+                      ) : (
+                        <FaUserCircle size={22} />
+                      )}
+                    </button>
+                    <AnimatePresence>
+                      {dropdownOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 5 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute right-0 mt-3 w-48 bg-[#F5F5F7] shadow-lg border border-gray-200 rounded-sm overflow-hidden"
+                        >
+                          <div className="px-4 py-3 border-b border-gray-200 bg-white">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {currentUser.displayName || "User"}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate">
+                              {currentUser.email}
+                            </p>
+                          </div>
+                          {isAdmin && (
+                            <Link
+                              to="/admin"
+                              className="w-full flex items-center px-4 py-3 text-sm text-[#8A4413] hover:bg-gray-100 transition-colors"
+                              onClick={closeAllMenus}
+                            >
+                              <FaShieldAlt className="mr-2" /> Admin Dashboard
+                            </Link>
+                          )}
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                          >
+                            <FaSignOutAlt className="mr-2" /> Logout
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link
+                    to="/login"
+                    className={`px-6 py-2 text-sm tracking-widest uppercase transition-all duration-300 rounded-sm ${
+                      isScrolled
+                        ? "bg-gray-900 text-white hover:bg-black"
+                        : "bg-white text-black hover:bg-gray-200"
                     }`}
                   >
-                    {currentUser.photoURL ? (
-                      <img src={currentUser.photoURL} alt="Profile" className="w-full h-full rounded-full object-cover" />
-                    ) : (
-                      <FaUserCircle size={22} />
-                    )}
-                  </button>
-                  <AnimatePresence>
-                    {dropdownOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute right-0 mt-3 w-48 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-2xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50"
-                      >
-                        <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
-                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                            {currentUser.displayName || "User"}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                            {currentUser.email}
-                          </p>
-                        </div>
-                        {isAdmin && (
-                          <Link
-                            to="/admin"
-                            className="w-full flex items-center px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                            onClick={closeAllMenus}
-                          >
-                            <FaShieldAlt className="mr-2" /> Admin Dashboard
-                          </Link>
-                        )}
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                        >
-                          <FaSignOutAlt className="mr-2" /> Logout
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ) : (
-                <Link
-                  to="/login"
-                  className={`px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-300 ${
-                    isScrolled
-                      ? "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg"
-                      : "bg-blue-500 text-white hover:bg-blue-600 shadow-lg"
-                  }`}
-                >
-                  Login
-                </Link>
-              )}
+                    Login
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
 
           {/* MOBILE MENU / AUTH TOGGLE */}
-          <div className="flex items-center space-x-4 md:hidden">
+          <div className="flex items-center space-x-4 md:hidden pr-6">
             {currentUser && !mobileMenuOpen && (
-              <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm">
+              <div className="w-8 h-8 rounded-sm overflow-hidden border border-[#000000] bg-white">
                 {currentUser.photoURL ? (
                   <img src={currentUser.photoURL} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <FaUserCircle className={`w-full h-full ${isScrolled ? "text-gray-800" : "text-white"}`} />
+                  <FaUserCircle className={`w-full h-full ${isScrolled ? "text-[#979797]" : "text-[#979797]"}`} />
                 )}
               </div>
             )}
-            <motion.button
-              className={`focus:outline-none p-2 rounded-full transition-colors ${
+            <button
+              className={`focus:outline-none p-2 transition-colors ${
                 isScrolled ? "text-black" : "text-white"
               }`}
               onClick={toggleMobileMenu}
               aria-label="Mobile menu"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-            </motion.button>
+            </button>
           </div>
         </nav>
 
@@ -378,7 +375,7 @@ const Header = React.memo(() => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[999] md:hidden"
+                className="fixed inset-0 bg-black/60 z-[999] md:hidden"
                 onClick={closeAllMenus}
               />
               <motion.div
@@ -386,25 +383,25 @@ const Header = React.memo(() => {
                 initial={{ x: "100%" }}
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="fixed top-0 right-0 w-[80%] max-w-sm h-full z-[1000] bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-6 overflow-y-auto border-l border-white/20 dark:border-gray-800"
+                transition={{ type: "tween", duration: 0.3 }}
+                className="fixed top-0 right-0 w-[85%] max-w-sm h-full z-[1000] bg-[#F5F5F7] shadow-2xl p-6 overflow-y-auto border-l border-gray-200"
               >
-                <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Menu</h2>
-                  <button onClick={toggleMobileMenu} className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full">
-                    <FaTimes size={18} className="text-gray-800 dark:text-white" />
+                <div className="flex justify-between items-center mb-8 border-b border-gray-200 pb-4">
+                  <h2 className="text-sm tracking-widest uppercase font-semibold text-gray-900">Menu</h2>
+                  <button onClick={toggleMobileMenu} className="p-2 text-gray-500 hover:text-black">
+                    <FaTimes size={20} />
                   </button>
                 </div>
 
                 {currentUser && (
-                  <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl flex items-center space-x-3 border border-gray-100 dark:border-gray-700">
+                  <div className="mb-6 p-4 bg-white rounded-sm flex items-center space-x-3 border border-gray-200">
                     {currentUser.photoURL ? (
-                      <img src={currentUser.photoURL} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+                      <img src={currentUser.photoURL} alt="Profile" className="w-10 h-10 rounded-sm object-cover" />
                     ) : (
                       <FaUserCircle size={40} className="text-gray-400" />
                     )}
                     <div className="flex-1 overflow-hidden">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      <p className="text-sm font-medium text-gray-900 truncate">
                         {currentUser.displayName || "User"}
                       </p>
                       <p className="text-xs text-gray-500 truncate">{currentUser.email}</p>
@@ -412,20 +409,19 @@ const Header = React.memo(() => {
                   </div>
                 )}
 
-                <ul className="space-y-2">
+                <ul className="space-y-1">
                   {renderMobileMenuLinks}
 
-                  {/* ADMIN LINK IN MOBILE - MADE PROMINENT */}
                   {isAdmin && (
                     <motion.li
                       initial={{ x: 20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: 0.25 }}
-                      className="mt-4"
+                      className="mt-6 border-t border-gray-200 pt-4"
                     >
                       <Link
                         to="/admin"
-                        className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md transition-all"
+                        className="flex items-center justify-center gap-2 py-3 px-4 text-sm font-bold text-[#8A4413] border border-[#8A4413] rounded-sm hover:bg-[#8A4413] hover:text-white transition-all"
                         onClick={closeAllMenus}
                       >
                         <FaShieldAlt /> Admin Dashboard
@@ -433,22 +429,21 @@ const Header = React.memo(() => {
                     </motion.li>
                   )}
 
-                  <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+                  <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="pt-2">
                     <Link
                       to="/#contact"
-                      className="block py-3 px-4 mt-2 bg-black text-white text-sm font-medium text-center rounded-xl shadow-md"
+                      className="block py-3 px-4 mt-2 bg-gray-900 text-white text-sm tracking-wide text-center rounded-sm hover:bg-black transition-colors"
                       onClick={(e) => handleNavClick(e, "/#contact")}
                     >
                       Contact Us
                     </Link>
                   </motion.li>
 
-                  {/* MOBILE AUTH ACTION */}
                   <motion.li initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
                     {currentUser ? (
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center justify-center py-3 px-4 mt-3 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 text-sm font-medium text-center rounded-xl transition-colors"
+                        className="w-full flex items-center justify-center py-3 px-4 mt-3 bg-red-50 text-red-600 text-sm tracking-wide text-center rounded-sm hover:bg-red-100 transition-colors"
                       >
                         <FaSignOutAlt className="mr-2" /> Logout
                       </button>
@@ -456,16 +451,13 @@ const Header = React.memo(() => {
                       <Link
                         to="/login"
                         onClick={closeAllMenus}
-                        className="block py-3 px-4 mt-3 bg-blue-600 text-white text-sm font-medium text-center rounded-xl shadow-md"
+                        className="block py-3 px-4 mt-3 border border-gray-900 text-gray-900 text-sm tracking-wide text-center rounded-sm hover:bg-gray-100 transition-colors"
                       >
                         Login
                       </Link>
                     )}
                   </motion.li>
                 </ul>
-
-                {/* Extra spacer to ensure scrollability */}
-                <div className="h-8" />
               </motion.div>
             </>
           )}
