@@ -9,7 +9,7 @@ const items = [
     type: "testimonials",
     title: "Guest Stories",
     subtitle: "Real safari experiences.",
-    image: "/camera1.webp",
+    image: "/Animals/4zebras.jpeg",
     bg: "bg-[#f5f5f7]",
     button: "View Stories",
   },
@@ -18,7 +18,7 @@ const items = [
     blogIndex: 0,
     title: "Packing Guide",
     subtitle: "What to bring on safari.",
-    image: "/gallery/jeep.jpeg",
+    image: "/gallery/hotel-room.jpeg",
     bg: "bg-[linear-gradient(90deg,#e5e5e7_0%,#e5e5e7_40%,#f6a96b_75%,#e67e22_100%)]",
     button: "Read",
   },
@@ -27,7 +27,7 @@ const items = [
     blogIndex: 1,
     title: "Great Migration",
     subtitle: "Nature’s greatest event.",
-    image: "/Animals/lion1T.png",
+    image: "/Animals/3rhinos.jpeg",
     bg: "bg-[#f5f5f7]",
     button: "Explore",
   },
@@ -36,7 +36,7 @@ const items = [
     blogIndex: 2,
     title: "Luxury Lodges",
     subtitle: "Stay in the wild.",
-    image: "/parachute.jpeg",
+    image: "/gallery/hotel2.jpeg",
     bg: "bg-[#f5f5f7]",
     button: "Discover",
   },
@@ -108,7 +108,6 @@ const SafariGrid = () => {
   const [active, setActive] = useState(null);
   const [visible, setVisible] = useState(false);
 
-  // Handle smooth mount/unmount
   useEffect(() => {
     if (active) {
       setVisible(true);
@@ -120,7 +119,7 @@ const SafariGrid = () => {
 
   const handleClose = () => {
     setVisible(false);
-    setTimeout(() => setActive(null), 260); // match animation duration
+    setTimeout(() => setActive(null), 260);
   };
 
   return (
@@ -130,9 +129,10 @@ const SafariGrid = () => {
         {items.map((item, index) => (
           <div
             key={index}
-            className={`h-[420px] md:h-[480px] rounded-2xl overflow-hidden flex flex-col justify-between items-center text-center ${item.bg}
+            className={`h-[440px] md:h-[520px] rounded-2xl overflow-hidden flex flex-col justify-between items-center text-center ${item.bg}
             transition-transform duration-300 ease-out hover:scale-[1.015]`}
           >
+            {/* TEXT */}
             <div className="pt-10 px-6">
               <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
                 {item.title}
@@ -150,19 +150,20 @@ const SafariGrid = () => {
               </button>
             </div>
 
-            <div className="w-full flex justify-center items-end pb-6">
+            {/* IMAGE AREA (FIXED) */}
+            <div className="w-full flex justify-center items-end h-[55%] pb-6 px-8">
               <img
                 src={item.image}
                 alt=""
                 loading="lazy"
-                className="max-h-[200px] md:max-h-[220px] object-contain"
+                className="max-h-full w-auto object-contain rounded-xl"
               />
             </div>
           </div>
         ))}
       </div>
 
-      {/* ================= MODAL ================= */}
+      {/* MODAL */}
       {active && (
         <div
           onClick={handleClose}
@@ -173,7 +174,11 @@ const SafariGrid = () => {
             onClick={(e) => e.stopPropagation()}
             className={`relative w-full max-w-3xl max-h-[90vh] bg-white rounded-3xl overflow-hidden flex flex-col
             transform transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
-            ${visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-[0.98]"}`}
+            ${
+              visible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-6 scale-[0.98]"
+            }`}
           >
             {/* CLOSE */}
             <button

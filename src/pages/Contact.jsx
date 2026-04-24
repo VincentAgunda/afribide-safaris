@@ -53,7 +53,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
   return (
     <>
       {/* ================================
-         SECTION (NO SCROLL ANIMATION)
+         SECTION
       ================================= */}
       <section className="relative max-w-7xl mx-auto my-32 rounded-[40px] overflow-hidden">
         {/* Background */}
@@ -67,6 +67,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
 
         {/* Content */}
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 items-center gap-12 px-8 md:px-16 py-24 bg-[#d8d9dd] rounded-[40px] shadow-[0_40px_120px_rgba(0,0,0,0.12)]">
+          
           {/* Text */}
           <div>
             <h2 className="text-5xl md:text-7xl font-semibold tracking-tight text-neutral-900 leading-[1.05] mb-8">
@@ -88,18 +89,20 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
 
           {/* Image */}
           <div className="flex justify-center lg:justify-end pointer-events-none">
-            <img
-              src="/calltoaction.png"
-              alt="Safari Journey Concept"
-              className="w-72 md:w-[450px] object-contain select-none"
-              loading="lazy"
-            />
+            <div className="rounded-[40px] overflow-hidden">
+              <img
+                src="/parachute.jpeg"
+                alt="Safari Journey Concept"
+                className="w-72 md:w-[450px] object-cover select-none"
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* ================================
-         MODAL (ONLY ANIMATION HERE)
+         MODAL
       ================================= */}
       {open && (
         <div
@@ -110,7 +113,11 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
           <div
             onClick={(e) => e.stopPropagation()}
             className={`w-full max-w-2xl transform transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
-            ${visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-[0.98]"}`}
+            ${
+              visible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-6 scale-[0.98]"
+            }`}
           >
             <BookingModal
               isOpen={true}

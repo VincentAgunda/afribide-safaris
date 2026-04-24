@@ -48,7 +48,7 @@ const galleryData = [
   },
   {
     id: 4,
-    src: "/parachute.png",
+    src: "/parachute.jpeg",
     category: "Lodges",
     title: "Rest in luxury.",
     bgColor: "bg-[#FAFAFA]",
