@@ -81,7 +81,7 @@ const Questions = () => {
 
         {/* TITLE */}
         <h2 className="text-[34px] md:text-[48px] font-semibold tracking-[-0.02em] text-[#1d1d1f] mb-16">
-          Take a closer look.
+          Frequently Asked
         </h2>
 
         {/* GRADIENT CONTAINER (APPLE STYLE) */}

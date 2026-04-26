@@ -82,7 +82,7 @@ const galleryData = [
     bgColor: "bg-[#000000]",
     textColor: "text-white",
     relatedImages: [
-     "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
       "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
       "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
       "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
@@ -110,7 +110,7 @@ const galleryData = [
     bgColor: "bg-[#979797]",
     textColor: "text-white",
     relatedImages: [
-     "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
+      "/chettah1.jpeg", "/zebra-outside.jpeg", "/goose.jpeg",
       "/chimpanzee.jpeg", "/lion2.jpeg", "/giraffe1.jpeg",
       "/elephant1.jpeg", "/lion1.jpeg", "/zebra.jpeg",
       "/Leopard.jpeg", "/goose2.jpeg", "/girrafe2.jpeg"
@@ -154,6 +154,21 @@ const SafariPhotoGallery = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [galleryIndex, selectedPhoto]);
 
+  // INTELLIGENT PRELOADING: Preload adjacent images so there is no black flash on swipe
+  useEffect(() => {
+    if (galleryIndex !== null && selectedPhoto) {
+      const images = selectedPhoto.relatedImages;
+      const nextIdx = (galleryIndex + 1) % images.length;
+      const prevIdx = galleryIndex === 0 ? images.length - 1 : galleryIndex - 1;
+
+      const imgNext = new Image();
+      imgNext.src = images[nextIdx];
+
+      const imgPrev = new Image();
+      imgPrev.src = images[prevIdx];
+    }
+  }, [galleryIndex, selectedPhoto]);
+
   // Optimized scroll function for main carousel
   const scroll = useCallback((direction) => {
     if (scrollContainerRef.current) {
@@ -186,10 +201,10 @@ const SafariPhotoGallery = () => {
     );
   };
 
-  // Drag handler for swipe functionality (Optimized for Mobile)
+  // Drag handler for swipe functionality
   const handleDragEnd = (e, { offset, velocity }) => {
-    const swipeThreshold = 40; // Lowered threshold for easier swiping
-    const swipeVelocity = 400; // Consider fast swipes even if distance is short
+    const swipeThreshold = 40; 
+    const swipeVelocity = 400; 
 
     if (offset.x < -swipeThreshold || velocity.x < -swipeVelocity) {
       handleNextImage();
@@ -206,9 +221,9 @@ const SafariPhotoGallery = () => {
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-semibold text-[#1d1d1f] tracking-tight"
+            className="text-3xl md:text-5xl font-semibold text-[#1d1d1f] tracking-tight"
           >
-            The Wild in Focus.
+            Tour Our Wildlife Gallery.
           </motion.h2>
         </div>
 
@@ -217,10 +232,9 @@ const SafariPhotoGallery = () => {
           <motion.div
             ref={scrollContainerRef}
             layout
-            // Hide scrollbar natively across browsers
             className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {galleryData.map((item) => (
+            {galleryData.map((item, index) => (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -244,7 +258,10 @@ const SafariPhotoGallery = () => {
                     src={item.src}
                     alt={item.title}
                     className="w-full h-full object-contain object-bottom transform transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
+                    // Eagerly load the first 3 images for a snappy initial render
+                    loading={index <= 2 ? "eager" : "lazy"}
+                    fetchpriority={index === 0 ? "high" : "auto"}
+                    decoding="async"
                   />
                 </div>
 
@@ -327,6 +344,7 @@ const SafariPhotoGallery = () => {
                     src={selectedPhoto.src}
                     alt={selectedPhoto.title}
                     className="max-h-[30vh] md:max-h-[40vh] object-contain drop-shadow-2xl"
+                    decoding="async"
                   />
                 </div>
               </div>
@@ -353,6 +371,7 @@ const SafariPhotoGallery = () => {
                         alt={`${selectedPhoto.category} detail ${idx + 1}`}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         loading="lazy"
+                        decoding="async"
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
                          <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-md font-medium text-sm md:text-base">View</span>
@@ -409,13 +428,12 @@ const SafariPhotoGallery = () => {
               </div>
             </div>
 
-            {/* Image Wrapper (Handles Swipe Gestures & Overlapping Crossfade) */}
+            {/* Image Wrapper */}
             <div className="relative w-full h-full flex items-center justify-center">
               <AnimatePresence>
                 <motion.img
                   key={galleryIndex}
                   src={selectedPhoto.relatedImages[galleryIndex]}
-                  // Soft crossfade replacing the harsh horizontal movement
                   initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 1.04 }}
@@ -424,8 +442,7 @@ const SafariPhotoGallery = () => {
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.7}
                   onDragEnd={handleDragEnd}
-                  // Absolute positioning forces images to overlap during the transition
-                  // will-change properties prevent mobile rendering flickers
+                  decoding="async"
                   className="absolute w-full h-full object-contain cursor-grab active:cursor-grabbing z-[60] px-0 sm:px-16 will-change-transform will-change-opacity"
                   alt={`Gallery visual ${galleryIndex + 1}`}
                 />

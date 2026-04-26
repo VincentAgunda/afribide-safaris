@@ -261,13 +261,13 @@ const AdminDashboard = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 font-sans antialiased pt-20 md:pt-24">
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex w-64 bg-blue-600 text-white p-6 flex-col fixed top-20 md:top-24 bottom-0 left-0 overflow-y-auto z-40">
+      <div className="hidden md:flex w-64 bg-[#2B1122] text-white p-6 flex-col fixed top-20 md:top-24 bottom-0 left-0 overflow-y-auto z-40">
         <SidebarContent />
       </div>
 
       {/* Mobile Header */}
       <div className="md:hidden fixed top-20 left-0 right-0 bg-white border-b border-gray-200 px-4 py-3 z-30 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-blue-600">Afribide Admin</h2>
+        <h2 className="text-lg font-bold text-[#2B1122]">Afribide Admin</h2>
         <button
           onClick={toggleMobileSidebar}
           className="p-2 rounded-lg bg-blue-50 text-blue-600"

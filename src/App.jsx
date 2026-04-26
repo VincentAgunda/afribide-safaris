@@ -13,7 +13,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import About from "./pages/About";
 
-// ✅ FIXED IMPORTS (SEPARATE PAGES)
 import NextureWork from "./pages/NextureWork";
 import GalleryPage from "./pages/GalleryPage";
 
@@ -26,16 +25,16 @@ import AdminAuth from "./pages/AdminAuth";
    PAGE ANIMATION VARIANTS
 ========================= */
 const pageVariants = {
-  initial: { opacity: 0, x: -30 },
+  initial: { opacity: 0, scale: 0.98 },
   animate: {
     opacity: 1,
-    x: 0,
-    transition: { duration: 0.3, ease: "easeInOut" }
+    scale: 1,
+    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] } 
   },
   exit: {
     opacity: 0,
-    x: 30,
-    transition: { duration: 0.25, ease: "easeInOut" }
+    scale: 0.98,
+    transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }
   }
 };
 
@@ -50,7 +49,7 @@ function AppContent() {
   const location = useLocation();
 
   return (
-    <div className="app bg-gray-50 dark:bg-black min-h-screen">
+    <div className="app bg-[#F5F5F7] dark:bg-[#111111] min-h-screen">
       <ScrollToTop />
       <Header />
 
@@ -93,7 +92,7 @@ function AppContent() {
             }
           />
 
-          {/* ✅ NEXTURE WORK PAGE */}
+          {/* NEXTURE WORK PAGE */}
           <Route
             path="/nexture-work"
             element={
@@ -109,7 +108,7 @@ function AppContent() {
             }
           />
 
-          {/* ✅ FULL GALLERY PAGE */}
+          {/* FULL GALLERY PAGE */}
           <Route
             path="/gallery"
             element={

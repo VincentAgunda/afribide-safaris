@@ -9,87 +9,66 @@ import React, {
 } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
-import BookingModal from "../components/BookingModal"; // <-- Import the extracted modal
+import BookingModal from "../components/BookingModal";
 
-// Lazy-load icons (same as before)
+// Lazy-load icons
 const Map = React.lazy(() => import("@mui/icons-material/Map"));
 const Explore = React.lazy(() => import("@mui/icons-material/Explore"));
 const Landscape = React.lazy(() => import("@mui/icons-material/Landscape"));
-const DirectionsCar = React.lazy(() =>
-  import("@mui/icons-material/DirectionsCar")
-);
+const DirectionsCar = React.lazy(() => import("@mui/icons-material/DirectionsCar"));
 const Article = React.lazy(() => import("@mui/icons-material/Article"));
 
 const CARD_THEMES = [
   {
+    bg: "#FFFFFF",
+    text: "text-gray-900",
+    subText: "text-gray-500 font-light tracking-wide",
+    iconBg: "bg-[#F5F5F7]",
+    iconColor: "text-[#8A4413]",
+    btnBg: "bg-transparent border border-gray-900 hover:bg-gray-900",
+    btnText: "text-gray-900 hover:text-white",
+    plusBorder: "border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white",
+    divider: "border-gray-200",
+    bullet: "bg-[#8A4413]",
+  },
+  {
     bg: "#F5F5F7",
     text: "text-gray-900",
-    subText: "text-gray-700 font-normal",
-    iconBg: "bg-gray-200",
-    iconColor: "text-gray-900",
-    btnBg: "bg-black hover:bg-[#002D62]",
-    btnText: "text-white",
-    plusBorder: "border-[#0b1b32] text-[#0b1b32]",
-    divider: "border-gray-300",
-  },
-  {
-    bg: "#979797",
-    text: "text-white",
-    subText: "text-gray-100 font-light",
-    iconBg: "bg-white/20",
-    iconColor: "text-white",
-    btnBg: "bg-black hover:bg-[#222]",
-    btnText: "text-white",
-    plusBorder: "border-white text-white hover:bg-white hover:text-[#979797]",
-    divider: "border-white/30",
-  },
-  {
-    bg: "#Ffffff",
-    text: "text-gray-900",
-    subText: "text-gray-700 font-normal",
+    subText: "text-gray-600 font-light tracking-wide",
     iconBg: "bg-white",
-    iconColor: "text-gray-900",
-    btnBg: "bg-black hover:bg-[#002D62]",
+    iconColor: "text-[#8A4413]",
+    btnBg: "bg-[#8A4413] border border-[#8A4413] hover:bg-[#733810]",
     btnText: "text-white",
-    plusBorder: "border-[#0b1b32] text-[#0b1b32]",
+    plusBorder: "border-[#8A4413] text-[#8A4413] hover:bg-[#8A4413] hover:text-white",
     divider: "border-gray-300",
+    bullet: "bg-[#8A4413]",
   },
   {
-    bg: "#000000",
+    bg: "#111111",
     text: "text-white",
-    subText: "text-gray-300 font-light",
+    subText: "text-gray-400 font-light tracking-wide",
     iconBg: "bg-gray-800",
-    iconColor: "text-white",
-    btnBg: "bg-white hover:bg-gray-200",
+    iconColor: "text-[#8A4413]",
+    btnBg: "bg-white border border-white hover:bg-gray-200",
     btnText: "text-black",
     plusBorder: "border-white text-white hover:bg-white hover:text-black",
     divider: "border-gray-800",
-  },
-  {
-    bg: "#FFD600",
-    text: "text-gray-900",
-    subText: "text-gray-700 font-normal",
-    iconBg: "bg-white",
-    iconColor: "text-gray-900",
-    btnBg: "bg-black hover:bg-[#002D62]",
-    btnText: "text-white",
-    plusBorder: "border-[#0b1b32] text-[#0b1b32]",
-    divider: "border-gray-300",
+    bullet: "bg-[#8A4413]",
   },
 ];
 
 /* =========================================
-   SERVICE CARD COMPONENT (unchanged)
+   SERVICE CARD COMPONENT
 ========================================= */
 const ServiceCard = memo(
   ({ service, index, onOpenModal, isMobile, totalCards }) => {
     const theme = CARD_THEMES[index % CARD_THEMES.length];
 
     const desktopMotionProps = {
-      initial: { opacity: 0.5, scale: 0.9 },
-      whileInView: { opacity: 1, scale: 1 },
-      transition: { duration: 0.6, ease: "easeOut" },
-      viewport: { amount: 0.6, once: false },
+      initial: { opacity: 0, y: 30 },
+      whileInView: { opacity: 1, y: 0 },
+      transition: { duration: 0.6, ease: "easeOut", delay: index * 0.1 },
+      viewport: { amount: 0.2, once: true },
     };
 
     const MotionWrapper = isMobile ? "div" : motion.div;
@@ -105,31 +84,33 @@ const ServiceCard = memo(
           minHeight: "480px",
           backgroundColor: theme.bg,
         }}
-        className={`relative rounded-3xl overflow-hidden flex-shrink-0 snap-center flex flex-col p-8 shadow-md border border-transparent ${
-          index === 0 ? "ml-6" : ""
-        } ${index === totalCards - 1 ? "mr-6" : "mr-5"}`}
+        className={`relative rounded-sm overflow-hidden flex-shrink-0 snap-center flex flex-col p-8 border ${
+          theme.bg === "#FFFFFF" ? "border-gray-200" : "border-transparent"
+        } ${index === 0 ? "ml-6 md:ml-0" : ""} ${
+          index === totalCards - 1 ? "mr-6 md:mr-0" : "mr-6"
+        }`}
       >
         <div
-          className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 ${theme.iconBg} ${theme.iconColor}`}
+          className={`w-14 h-14 rounded-sm flex items-center justify-center mb-8 ${theme.iconBg} ${theme.iconColor}`}
         >
           <Suspense fallback={<div className="w-6 h-6" />}>
             <service.icon className="text-2xl" />
           </Suspense>
         </div>
 
-        <h3 className={`text-xl font-bold mb-3 ${theme.text}`}>
+        <h3 className={`text-xl font-medium tracking-wide mb-3 ${theme.text}`}>
           {service.title}
         </h3>
 
-        <p className={`mb-6 ${theme.subText}`}>{service.description}</p>
+        <p className={`mb-8 text-sm leading-relaxed ${theme.subText}`}>
+          {service.description}
+        </p>
 
-        <ul className="space-y-2 mb-8">
+        <ul className="space-y-3 mb-8">
           {service.features.map((item, i) => (
             <li key={i} className="flex items-start">
               <span
-                className={`inline-block w-1.5 h-1.5 rounded-full mt-2 mr-3 ${
-                  theme.text === "text-white" ? "bg-white" : "bg-gray-600"
-                }`}
+                className={`inline-block w-1.5 h-1.5 rounded-sm mt-1.5 mr-3 flex-shrink-0 ${theme.bullet}`}
               ></span>
               <span className={`text-sm ${theme.subText}`}>{item}</span>
             </li>
@@ -137,22 +118,22 @@ const ServiceCard = memo(
         </ul>
 
         <div
-          className={`mt-auto pt-4 border-t flex items-center justify-between ${theme.divider}`}
+          className={`mt-auto pt-6 border-t flex items-center justify-between ${theme.divider}`}
         >
           <motion.button
             whileHover={isMobile ? {} : { scale: 1.02 }}
             whileTap={isMobile ? {} : { scale: 0.98 }}
             onClick={() => onOpenModal(service, theme)}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors ${theme.btnBg} ${theme.btnText}`}
+            className={`px-6 py-2.5 rounded-sm text-xs tracking-widest uppercase transition-colors duration-300 ${theme.btnBg} ${theme.btnText}`}
           >
             Book Today
           </motion.button>
 
           <button
             onClick={() => onOpenModal(service, theme)}
-            className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition transform hover:scale-105 ${theme.plusBorder}`}
+            className={`w-10 h-10 flex items-center justify-center rounded-sm border transition-all duration-300 ${theme.plusBorder}`}
           >
-            <Plus size={20} strokeWidth={3} />
+            <Plus size={18} strokeWidth={2} />
           </button>
         </div>
       </MotionWrapper>
@@ -201,7 +182,8 @@ const Comprehensive = () => {
     const handleScroll = () => {
       const scrollLeft = container.scrollLeft;
       const width = container.offsetWidth;
-      const index = Math.round(scrollLeft / width);
+      // Added a slight offset to calculate active index better on mobile
+      const index = Math.round((scrollLeft + 20) / width);
       setActiveIndex(index);
     };
 
@@ -212,9 +194,12 @@ const Comprehensive = () => {
   const scrollToIndex = (index) => {
     const container = containerRef.current;
     if (!container) return;
-    const width = container.offsetWidth;
+    
+    // Calculate scroll position factoring in card width and margins
+    const cardWidth = container.querySelector('div').offsetWidth;
+    const margin = 24; // mr-6 is 24px
     container.scrollTo({
-      left: width * index,
+      left: (cardWidth + margin) * index,
       behavior: "smooth",
     });
   };
@@ -255,7 +240,7 @@ const Comprehensive = () => {
         ],
       },
       {
-        title: "Custom / Tailor-made Safari",
+        title: "Tailor-made Safari",
         description:
           "Design your dream African adventure exactly the way you want it.",
         icon: DirectionsCar,
@@ -266,7 +251,7 @@ const Comprehensive = () => {
         ],
       },
       {
-        title: "Blog / Travel Guide",
+        title: "Travel Guide",
         description:
           "Read our latest tips, destination guides, and stories from the wild.",
         icon: Article,
@@ -281,44 +266,68 @@ const Comprehensive = () => {
   );
 
   return (
-    <section className="w-full min-h-screen py-20 bg-[#F0F8FF]">
-      <div className="max-w-7xl mx-auto mb-16 px-4 text-center">
-        <h2 className="text-3xl md:text-4xl font-medium text-[#002D62]">
-          Discover Africa
-        </h2>
+    <section className="w-full min-h-screen py-24 bg-white">
+      <div className="max-w-7xl mx-auto mb-16 px-6 lg:px-12 flex flex-col md:flex-row md:items-end justify-between">
+        <div>
+          <h2 className="text-sm tracking-widest uppercase font-semibold text-[#8A4413] mb-3">
+            Our Offerings
+          </h2>
+          <h3 className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 tracking-wide">
+            Discover Africa
+          </h3>
+        </div>
+        
+        {/* Desktop Navigation Arrows (Optional, stylistic addition to match premium feel) */}
+        <div className="hidden md:flex gap-2 mt-6 md:mt-0">
+           <button 
+             onClick={() => scrollToIndex(Math.max(0, activeIndex - 1))}
+             className="w-10 h-10 border border-gray-300 rounded-sm flex items-center justify-center text-gray-500 hover:text-[#8A4413] hover:border-[#8A4413] transition-colors"
+           >
+             <span className="transform rotate-180 text-lg">➔</span>
+           </button>
+           <button 
+             onClick={() => scrollToIndex(Math.min(services.length - 1, activeIndex + 1))}
+             className="w-10 h-10 border border-gray-300 rounded-sm flex items-center justify-center text-gray-500 hover:text-[#8A4413] hover:border-[#8A4413] transition-colors"
+           >
+             <span className="text-lg">➔</span>
+           </button>
+        </div>
       </div>
 
-      <div
-        ref={containerRef}
-        className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth py-4 pb-12"
-      >
-        {services.map((service, index) => (
-          <ServiceCard
-            key={index}
-            index={index}
-            service={service}
-            onOpenModal={handleOpenModal}
-            isMobile={isMobile}
-            totalCards={services.length}
-          />
-        ))}
+      <div className="max-w-7xl mx-auto md:px-12">
+        <div
+          ref={containerRef}
+          className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth py-4 pb-12"
+        >
+          {services.map((service, index) => (
+            <ServiceCard
+              key={index}
+              index={index}
+              service={service}
+              onOpenModal={handleOpenModal}
+              isMobile={isMobile}
+              totalCards={services.length}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="flex justify-center mt-4 gap-2">
+      {/* Pagination Indicators - Changed to premium dashes instead of dots */}
+      <div className="flex justify-center mt-2 gap-3">
         {services.map((_, idx) => (
           <button
             key={idx}
             onClick={() => scrollToIndex(idx)}
-            className={`w-2.5 h-2.5 rounded-full transition-all ${
+            className={`h-1 transition-all duration-300 rounded-sm ${
               activeIndex === idx
-                ? "bg-[#002D62] scale-110"
-                : "bg-gray-300"
+                ? "w-8 bg-[#8A4413]"
+                : "w-4 bg-gray-300 hover:bg-gray-400"
             }`}
+            aria-label={`Go to slide ${idx + 1}`}
           />
         ))}
       </div>
 
-      {/* Use the extracted BookingModal */}
       <BookingModal
         isOpen={modalData.isOpen}
         onClose={handleCloseModal}

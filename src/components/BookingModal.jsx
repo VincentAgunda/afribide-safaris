@@ -1,4 +1,3 @@
-// BookingModal.jsx
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,7 +7,7 @@ import MapIcon from "@mui/icons-material/Map";
 
 // 🔥 Firestore imports
 import { db } from "../firebase"; // adjust path if needed
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore";
 
 // Default fallbacks when modal is opened without a specific service/theme
 const DEFAULT_SERVICE = {
@@ -37,6 +36,7 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
   const [status, setStatus] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+  const [destinations, setDestinations] = useState([]); // 🔥 State to hold fetched packages
   const formRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -50,10 +50,30 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
     travel_date: "",
   });
 
-  // Auto-fill the package when modal opens
+  // Auto-fill the package when modal opens and fetch destinations
   useEffect(() => {
     if (isOpen) {
       setFormData((prev) => ({ ...prev, package: finalService.title }));
+      
+      // 🔥 Fetch destinations from Firestore
+      const fetchDestinations = async () => {
+        try {
+          const querySnapshot = await getDocs(collection(db, "safaris"));
+          const fetchedPackages = querySnapshot.docs.map((doc) => doc.data().title);
+          
+          // Ensure the default/current service is in the list if it's custom
+          if (!fetchedPackages.includes(DEFAULT_SERVICE.title)) {
+            fetchedPackages.unshift(DEFAULT_SERVICE.title);
+          }
+          
+          setDestinations(fetchedPackages);
+        } catch (error) {
+          console.error("Error fetching destinations:", error);
+          setDestinations([finalService.title]); // Fallback if fetch fails
+        }
+      };
+
+      fetchDestinations();
     }
   }, [isOpen, finalService.title]);
 
@@ -63,6 +83,7 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
     if (!formData.email.match(/^\S+@\S+\.\S+$/))
       newErrors.email = "Valid email required";
     if (!formData.travel_date) newErrors.travel_date = "Select a travel date";
+    if (!formData.package) newErrors.package = "Select a destination";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -149,7 +170,7 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
   if (!isOpen) return null;
 
   const isDarkTheme = finalTheme.text === "text-white";
-  const inputClass = `w-full px-4 py-3 rounded-xl border outline-none transition-colors ${
+  const inputClass = `w-full px-4 py-3 rounded-[4px] border outline-none transition-colors ${
     isDarkTheme
       ? "bg-white/10 border-white/20 text-white placeholder:text-gray-300 focus:bg-white/20"
       : "bg-white border-gray-200 text-gray-900 focus:border-[#0b1b32]"
@@ -194,11 +215,34 @@ const BookingModal = ({ isOpen, onClose, service, theme }) => {
               </h3>
               <p className={`mb-8 ${finalTheme.subText}`}>
                 You are requesting:{" "}
-                <span className="font-semibold">{finalService.title}</span>
+                <span className="font-semibold">{formData.package}</span>
               </p>
 
               <form ref={formRef} onSubmit={sendEmail} className="space-y-4">
-                <input type="hidden" name="package" value={formData.package} />
+                
+                {/* 🔥 Destination Dropdown (Replaces hidden input) */}
+                <div className="flex flex-col">
+                  <label className={`text-sm ml-2 mb-1 ${finalTheme.subText}`}>
+                    Select Destination / Package
+                  </label>
+                  <select
+                    name="package"
+                    value={formData.package}
+                    onChange={handleChange}
+                    className={`${inputClass} appearance-none ${
+                      errors.package ? "border-red-500" : ""
+                    }`}
+                  >
+                    <option value="" disabled>
+                      Select a destination
+                    </option>
+                    {destinations.map((dest, idx) => (
+                      <option key={idx} value={dest} className="text-gray-900">
+                        {dest}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
                 {/* People */}
                 <div className="grid grid-cols-2 gap-4">
