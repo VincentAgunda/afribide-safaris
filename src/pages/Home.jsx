@@ -31,28 +31,13 @@ const textVariants = {
   },
 };
 
-/* HERO SLIDER IMAGES */
-const desktopImages = [
-  "/Hero/leopard1.png",
-  "/Hero/cheetah.png",
-  "/Hero/cheetah.png",
-  "/Hero/antelope.png",
-];
-
-const mobileImages = [
-   "/Hero/leopard1.png",
-  "/Hero/cheetah.png",
-  "/Hero/parachute.jpeg",
-  "/Hero/antelope.png",
-];
-
-// Determine max length to ensure we don't miss images if arrays differ
-const TOTAL_SLIDES = Math.max(desktopImages.length, mobileImages.length);
+/* SINGLE HERO IMAGE */
+const heroDesktop = "/Hero/cheetah.png";
+const heroMobile = "/Hero/cheetah.png"; // You can change this if you have a specific mobile crop
 
 const Home = () => {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   /* HASH SCROLL */
   useEffect(() => {
@@ -64,14 +49,6 @@ const Home = () => {
       }, 100);
     }
   }, [location]);
-
-  /* HERO IMAGE SLIDER INTERVAL */
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % TOTAL_SLIDES);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
@@ -91,58 +68,32 @@ const Home = () => {
         {/* ================= HERO ================= */}
         <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
           
-          {/* ================= BACKGROUND SLIDER ================= */}
+          {/* ================= OPTIMIZED BACKGROUND ================= */}
           <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
-            {/* By mapping the arrays and keeping them mounted, the browser pre-loads 
-              the images. We transition opacity and scale for ultimate GPU smoothness.
-            */}
-            {Array.from({ length: TOTAL_SLIDES }).map((_, index) => {
-              const isActive = currentSlide === index;
+            <motion.div
+              initial={{ scale: 1.1, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                opacity: { duration: 1.5, ease: "easeInOut" },
+                scale: { duration: 6, ease: "easeOut" },
+              }}
+              className="absolute inset-0 w-full h-full"
+            >
+              {/* Using a picture tag ensures the browser only downloads the image needed for the device */}
+              <picture>
+                <source media="(min-width: 768px)" srcSet={heroDesktop} />
+                <img
+                  src={heroMobile}
+                  alt="Afribide Safari Hero"
+                  className="w-full h-full object-cover object-center"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </picture>
               
-              // Safe fallbacks in case desktop/mobile arrays have different lengths
-              const desktopSrc = desktopImages[index] || desktopImages[0];
-              const mobileSrc = mobileImages[index] || mobileImages[0];
-
-              return (
-                <motion.div
-                  key={index}
-                  initial={false}
-                  animate={{
-                    opacity: isActive ? 1 : 0,
-                    scale: isActive ? 1.05 : 1, // Smooth, slow zoom in
-                  }}
-                  transition={{
-                    opacity: { duration: 1.5, ease: "easeInOut" },
-                    scale: { duration: 6, ease: "linear" }, // Matches the 6s interval
-                  }}
-                  className="absolute inset-0 w-full h-full"
-                  style={{
-                    zIndex: isActive ? 10 : 0,
-                    willChange: "opacity, transform", // Forces GPU acceleration
-                  }}
-                >
-                  {/* Desktop Background */}
-                  <img
-                    src={desktopSrc}
-                    alt={`Afribide Safari ${index + 1}`}
-                    className="w-full h-full object-cover object-center hidden md:block"
-                    // Eager load the first image, lazy load the rest
-                    loading={index === 0 ? "eager" : "lazy"} 
-                  />
-                  
-                  {/* Mobile Background */}
-                  <img
-                    src={mobileSrc}
-                    alt={`Afribide Safari Mobile ${index + 1}`}
-                    className="w-full h-full object-cover object-center block md:hidden"
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
-                  
-                  {/* Dark Overlay for Text Readability */}
-                  <div className="absolute inset-0 bg-black/40" />
-                </motion.div>
-              );
-            })}
+              {/* Dark Overlay for Text Readability */}
+              <div className="absolute inset-0 bg-black/40" />
+            </motion.div>
           </div>
 
           {/* ================= FOREGROUND ================= */}

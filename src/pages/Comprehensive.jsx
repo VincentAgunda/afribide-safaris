@@ -269,7 +269,7 @@ const Comprehensive = () => {
     <section className="w-full min-h-screen py-24 bg-white">
       <div className="max-w-7xl mx-auto mb-16 px-6 lg:px-12 flex flex-col md:flex-row md:items-end justify-between">
         <div>
-          <h2 className="text-sm tracking-widest uppercase font-semibold text-[#8A4413] mb-3">
+          <h2 className="text-[12px] tracking-[0.38em] uppercase text-[#8A4413] mb-6">
             Our Offerings
           </h2>
           <h3 className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 tracking-wide">
