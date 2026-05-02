@@ -27,18 +27,19 @@ import {
 
 // Pre‑existing images
 const IMAGE_OPTIONS = [
-  { label: "Bird1", value: "/bird1.jpeg" },
+  { label: "Bird1", value: "/Animals/bird1.jpeg" },
+  { label: "Bird2", value: "/Animals/bird2.jpeg" },
+  { label: "Bird3", value: "/Animals/bird3.jpeg" },
+  { label: "Leopard", value: "/Hero/leopard1.png" },
+  { label: "Cheetah", value: "/Hero/cheetah.png" },
   { label: "Zebra Herd", value: "/zebra.jpeg" },
   { label: "Geese at Lake", value: "/goose.jpeg" },
-  { label: "Rhino", value: "/Animals/mudrhino.jpeg" },
-  { label: "Chimpanzee", value: "/chimpanzee.jpeg" },
-  { label: "Firewood", value: "/firewood.jpeg" },
   { label: "Goose on water", value: "/goose2.jpeg" },
   { label: "Zebra outside", value: "/zebra-outside.jpeg" },
   { label: "Jeep", value: "/gallery/jeep.jpeg" },
   { label: "leopard3", value: "/Animals/3leopard.jpeg" },
-  { label: "3rhinos", value: "/Animals/3rhinos.jpeg" },
-  { label: "Ducks", value: "/Animals/2ducks.jpeg" },
+  { label: "Ducks1", value: "/Animals/2ducks.jpeg" },
+  { label: "Ducks", value: "/Animals/2ducks1.jpeg" },
   { label: "Lion", value: "/lion1.jpeg" },
   { label: "4Zebras", value: "/Animals/4zebras.jpeg" },
 ];
@@ -286,7 +287,7 @@ const AdminDashboard = () => {
 
       {/* Mobile Sidebar */}
       <div
-        className={`md:hidden fixed top-20 left-0 bottom-0 w-64 bg-blue-600 text-white p-6 flex-col z-50 transform transition-transform duration-300 ${
+        className={`md:hidden fixed top-20 left-0 bottom-0 w-64 bg-[#2B1122] text-white p-6 flex-col z-50 transform transition-transform duration-300 ${
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

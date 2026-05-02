@@ -6,18 +6,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { auth } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 
+// Updated navLinks for Option 1
 const navLinks = [
   { path: "/#about", label: "About Us" },
   { path: "/#gallery", label: "Explore" },
   { path: "/#full-gallery", label: "Gallery" },
-  {
-    label: "Testimonials & Blogs",
-    isDropdown: true,
-    subLinks: [
-      { path: "/#testimonials", label: "Testimonials" },
-      { path: "/#blog", label: "Blogs" },
-    ],
-  },
+  { path: "/#safariheros", label: "Testimonials & Blogs" },
 ];
 
 const Header = React.memo(() => {

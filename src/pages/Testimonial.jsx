@@ -9,7 +9,7 @@ const items = [
     type: "testimonials",
     title: "Guest Stories",
     subtitle: "Real safari experiences",
-    image: "/Animals/4zebras.jpeg",
+    image: "/parachute.jpeg",
     bg: "bg-[#F9F8F6]", // Softer, warmer luxury white
     button: "View Stories",
   },
@@ -18,7 +18,7 @@ const items = [
     blogIndex: 0,
     title: "Packing Guide",
     subtitle: "What to bring on safari",
-    image: "/gallery/hotel-room.jpeg",
+    image: "/gallery/jeep.jpeg",
     bg: "bg-[#F9F8F6]",
     button: "Read Guide",
   },
@@ -27,7 +27,7 @@ const items = [
     blogIndex: 1,
     title: "Great Migration",
     subtitle: "Nature’s greatest event",
-    image: "/Animals/3rhinos.jpeg",
+    image: "/Hero/cheetah.png",
     bg: "bg-[#F9F8F6]",
     button: "Explore",
   },
@@ -36,7 +36,7 @@ const items = [
     blogIndex: 2,
     title: "Luxury Lodges",
     subtitle: "Stay in the wild",
-    image: "/gallery/hotel2.jpeg",
+    image: "/gallery/hotel1.jpeg",
     bg: "bg-[#F9F8F6]",
     button: "Discover",
   },
@@ -71,8 +71,8 @@ const blogs = [
       "Binoculars & zoom camera improve viewing",
     ],
     tips: ["Avoid bright colors (especially blue/black)", "Pack light but versatile in soft-sided bags"],
-    image: "/goose.jpeg",
-    gallery: ["/parachute.jpeg", "/parachute.jpeg"],
+    image: "/Animals/bird4.jpeg",
+    gallery: ["/Hero/antelope.png", "/Hero/parachute.jpeg", "/gallery/landrover.jpeg", "/Hero/leopard1.png"],
     checklist: [
       { category: "Clothing", items: ["3-4 moisture-wicking t-shirts", "2 long-sleeve shirts", "Fleece jacket", "Walking boots"] },
       { category: "Gear & Tech", items: ["Binoculars (8x42)", "Camera with 300mm+ lens", "Universal adaptor", "Headlamp"] },
@@ -89,7 +89,7 @@ const blogs = [
     ],
     tips: ["River crossings are best seen July–October", "Book camps 9-12 months in advance"],
     image: "/zebra.jpeg",
-    gallery: ["/parachute.jpeg", "/parachute.jpeg"],
+    gallery: ["/Animals/2ducks.jpeg", "/Animals/2ducks1.jpeg","/Animals/3leopard.jpeg","/Animals/2rhinos.jpeg", "/Animals/bird1.jpeg","/Hero/cheetah.png"],
     timeline: [
       { period: "Jan - Mar", event: "Calving season in the southern Serengeti. Predators are highly active." },
       { period: "Apr - Jun", event: "The herds move north and west in long columns as the rut begins." },
@@ -106,8 +106,8 @@ const blogs = [
       "Private viewing decks & open-air bathtubs",
     ],
     tips: ["Choose private conservancies for night drives", "Check seasonal pricing (Green season is cheaper)"],
-    image: "/parachute.jpeg",
-    gallery: ["parachute.jpeg", "parachute.jpeg", "parachute.jpeg"],
+    image: "/Hero/cheetah.png",
+    gallery: ["/gallery/hotel2.jpeg", "cottage.jpeg", "parachute.jpeg", "/gallery/hotel-room.jpeg", "/gallery/hotel1.jpeg"],
     amenities: [
       "Private Plunge Pools", "Personal Butlers", "Spa & Wellness", 
       "Gourmet Bush Dinners", "Open-air Showers", "High-speed Wi-Fi", 
@@ -190,37 +190,56 @@ const SafariGrid = () => {
             key={index}
             // 1. Added `isolate` to fix z-index layering
             // 2. Switched mobile height to a fluid `h-[65vh] max-h-[420px]`
+            // 3. Changed rounded to rounded-none md:rounded-[2rem] for sharp mobile corners
             className={`group snap-center shrink-0 w-[90vw] md:w-[75vw] max-w-[1100px] h-[65vh] min-h-[380px] max-h-[420px] md:max-h-none md:h-[560px] 
-            overflow-hidden flex flex-col md:flex-row relative rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] 
+            overflow-hidden flex flex-col md:flex-row relative rounded-none md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] 
             transition-shadow duration-500 hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)] bg-white isolate`}
           >
-            {/* TEXT AREA */}
-            <div className="absolute bottom-0 left-0 w-full h-[85%] md:h-full md:relative md:w-1/2 flex flex-col justify-end md:justify-center items-start p-6 md:p-14 z-10 gap-4 md:gap-6 
-                            bg-gradient-to-t from-white via-white/90 to-transparent md:bg-gradient-to-r md:from-white md:via-white/90 md:to-white/10">
+           {/* TEXT AREA — CLEAN */}
+            <div
+              className="
+              absolute bottom-0 left-0 w-full h-[75%] md:h-full md:relative md:w-1/2
+              flex flex-col justify-end md:justify-center items-start 
+              p-6 md:p-14 z-10 gap-4 md:gap-6
+
+              /* 👇 CLEAN APPLE-STYLE FADE */
+              bg-gradient-to-t 
+              from-black/55 
+              via-black/15 
+              to-transparent
+
+              md:bg-gradient-to-r 
+              md:from-white 
+              md:via-white/90 
+              md:to-white/10
+              "
+            >
               <div className="space-y-2 md:space-y-3">
                 <p className="text-[10px] md:text-sm tracking-[0.2em] text-[#A67C52] uppercase font-semibold">
                   {item.subtitle}
                 </p>
-                <h2 className="text-3xl md:text-6xl font-serif text-neutral-900 leading-tight">
+
+                <h2 className="text-3xl md:text-6xl font-serif text-white md:text-neutral-900 leading-tight">
                   {item.title}
                 </h2>
               </div>
 
               <button
                 onClick={() => setActive(item)}
-                className="mt-2 md:mt-4 px-6 md:px-8 py-3 rounded-full bg-neutral-900 text-white text-xs md:text-sm tracking-wide uppercase font-medium transition-all duration-300 hover:bg-[#A67C52] hover:shadow-lg active:scale-95"
+                className="mt-2 md:mt-4 px-6 md:px-8 py-3 rounded-full 
+                bg-white/90 md:bg-neutral-900 text-neutral-900 md:text-white 
+                text-xs md:text-sm tracking-wide uppercase font-medium 
+                transition-all duration-300 hover:bg-[#A67C52] hover:text-white"
               >
                 {item.button}
               </button>
             </div>
 
-            {/* IMAGE AREA */}
-            {/* Fixed z-index (z-0 instead of -z-10) and forced inset-0 on mobile */}
+            {/* IMAGE */}
             <div className="absolute inset-0 w-full h-full md:relative md:flex-1 z-0 overflow-hidden bg-[#F2F0EA]">
               <img
                 src={item.image}
                 alt={item.title}
-                loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
               />
             </div>
@@ -272,8 +291,9 @@ const SafariGrid = () => {
         >
           <div
             onClick={(e) => e.stopPropagation()}
+            // Updated to rounded-none on mobile, and md:rounded-3xl on larger screens
             className={`relative w-full max-w-5xl max-h-[90vh] bg-white overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.1)]
-            transform transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] rounded-3xl
+            transform transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] rounded-none md:rounded-3xl
             ${
               visible
                 ? "opacity-100 translate-y-0 scale-100"

@@ -6,7 +6,7 @@ import { FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import Comprehensive from "./Comprehensive";
 import NextureWork from "./NextureWork";
 import Questions from "./Questions";
-import Services from "./Services";
+import Testimonial from "./Testimonial";
 import Contact from "./Contact";
 import GalleryPage from "./GalleryPage";
 import BookingModal from "../components/BookingModal";
@@ -32,12 +32,14 @@ const textVariants = {
 };
 
 /* SINGLE HERO IMAGE */
+// Highly recommend changing these to .webp formats!
 const heroDesktop = "/Hero/cheetah.png";
-const heroMobile = "/Hero/cheetah.png"; // You can change this if you have a specific mobile crop
+const heroMobile = "/Hero/cheetah.png"; 
 
 const Home = () => {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false); // Track image loading
 
   /* HASH SCROLL */
   useEffect(() => {
@@ -55,31 +57,32 @@ const Home = () => {
 
   return (
     <LayoutGroup>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, ease: EASE }}
+      {/* REMOVED the global initial={{ opacity: 0 }} here to prevent blocking the whole page render */}
+      <div
         className="min-h-screen bg-[#F5F5F7] text-gray-900 overflow-x-hidden"
         style={{
-          fontFamily:
-            "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+          fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
         }}
       >
         {/* ================= HERO ================= */}
-        <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
+        {/* Changed bg-black to a warm dark tone (e.g., #2c2921) to make the pre-load phase less jarring */}
+        <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-[#2c2921]">
           
           {/* ================= OPTIMIZED BACKGROUND ================= */}
           <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
             <motion.div
               initial={{ scale: 1.1, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              // Only animate to full opacity once the image has actually loaded
+              animate={{ 
+                scale: 1, 
+                opacity: imageLoaded ? 1 : 0 
+              }}
               transition={{
-                opacity: { duration: 1.5, ease: "easeInOut" },
+                opacity: { duration: 0.8, ease: "easeInOut" }, // Sped up the fade-in
                 scale: { duration: 6, ease: "easeOut" },
               }}
               className="absolute inset-0 w-full h-full"
             >
-              {/* Using a picture tag ensures the browser only downloads the image needed for the device */}
               <picture>
                 <source media="(min-width: 768px)" srcSet={heroDesktop} />
                 <img
@@ -88,6 +91,7 @@ const Home = () => {
                   className="w-full h-full object-cover object-center"
                   loading="eager"
                   fetchPriority="high"
+                  onLoad={() => setImageLoaded(true)} // Trigger animation when ready
                 />
               </picture>
               
@@ -152,26 +156,16 @@ const Home = () => {
         </section>
 
         {/* ================= SECTIONS ================= */}
-        <div id="about-section">
-          <Comprehensive />
-        </div>
-        <div id="gallery-section">
-          <NextureWork />
-        </div>
-        <div id="full-gallery-section">
-          <GalleryPage />
-        </div>
-        <div id="safariheros-section">
-          <Services />
-        </div>
+        <div id="about-section"><Comprehensive /></div>
+        <div id="gallery-section"><NextureWork /></div>
+        <div id="full-gallery-section"><GalleryPage /></div>
+        <div id="safariheros-section"><Testimonial /></div>
         <Questions />
-        <div id="contact-section">
-          <Contact />
-        </div>
+        <div id="contact-section"><Contact /></div>
 
         {/* ================= MODAL ================= */}
         <BookingModal isOpen={isModalOpen} onClose={closeModal} />
-      </motion.div>
+      </div>
     </LayoutGroup>
   );
 };
