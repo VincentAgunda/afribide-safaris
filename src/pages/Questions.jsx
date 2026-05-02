@@ -85,7 +85,7 @@ const Questions = () => {
         </h2>
 
         {/* GRADIENT CONTAINER (APPLE STYLE) */}
-        <div className="relative rounded-[32px] overflow-hidden">
+        <div className="relative rounded-[0px] overflow-hidden">
 
           {/* smooth blend background */}
           <div className="absolute inset-0 bg-[linear-gradient(90deg,#e5e5e7_0%,#e5e5e7_40%,#f6a96b_75%,#e67e22_100%)]" />

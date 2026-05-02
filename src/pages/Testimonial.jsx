@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 /* ================================================= */
-/* DATA                                              */
+/* DATA                                             */
 /* ================================================= */
 
 const items = [
@@ -9,7 +9,7 @@ const items = [
     type: "testimonials",
     title: "Guest Stories",
     subtitle: "Real safari experiences",
-    image: "/parachute.jpeg",
+    image: "/parachute2.png",
     bg: "bg-[#F9F8F6]", // Softer, warmer luxury white
     button: "View Stories",
   },
@@ -72,7 +72,7 @@ const blogs = [
     ],
     tips: ["Avoid bright colors (especially blue/black)", "Pack light but versatile in soft-sided bags"],
     image: "/Animals/bird4.jpeg",
-    gallery: ["/Hero/antelope.png", "/Hero/parachute.jpeg", "/gallery/landrover.jpeg", "/Hero/leopard1.png"],
+    gallery: ["/Hero/antelope.png", "parachute2.png", "/gallery/landrover.jpeg", "/Hero/leopard1.png"],
     checklist: [
       { category: "Clothing", items: ["3-4 moisture-wicking t-shirts", "2 long-sleeve shirts", "Fleece jacket", "Walking boots"] },
       { category: "Gear & Tech", items: ["Binoculars (8x42)", "Camera with 300mm+ lens", "Universal adaptor", "Headlamp"] },
@@ -107,7 +107,7 @@ const blogs = [
     ],
     tips: ["Choose private conservancies for night drives", "Check seasonal pricing (Green season is cheaper)"],
     image: "/Hero/cheetah.png",
-    gallery: ["/gallery/hotel2.jpeg", "cottage.jpeg", "parachute.jpeg", "/gallery/hotel-room.jpeg", "/gallery/hotel1.jpeg"],
+    gallery: ["/gallery/hotel2.jpeg", "cottage.jpeg", "parachute2.png", "/gallery/hotel-room.jpeg", "/gallery/hotel1.jpeg"],
     amenities: [
       "Private Plunge Pools", "Personal Butlers", "Spa & Wellness", 
       "Gourmet Bush Dinners", "Open-air Showers", "High-speed Wi-Fi", 
@@ -178,19 +178,25 @@ const SafariGrid = () => {
     // Changed to 100dvh so it strictly fits the mobile viewport perfectly
     <section className="bg-[#FAF9F6] min-h-[100dvh] py-4 md:py-16 relative flex flex-col justify-center font-sans">
       
+      {/* Centered Bordered Header */}
+        <div className="flex justify-center mb-24">
+          <h1 className="border-[3px] border-black px-6 py-2 text-3xl md:text-4xl font-bold tracking-widest bg-transparent">
+            TESTIMONIALS AND BLOGS
+          </h1>
+        </div>
       {/* CAROUSEL CONTAINER */}
       <div
         ref={scrollRef}
         onScroll={handleScroll}
         className="flex overflow-x-auto snap-x snap-mandatory px-4 md:px-[10vw] gap-6 pb-6 pt-4 
-                   [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] w-full"
+                    [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] w-full"
       >
         {items.map((item, index) => (
           <div
             key={index}
             // 1. Added `isolate` to fix z-index layering
             // 2. Switched mobile height to a fluid `h-[65vh] max-h-[420px]`
-            // 3. Changed rounded to rounded-none md:rounded-[2rem] for sharp mobile corners
+            // 3. Changed rounded to rounded-none md:rounded-[2rem] for sharp mobile corners (applied to the full card)
             className={`group snap-center shrink-0 w-[90vw] md:w-[75vw] max-w-[1100px] h-[65vh] min-h-[380px] max-h-[420px] md:max-h-none md:h-[560px] 
             overflow-hidden flex flex-col md:flex-row relative rounded-none md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] 
             transition-shadow duration-500 hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)] bg-white isolate`}
