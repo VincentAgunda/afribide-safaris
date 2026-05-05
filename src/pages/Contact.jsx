@@ -91,7 +91,7 @@ const Contact = ({ initialPackage = "", isModalOpen = false, onClose }) => {
           <div className="flex justify-center lg:justify-end pointer-events-none">
             <div className="rounded-[40px] overflow-hidden">
               <img
-                src="/parachute.jpeg"
+                src="/Animals/sunzebra.png"
                 alt="Safari Journey Concept"
                 className="w-72 md:w-[450px] object-cover select-none"
                 loading="lazy"

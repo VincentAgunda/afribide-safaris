@@ -1,481 +1,352 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaSun, FaMoon, FaTimes, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { 
+  Compass, Globe, Waves, Truck, Users, Plus, 
+  ArrowRight, Play 
+} from "lucide-react";
 
-// Updated Material-UI icons for a Safari/Travel theme
-import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
-import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
-import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
-
-// Animation variants
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
+/* ------------------ Animation ------------------ */
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  show: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.8,
-      ease: "easeOut",
-    },
+    transition: { duration: 0.8, ease: "easeOut" },
   },
 };
 
-const modalVariants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.95,
-    transition: {
-      duration: 0.2,
-      ease: "easeIn"
-    }
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.25,
-      ease: "easeOut",
-      when: "beforeChildren",
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const staggerItem = {
-  hidden: { opacity: 0, y: 10 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      ease: "easeOut"
-    }
-  }
-};
-
-// Updated Data for Afribide Safaris
-const TEAM_MEMBERS = [
+/* ------------------ Data ------------------ */
+const services = [
   {
-    id: 1,
-    name: "Vincent Agunda",
-    role: "Founder & Lead Safari Guide",
-    bio: "Born in the heart of East Africa, Vincent curates authentic and thrilling wilderness experiences.",
-    image: "guide-vincent.jpg", // Update with actual image
-    linkedin: "#",
-    twitter: "#"
+    icon: Compass,
+    prefix: "Bespoke ",
+    highlight: "Savanna Itineraries.",
+    colorClass: "text-[#9c51e0]", 
+    iconColor: "#9c51e0",
+    desc: "Fully customized journeys tailored to your rhythm—whether tracking the Great Migration or retreating into quiet wilderness.",
   },
   {
-    id: 2,
-    name: "Brian Okungu",
-    role: "Head of Travel Operations",
-    bio: "Ensuring every logistical detail is flawless for a seamless African adventure.",
-    image: "guide-brian1.jpg", // Update with actual image
-    linkedin: "#",
-    twitter: "#"
+    icon: Waves,
+    prefix: "Exotic ",
+    highlight: "Beach Safaris.",
+    colorClass: "text-[#f56300]", 
+    iconColor: "#f56300",
+    desc: "From the savanna to the shoreline, experience seamless transitions into Africa’s most pristine coastal escapes.",
   },
   {
-    id: 3,
-    name: "Brian Oloo",
-    role: "Wildlife & Conservation Expert",
-    bio: "Passionate about sustainable tourism and protecting Africa's natural heritage.",
-    image: "guide-brian2.jpg", // Update with actual image
-    linkedin: "#",
-    twitter: "#"
-  }
+    icon: Globe,
+    prefix: "Curated ",
+    highlight: "Pan-African Tours.",
+    colorClass: "text-[#00a29b]", 
+    iconColor: "#00a29b",
+    desc: "Travel beyond borders with curated routes across Africa’s most iconic and remote destinations.",
+  },
+  {
+    icon: Truck,
+    prefix: "Premium ",
+    highlight: "Fleet & Logistics.",
+    colorClass: "text-[#007aff]", 
+    iconColor: "#007aff",
+    desc: "Custom-engineered safari vehicles built for comfort, safety, and exceptional wildlife viewing.",
+  },
+  {
+    icon: Users,
+    prefix: "Expert ",
+    highlight: "Tour Consultancy.",
+    colorClass: "text-[#34c759]", 
+    iconColor: "#34c759",
+    desc: "Strategic planning from lodge selection to seasonal timing—ensuring a seamless, elevated journey.",
+  },
 ];
 
-const CORE_VALUES = [
-  {
-    title: "Authenticity",
-    description: "Real, unfiltered encounters with Africa's majestic wildlife and cultures.",
-    icon: ExploreOutlinedIcon 
-  },
-  {
-    title: "Conservation",
-    description: "Committed to sustainable travel that protects habitats and uplifts local communities.",
-    icon: PublicOutlinedIcon 
-  },
-  {
-    title: "Tailor-Made",
-    description: "Bespoke itineraries designed from scratch to match your unique travel dreams.",
-    icon: MapOutlinedIcon 
-  }
-];
+const AboutAfribide = () => {
+  const [expandedCards, setExpandedCards] = useState({});
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollRef = useRef(null);
 
-const AboutPage = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [showTeam, setShowTeam] = useState(false);
-  const [showConsultationModal, setShowConsultationModal] = useState(false);
-  const formRef = useRef(null);
-  
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    plan: '',
-    message: ''
-  });
-  
-  const [message, setMessage] = useState('');
+  const toggleCard = (index, e) => {
+    e.stopPropagation(); 
+    setExpandedCards((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
 
-  const sendEmail = (e) => {
-    e.preventDefault();
-    setMessage("Sending your inquiry...");
-    setTimeout(() => {
-      setMessage("Message sent successfully! Our safari experts will reach out shortly.");
-      setFormData({ name: '', email: '', phone: '', plan: '', message: '' });
-    }, 2000);
+  // Update active dot on scroll
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft } = scrollRef.current;
+    const cardWidth = scrollRef.current.children[0].offsetWidth;
+    const gap = 24; // 1.5rem (gap-6)
+    
+    const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+    setActiveIndex(newIndex);
+  };
+
+  // Scroll to a specific index
+  const scrollToIndex = (index) => {
+    if (scrollRef.current) {
+      const cardWidth = scrollRef.current.children[0].offsetWidth;
+      const gap = 24;
+      scrollRef.current.scrollTo({
+        left: index * (cardWidth + gap),
+        behavior: "smooth",
+      });
+    }
+  };
+
+  // Next button logic
+  const scrollNext = () => {
+    if (activeIndex < services.length - 1) {
+      scrollToIndex(activeIndex + 1);
+    } else {
+      scrollToIndex(0); // Loop back to start
+    }
   };
 
   return (
-    <section className={`${darkMode ? "bg-black" : "bg-white"} min-h-screen transition-colors duration-300`}>
-      <div className="max-w-6xl mx-auto py-12 px-4 md:px-6">
-        {/* Theme Toggle */}
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={() => setDarkMode((prev) => !prev)}
-            className="flex items-center gap-2 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-full text-xs transition-all"
+    <main className="bg-white text-[#1d1d1f] font-sans antialiased overflow-hidden">
+      {/* ================= HERO ================= */}
+      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+        <img
+          src="/Hero/cheetah.png"
+          alt="Afribide Safari"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          className="relative z-10 text-center px-6 max-w-4xl"
+        >
+          <h1 className="text-white font-semibold tracking-tight leading-tight text-[clamp(2.5rem,6vw,5rem)]">
+            Where Adventure Meets Expertise
+          </h1>
+          <p className="text-white/80 mt-6 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+            A safari is not just a journey—it’s a return to the wild.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ================= INTRO ================= */}
+      <section className="py-24 px-6 max-w-5xl mx-auto">
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
+          <p className="text-xl md:text-2xl leading-relaxed text-[#424245] font-medium tracking-tight">
+            At <span className="text-black font-semibold">Afribide Safaris</span>, we curate
+            sophisticated, high-impact journeys that place you at the very heart
+            of the wilderness.
+          </p>
+          <p className="mt-8 text-lg text-[#6e6e73] leading-relaxed tracking-tight">
+            Based in Nairobi, we bridge rugged adventure with refined luxury—
+            from the sweeping plains of the Masai Mara to secluded landscapes
+            and the turquoise shores of the Indian Ocean. Every encounter is
+            designed to feel both raw and effortlessly comfortable.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ================= A CLOSER LOOK ================= */}
+      <section className="py-32 bg-[#f5f5f7]">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="text-center mb-16"
           >
-            {darkMode ? <FaSun size={14} /> : <FaMoon size={14} />}
-            {darkMode ? "Light Mode" : "Dark Mode"}
-          </button>
-        </div>
-
-        {/* Hero Section */}
-        <div className="container mx-auto px-4 py-8 md:py-12 flex flex-col md:flex-row items-center gap-6 md:gap-8">
-          <div className="flex-1">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              className="mb-4"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.15,
-                    delayChildren: 0.15
-                  }
-                }
-              }}
-            >
-              <motion.h1
-                className={`text-3xl md:text-4xl font-medium leading-tight mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}
-                variants={fadeInUp}
-              >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Unforgettable</span> African
-              </motion.h1>
-              <motion.h1
-                className={`text-3xl md:text-4xl font-medium leading-tight mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}
-                variants={fadeInUp}
-              >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">safaris</span> tailored
-              </motion.h1>
-              <motion.h1
-                className={`text-3xl md:text-4xl font-medium leading-tight mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}
-                variants={fadeInUp}
-              >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">just for you</span>
-              </motion.h1>
-            </motion.div>
-
-            <motion.p
-              className={`text-lg mb-6 max-w-lg ${darkMode ? "text-white/80" : "text-gray-700"}`}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              variants={fadeInUp}
-              transition={{ delay: 0.6 }}
-            >
-              Our journey is rooted in a deep love for the African continent. We are a collective of <span className={`${darkMode ? "text-cyan-400" : "text-blue-600"}`}>passionate guides</span> and <span className={`${darkMode ? "text-cyan-400" : "text-blue-600"}`}>travel experts</span>, dedicated to designing bespoke wilderness adventures that not only thrill but also respect the <span className={`${darkMode ? "text-cyan-400" : "text-blue-600"}`}>natural habitats</span> and local communities.
-            </motion.p>
-          </div>
+            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-[#1d1d1f]">
+               A balance of wild and refined.
+            </h1>
+          </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
             viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.5, ease:"circOut" }}
-            className="flex-1 aspect-video md:aspect-square bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg"
+            className="bg-gradient-to-r from-[#d9d9e3] via-[#d9d9e3] to-[#ffb37b] rounded-[28px] p-12 md:p-20 grid md:grid-cols-2 gap-12 items-center shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
           >
-            {/* Update this image source to a safari picture */}
-            <img
-              src="/safari-hero.jpg" 
-              alt="Afribide Safari Experience"
-              className="w-full h-full object-cover"
-              loading="lazy"
-              width="500"
-              height="500"
-            />
+            <div className="text-center md:text-left flex flex-col items-center md:items-start z-10">
+              <p className="mt-6 text-[#1d1d1f]/90 text-lg md:text-xl font-medium leading-relaxed max-w-[420px]">
+                Whether beneath an acacia canopy or along untouched coastlines,
+                Afribide Safaris ensures each moment feels immersive yet effortlessly
+                luxurious.
+              </p>
+              <motion.a
+                href="#explore"
+                whileHover={{ scale: 1.02 }}
+                className="mt-10 inline-flex items-center gap-2.5 px-8 py-3.5 text-base font-semibold rounded-full bg-black text-white group hover:bg-[#1d1d1f] transition-colors"
+              >
+                Explore Our Journeys
+                <motion.span className="transition-transform group-hover:translate-x-1">
+                  <ArrowRight size={20} strokeWidth={2} />
+                </motion.span>
+              </motion.a>
+            </div>
+            <motion.div 
+              className="relative w-full flex justify-center md:justify-end"
+              initial={{ opacity: 0, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <img
+                src="/Hero/ante.png"
+                alt="Safari Guide"
+                className="w-full max-w-[400px] h-[400px] object-contain drop-shadow-xl"
+              />
+            </motion.div>
           </motion.div>
         </div>
+      </section>
 
-        {/* Values Section */}
-        <motion.div
-          className="container mx-auto px-4 py-12 mb-16"
-          initial="hidden"
-          whileInView="visible"
-          variants={fadeInUp}
-          viewport={{ once: true, margin: "-50px" }}
-        >
-          <motion.h2
-            className={`text-2xl md:text-3xl font-medium text-center mb-12 ${darkMode ? "text-white" : "text-gray-900"}`}
-            variants={fadeInUp}
-          >
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Our Core</span> Values
-          </motion.h2>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {CORE_VALUES.map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                variants={fadeInUp}
-                transition={{ delay: index * 0.2, duration: 0.7, ease: "easeOut" }}
-                className={`p-6 rounded-lg ${darkMode ? "bg-gray-900/60" : "bg-gray-50/80"} border ${darkMode ? "border-gray-700/50" : "border-gray-200/80"} hover:border-cyan-400/50 transition-all duration-300`}
-                whileHover={{ y: -5, boxShadow: darkMode ? "0px 8px 15px rgba(0, 220, 220, 0.15)" : "0px 8px 15px rgba(50, 100, 250, 0.1)" }}
-              >
-                <div className={`text-3xl mb-3 ${darkMode ? "text-cyan-300" : "text-blue-500"}`}>
-                  <item.icon fontSize="large" />
-                </div>
-                <h3 className={`text-lg font-medium mb-1.5 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                  {item.title}
-                </h3>
-                <p className={`text-sm ${darkMode ? "text-white/70" : "text-gray-600"}`}>
-                  {item.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* CTA Section */}
-        <motion.div
-          className={`rounded-3xl p-8 text-center ${darkMode ? "bg-gray-900/60" : "bg-gray-100/80"} border ${darkMode ? "border-gray-700/50" : "border-gray-200/80"} mb-16 shadow-md`}
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{duration: 0.6, ease: "easeOut"}}
-        >
-          <motion.h2
-            className={`text-2xl md:text-3xl font-medium mb-6 ${darkMode ? "text-white" : "text-gray-900"}`}
-            variants={fadeInUp}
-            initial="hidden" whileInView="visible" viewport={{ once: true }}
-          >
-            Ready to <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">explore</span> the wild with us?
-          </motion.h2>
-          
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <motion.button
-              onClick={() => setShowConsultationModal(true)}
-              variants={fadeInUp}
-              initial="hidden" whileInView="visible" viewport={{ once: true }}
-              transition={{ delay: 0.15 }}
-              className={`px-6 py-2.5 rounded-lg font-semibold border-2 ${darkMode ? "border-cyan-400 text-white hover:bg-cyan-400/10" : "border-blue-600 text-blue-600 hover:bg-blue-600/10"} transition-all duration-300 text-sm`}
-              whileHover={{ scale: 1.03, y: -2, boxShadow: darkMode ? "0px 4px 12px rgba(0, 200, 200, 0.2)" : "0px 4px 12px rgba(59, 130, 246, 0.15)" }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Plan Your Safari
-            </motion.button>
-
-            <motion.button
-              onClick={() => setShowTeam(true)}
-              variants={fadeInUp}
-              initial="hidden" whileInView="visible" viewport={{ once: true }}
-              transition={{ delay: 0.25 }}
-              className={`px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 text-sm ${darkMode ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              Meet Our Team
-            </motion.button>
-          </div>
-        </motion.div>
-
-        {/* Consultation Form Modal */}
-        <AnimatePresence>
-          {showConsultationModal && (
+      {/* ================= WHAT WE OFFER ================= */}
+      <section className="py-28 bg-[#f5f5f7]">
+        <div className="max-w-7xl mx-auto pl-6 md:px-6">
+          <div className="mb-12 pr-6 md:pr-0">
             <motion.div
-              className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setShowConsultationModal(false)}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
             >
-              <motion.div
-                variants={modalVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                className={`relative w-full max-w-md max-h-[90vh] rounded-2xl overflow-hidden ${darkMode ? 'bg-gray-900/90 border border-gray-700' : 'bg-white/95 border border-gray-200'} shadow-xl flex flex-col`}
-                onClick={(e) => e.stopPropagation()}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="modal-title"
-              >
-                <button
-                  onClick={() => setShowConsultationModal(false)}
-                  className={`absolute top-3 right-3 z-10 p-1.5 rounded-full ${darkMode ? 'text-gray-300 hover:bg-gray-700/50 hover:text-white' : 'text-gray-500 hover:bg-gray-200/70 hover:text-gray-800'} transition-colors`}
-                  aria-label="Close modal"
+              <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-[#1d1d1f]">
+                What We Offer
+              </h2>
+            </motion.div>
+          </div>
+
+          {/* Carousel Container */}
+          <div 
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 pt-4 w-full pr-6 md:pr-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {services.map((item, i) => {
+              const Icon = item.icon;
+              const isExpanded = expandedCards[i];
+
+              return (
+                <motion.div
+                  key={i}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  // w-[62vw] ensures exactly 1.5 cards are visible on mobile viewports
+                  className="relative flex-none w-[62vw] md:w-[400px] snap-start bg-white p-8 md:p-10 rounded-[28px] shadow-[0_2px_12px_rgba(0,0,0,0.04)] min-h-[420px] flex flex-col"
                 >
-                  <FaTimes className="text-lg" />
-                </button>
+                  <div className="mb-8">
+                    <Icon size={36} color={item.iconColor} strokeWidth={1.5} />
+                  </div>
 
-                <div className={`overflow-y-auto flex-1 p-5 md:p-6`}>
-                  <motion.h2
-                    id="modal-title"
-                    className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}
-                    variants={staggerItem}
-                  >
-                    Start Your Adventure
-                  </motion.h2>
+                  <h3 className="text-[24px] md:text-[32px] font-semibold tracking-tight leading-tight text-[#1d1d1f] mb-4">
+                    {item.prefix}
+                    <span className={item.colorClass}>{item.highlight}</span>
+                  </h3>
 
-                  <form ref={formRef} onSubmit={sendEmail}>
-                    <motion.div
-                      variants={{
-                        visible: { 
-                          transition: { 
-                            staggerChildren: 0.05 
-                          } 
-                        }
-                      }}
-                      initial="hidden"
-                      animate="visible"
-                      className="space-y-3"
-                    >
-                      <motion.div variants={staggerItem}>
-                        <label htmlFor="name" className={`block text-xs mb-1 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>Your Name</label>
-                        <input id="name" type="text" name="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className={`w-full rounded-lg px-3 py-2.5 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500 border-gray-700' : 'bg-gray-100 text-gray-900 placeholder-gray-400 border-gray-300'} border focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 outline-none transition text-sm`} required placeholder="e.g. Jane Doe"/>
-                      </motion.div>
-                      <motion.div variants={staggerItem}>
-                        <label htmlFor="email" className={`block text-xs mb-1 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>Email Address</label>
-                        <input id="email" type="email" name="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className={`w-full rounded-lg px-3 py-2.5 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500 border-gray-700' : 'bg-gray-100 text-gray-900 placeholder-gray-400 border-gray-300'} border focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 outline-none transition text-sm`} required placeholder="you@example.com"/>
-                      </motion.div>
-                      <motion.div variants={staggerItem}>
-                        <label htmlFor="phone" className={`block text-xs mb-1 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>Phone Number </label>
-                        <input id="phone" type="tel" name="phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className={`w-full rounded-lg px-3 py-2.5 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500 border-gray-700' : 'bg-gray-100 text-gray-900 placeholder-gray-400 border-gray-300'} border focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 outline-none transition text-sm`} placeholder="(Optional)"/>
-                      </motion.div>
-                      <motion.div variants={staggerItem}>
-                        <label htmlFor="service" className={`block text-xs mb-1 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>Type of Safari</label>
-                        <select id="service" name="service" value={formData.plan} onChange={(e) => setFormData({...formData, plan: e.target.value})} className={`w-full rounded-lg px-3 py-2.5 ${darkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-gray-100 text-gray-900 border-gray-300'} border focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 outline-none transition appearance-none text-sm`} required>
-                          <option value="">Select an option</option>
-                          <option value="Classic Safari">Classic Safari</option>
-                          <option value="Luxury Lodge Safari">Luxury Lodge Safari</option>
-                          <option value="Family Holiday">Family Holiday</option>
-                          <option value="Custom Itinerary">Custom Tailor-Made Itinerary</option>
-                        </select>
-                      </motion.div>
-                      <motion.div variants={staggerItem}>
-                        <label htmlFor="message" className={`block text-xs mb-1 ${darkMode ? 'text-white/80' : 'text-gray-700'}`}>Trip Details</label>
-                        <textarea id="message" name="message" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} rows="3" className={`w-full rounded-lg px-3 py-2.5 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500 border-gray-700' : 'bg-gray-100 text-gray-900 placeholder-gray-400 border-gray-300'} border focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400 outline-none transition text-sm`} required placeholder="Tell us about your dream trip, dates, and group size..."></textarea>
-                      </motion.div>
-                    </motion.div>
-
-                    {message && (
-                      <motion.div className={`mt-3 p-2 rounded-lg text-xs ${message.includes("successfully") ? (darkMode ? 'bg-green-500/20 text-green-300' : 'bg-green-100 text-green-700') : (darkMode ? 'bg-yellow-500/20 text-yellow-300' : 'bg-yellow-100 text-yellow-700')}`} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} role="alert" >
-                        {message}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="text-[#6e6e73] text-base md:text-lg leading-relaxed tracking-tight overflow-hidden mt-4 pb-12"
+                      >
+                        {item.desc}
                       </motion.div>
                     )}
-                    <motion.button type="submit" className="w-full mt-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold py-2.5 px-5 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-cyan-500 text-sm" variants={staggerItem} whileHover={{ scale: 1.01, y: -1, boxShadow: "0px 3px 10px rgba(0, 180, 180, 0.2)"}} whileTap={{ scale: 0.98 }} >
-                      {message === "Sending your inquiry..." ? "Sending..." : "Send Request"}
-                    </motion.button>
-                  </form>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  </AnimatePresence>
 
-        {/* Team Popup Modal */}
-        <AnimatePresence>
-          {showTeam && (
-            <motion.div
-              className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowTeam(false)}
-            >
-              <motion.div
-                variants={modalVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                className={`relative w-full max-w-3xl max-h-[90vh] rounded-2xl overflow-hidden ${darkMode ? 'bg-gray-900/90 border border-gray-700' : 'bg-white/95 border border-gray-200'} shadow-xl flex flex-col`}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className={`p-3 md:p-4 sticky top-0 ${darkMode ? 'bg-gray-900/80' : 'bg-white/80'} backdrop-blur-sm border-b ${darkMode ? 'border-gray-700/50' : 'border-gray-200/50'} z-10 flex justify-between items-center`}>
-                  <h3 className={`text-lg md:text-xl font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                      Meet Our Safari Experts
-                    </span>
-                  </h3>
                   <button
-                    onClick={() => setShowTeam(false)}
-                    className={`p-1.5 rounded-full ${darkMode ? 'text-gray-300 hover:bg-gray-700/50 hover:text-white' : 'text-gray-500 hover:bg-gray-200/70 hover:text-gray-800'} transition-colors`}
-                    aria-label="Close team modal"
+                    onClick={(e) => toggleCard(i, e)}
+                    className="absolute bottom-8 right-8 w-10 h-10 flex items-center justify-center rounded-full bg-[#1d1d1f] text-white hover:bg-black transition-colors duration-200 z-10"
                   >
-                    <FaTimes className="text-lg" />
+                    <motion.div
+                      animate={{ rotate: isExpanded ? 45 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Plus size={24} strokeWidth={2.5} />
+                    </motion.div>
                   </button>
-                </div>
+                </motion.div>
+              );
+            })}
+          </div>
 
-                <div className="overflow-y-auto p-3 md:p-5">
-                  <motion.div
-                    variants={{
-                      visible: { 
-                        transition: { 
-                          staggerChildren: 0.08 
-                        } 
-                      }
-                    }}
-                    initial="hidden"
-                    animate="visible"
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-                  >
-                    {TEAM_MEMBERS.map((member) => (
-                      <motion.div
-                        key={member.id}
-                        variants={staggerItem}
-                        className={`rounded-lg overflow-hidden ${darkMode ? 'bg-gray-800/70' : 'bg-gray-50/90'} border ${darkMode ? 'border-gray-700/60' : 'border-gray-200/70'} transition-all duration-300 hover:shadow-md`}
-                        whileHover={{y: -3, boxShadow: darkMode ? "0px 5px 12px rgba(0,0,0,0.2)" : "0px 5px 12px rgba(0,0,0,0.08)"}}
-                      >
-                        <div className="h-40 w-full bg-gray-300 dark:bg-gray-700 relative overflow-hidden">
-                          <img src={member.image} alt={member.name} className="w-full h-full object-cover object-center" loading="lazy" width="300" height="300" />
-                        </div>
-                        <div className="p-4">
-                          <h3 className={`text-base font-semibold mb-1 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                            {member.name}
-                          </h3>
-                          <p className={`text-xs mb-2 font-medium ${darkMode ? 'text-cyan-400' : 'text-blue-600'}`}>
-                            {member.role}
-                          </p>
-                          <p className={`text-xs mb-3 ${darkMode ? 'text-white/70' : 'text-gray-600'}`}>
-                            {member.bio}
-                          </p>
-                          <div className="flex gap-2 mt-auto">
-                            <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className={`p-1.5 rounded-full ${darkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300 hover:text-gray-900'} transition-colors`}>
-                              <FaLinkedin size={14} />
-                            </a>
-                            <a href={member.twitter} target="_blank" rel="noopener noreferrer" className={`p-1.5 rounded-full ${darkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300 hover:text-gray-900'} transition-colors`}>
-                              <FaTwitter size={14} />
-                            </a>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </section>
+          {/* Custom Pagination (Pill & Play Button) */}
+          <div className="flex justify-center mt-10 pr-6 md:pr-0">
+            <div className="flex items-center gap-4">
+              {/* Dots Pill Container */}
+              <div className="flex items-center gap-2 bg-[#e8e8ed] rounded-full px-5 py-3.5">
+                {services.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => scrollToIndex(i)}
+                    aria-label={`Go to slide ${i + 1}`}
+                    className={`h-2 rounded-full transition-all duration-300 ease-out ${
+                      activeIndex === i 
+                        ? "w-7 bg-[#6e6e73]" // Elongated active indicator
+                        : "w-2 bg-[#a1a1a6] hover:bg-[#86868b]" // Small circular inactive dot
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Play/Next Circular Button */}
+              <button
+                onClick={scrollNext}
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-[#e8e8ed] text-[#1d1d1f] hover:bg-[#d2d2d7] active:scale-95 transition-all"
+                aria-label="Next slide"
+              >
+                <Play fill="currentColor" size={20} className="ml-1" />
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+       {/* ================= CLOSING (UPDATED) ================= */}
+      <section className="relative py-32 text-white text-center px-6 overflow-hidden">
+        
+        {/* Background Image */}
+        <img
+          src="/Hero/antelopep.png"   // <-- change to your image
+          alt="Safari Sunset"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/60" />
+
+        {/* Content */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="relative z-10 max-w-3xl mx-auto"
+        >
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">
+            The journey begins with intention
+          </h2>
+          <p className="mt-6 text-white/80 text-lg leading-relaxed tracking-tight">
+            Afribide Safaris is more than a travel company—it’s a gateway to
+            Africa’s most powerful experiences, curated with precision and
+            passion.
+          </p>
+        </motion.div>
+      </section>
+    </main>
   );
 };
 
-export default AboutPage;
+export default AboutAfribide;

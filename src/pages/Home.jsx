@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react"; 
 import { useLocation } from "react-router-dom";
 import { motion, LayoutGroup } from "framer-motion";
 import { FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
@@ -6,6 +6,7 @@ import { FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import Comprehensive from "./Comprehensive";
 import NextureWork from "./NextureWork";
 import Questions from "./Questions";
+import WhyChooseAfribide from "./WhyChooseAfribide"; // ✅ IMPORT ADDED
 import Testimonial from "./Testimonial";
 import Contact from "./Contact";
 import GalleryPage from "./GalleryPage";
@@ -31,15 +32,14 @@ const textVariants = {
   },
 };
 
-/* SINGLE HERO IMAGE */
-// Highly recommend changing these to .webp formats!
+/* HERO IMAGES */
 const heroDesktop = "/Hero/cheetah.png";
 const heroMobile = "/Hero/cheetah.png"; 
 
 const Home = () => {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false); // Track image loading
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   /* HASH SCROLL */
   useEffect(() => {
@@ -57,7 +57,6 @@ const Home = () => {
 
   return (
     <LayoutGroup>
-      {/* REMOVED the global initial={{ opacity: 0 }} here to prevent blocking the whole page render */}
       <div
         className="min-h-screen bg-[#F5F5F7] text-gray-900 overflow-x-hidden"
         style={{
@@ -65,20 +64,15 @@ const Home = () => {
         }}
       >
         {/* ================= HERO ================= */}
-        {/* Changed bg-black to a warm dark tone (e.g., #2c2921) to make the pre-load phase less jarring */}
         <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-[#2c2921]">
           
-          {/* ================= OPTIMIZED BACKGROUND ================= */}
+          {/* BACKGROUND */}
           <div className="absolute inset-0 z-0 w-full h-full pointer-events-none">
             <motion.div
               initial={{ scale: 1.1, opacity: 0 }}
-              // Only animate to full opacity once the image has actually loaded
-              animate={{ 
-                scale: 1, 
-                opacity: imageLoaded ? 1 : 0 
-              }}
+              animate={{ scale: 1, opacity: imageLoaded ? 1 : 0 }}
               transition={{
-                opacity: { duration: 0.8, ease: "easeInOut" }, // Sped up the fade-in
+                opacity: { duration: 0.8, ease: "easeInOut" },
                 scale: { duration: 6, ease: "easeOut" },
               }}
               className="absolute inset-0 w-full h-full"
@@ -91,16 +85,15 @@ const Home = () => {
                   className="w-full h-full object-cover object-center"
                   loading="eager"
                   fetchPriority="high"
-                  onLoad={() => setImageLoaded(true)} // Trigger animation when ready
+                  onLoad={() => setImageLoaded(true)}
                 />
               </picture>
               
-              {/* Dark Overlay for Text Readability */}
               <div className="absolute inset-0 bg-black/40" />
             </motion.div>
           </div>
 
-          {/* ================= FOREGROUND ================= */}
+          {/* FOREGROUND */}
           <div className="relative z-20 px-6 w-full max-w-7xl mx-auto flex flex-col items-center text-center mt-16">
             <motion.div
               variants={containerVariants}
@@ -127,7 +120,6 @@ const Home = () => {
                 like never before
               </motion.h1>
 
-              {/* CTA + SOCIAL */}
               <motion.div
                 variants={textVariants}
                 className="flex flex-col items-center gap-8"
@@ -160,7 +152,14 @@ const Home = () => {
         <div id="gallery-section"><NextureWork /></div>
         <div id="full-gallery-section"><GalleryPage /></div>
         <div id="safariheros-section"><Testimonial /></div>
+
         <Questions />
+        
+        {/* ✅ NEW SECTION ADDED HERE */}
+        <div id="whychoose-section">
+          <WhyChooseAfribide />
+        </div>
+
         <div id="contact-section"><Contact /></div>
 
         {/* ================= MODAL ================= */}

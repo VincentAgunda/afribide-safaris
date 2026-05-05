@@ -55,11 +55,11 @@ const GalleryImage = memo(({ src, alt, onClick }) => {
       whileHover={{ scale: 1.02, y: -2 }}
       transition={spring}
       onClick={onClick}
-      className="group relative aspect-[3/2] rounded-xl overflow-hidden bg-gray-100 shadow-sm ring-1 ring-black/5 will-change-transform transform-gpu cursor-pointer"
+      className="group relative aspect-[3/2] rounded-xl overflow-hidden bg-gray-200 shadow-sm ring-1 ring-black/5 will-change-transform transform-gpu cursor-pointer"
     >
       {/* Subtle Skeleton Loader */}
       <div 
-        className={`absolute inset-0 bg-gray-200/60 animate-pulse transition-opacity duration-500 ${loaded ? 'opacity-0' : 'opacity-100'}`} 
+        className={`absolute inset-0 bg-gray-300/60 animate-pulse transition-opacity duration-500 ${loaded ? 'opacity-0' : 'opacity-100'}`} 
       />
       
       <img
@@ -108,7 +108,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
   useEffect(() => {
     if (lightboxIndex === null) return;
     
-    // Preload next and previous images to ensure instant transitions
     const nextIdx = (lightboxIndex + 1) % gallery.length;
     const prevIdx = (lightboxIndex - 1 + gallery.length) % gallery.length;
     const imgNext = new Image(); imgNext.src = gallery[nextIdx];
@@ -133,7 +132,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
     if (el && scrollContainerRef.current) {
-      // Offset for sticky header
       const topPos = el.offsetTop - 80;
       scrollContainerRef.current.scrollTo({
         top: topPos,
@@ -162,7 +160,7 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
         <motion.div
           layoutId={`card-${item.id}`}
           transition={spring}
-          className="relative z-10 w-full max-w-5xl h-[100dvh] sm:h-full sm:max-h-[90vh] flex flex-col sm:rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-white transform-gpu will-change-transform"
+          className="relative z-10 w-full max-w-5xl h-[100dvh] sm:h-full sm:max-h-[90vh] flex flex-col sm:rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-[#f5f5f7] transform-gpu will-change-transform"
         >
           <motion.button
             onClick={onClose}
@@ -183,7 +181,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
               transition={spring}
               className="h-[300px] sm:h-[400px] w-full relative shrink-0 overflow-hidden transform-gpu will-change-transform bg-[#111111]"
             >
-              {/* Hero Image Skeleton */}
               <div className={`absolute inset-0 bg-gray-800 animate-pulse transition-opacity duration-700 ${heroLoaded ? 'opacity-0' : 'opacity-100'}`} />
               
               <img
@@ -224,7 +221,7 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
             </motion.div>
 
             {/* Sticky Quick-Nav & Book Action */}
-            <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-200/60 px-4 sm:px-8 py-3 flex items-center justify-between gap-4 transform-gpu shadow-sm">
+            <div className="sticky top-0 z-20 bg-[#f5f5f7]/80 backdrop-blur-xl border-b border-gray-200/60 px-4 sm:px-8 py-3 flex items-center justify-between gap-4 transform-gpu shadow-sm">
               <div className="flex flex-1 gap-2 sm:gap-3 items-center overflow-x-auto scrollbar-hide whitespace-nowrap">
                 <button 
                   onClick={() => scrollToSection('overview')} 
@@ -277,7 +274,7 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
                   </p>
                   
                   {item.journeyAtAGlance && (
-                    <div className="mt-8 p-6 rounded-2xl bg-gray-50 border border-gray-100 transform-gpu">
+                    <div className="mt-8 p-6 rounded-2xl bg-white border border-gray-200/50 shadow-sm transform-gpu">
                       <h4 className="text-lg font-bold text-[#1d1d1f] mb-3 flex items-center gap-2">
                         <MapPin className="text-[#8A4413]" size={20} />
                         Journey at a Glance
@@ -292,19 +289,19 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
 
               {/* --- ITINERARY --- */}
               {item.itinerary?.length > 0 && (
-                <section id="itinerary" className="max-w-4xl mx-auto scroll-mt-24 pt-4 border-t border-gray-100">
+                <section id="itinerary" className="max-w-4xl mx-auto scroll-mt-24 pt-4 border-t border-gray-200/60">
                   <motion.div {...fadeUp} className="will-change-transform">
                     <h4 className="text-3xl font-bold tracking-tight text-[#1d1d1f] mb-10 flex items-center gap-3">
                       <Map className="text-[#8A4413] " size={28} />
                       Itinerary Details
                     </h4>
-                    <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-[2px] before:bg-gray-200">
+                    <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-[2px] before:bg-gray-300">
                       {item.itinerary.map((day, idx) => (
                         <div
                           key={idx}
                           className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group"
                         >
-                          <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-[#1d1d1f] text-white shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-transform duration-300 hover:scale-110 transform-gpu">
+                          <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#f5f5f7] bg-[#1d1d1f] text-white shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-transform duration-300 hover:scale-110 transform-gpu">
                             <span className="text-xs font-bold tracking-tighter">
                               {day.day.replace("Day ", "")}
                             </span>
@@ -347,7 +344,7 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
               )}
 
               {/* --- PRICING --- */}
-              <section id="pricing" className="max-w-4xl scroll-mt-24 pt-4 border-t border-gray-100">
+              <section id="pricing" className="max-w-4xl scroll-mt-24 pt-4 border-t border-gray-200/60">
                 <motion.div {...fadeUp} className="grid lg:grid-cols-12 gap-8 will-change-transform">
                   <div className="lg:col-span-7 space-y-6">
                     <div>
@@ -359,7 +356,7 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
                         {item.pricing?.map((price, idx) => (
                           <div
                             key={idx}
-                            className="p-5 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors duration-300 transform-gpu"
+                            className="p-5 rounded-2xl bg-white border border-gray-100 hover:border-gray-300 transition-colors duration-300 transform-gpu shadow-sm"
                           >
                             <h5 className="text-base font-bold text-[#1d1d1f] tracking-tight mb-1">
                               {price.title}
@@ -370,9 +367,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
                           </div>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-400 mt-4 font-medium">
-                        * Rates are based on persons traveling in a private 4x4 safari vehicle.
-                      </p>
                     </div>
                   </div>
                   
@@ -392,9 +386,9 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
                         ))}
                       </ul>
                     </div>
-                    <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 transform-gpu">
+                    <div className="p-6 rounded-2xl bg-gray-200/50 border border-gray-200/80 transform-gpu">
                       <h4 className="text-lg font-bold tracking-tight text-[#1d1d1f] mb-4 flex items-center gap-2">
-                        <XCircle className="text-gray-400" size={18} /> Not Included
+                        <XCircle className="text-gray-500" size={18} /> Not Included
                       </h4>
                       <ul className="space-y-2">
                         {item.excluded?.map((exc, idx) => (
@@ -412,7 +406,7 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
               </section>
 
               {/* --- GALLERY HIGHLIGHTS --- */}
-              <section id="gallery" className="max-w-4xl mx-auto scroll-mt-24 pt-4 border-t border-gray-100 pb-10">
+              <section id="gallery" className="max-w-4xl mx-auto scroll-mt-24 pt-4 border-t border-gray-200/60 pb-10">
                 <motion.div {...fadeUp} className="will-change-transform">
                   <h4 className="text-3xl font-bold tracking-tight text-[#1d1d1f] mb-8 flex items-center gap-3">
                     <Camera className="text-[#8A4413] " size={28} />
@@ -475,7 +469,6 @@ const SafariModal = memo(({ item, onClose, onBookNow }) => {
             </button>
 
             <div className="relative w-full h-full flex items-center justify-center p-4 sm:p-12 md:p-24 overflow-hidden outline-none transform-gpu">
-              {/* Added a subtle global loading spinner behind the image in case of slow networks */}
               <div className="absolute inset-0 flex items-center justify-center -z-10">
                 <Loader2 className="animate-spin text-white/30" size={40} />
               </div>

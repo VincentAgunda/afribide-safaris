@@ -40,7 +40,7 @@ const IMAGE_OPTIONS = [
   { label: "leopard3", value: "/Animals/3leopard.jpeg" },
   { label: "Ducks1", value: "/Animals/2ducks.jpeg" },
   { label: "Ducks", value: "/Animals/2ducks1.jpeg" },
-  { label: "Lion", value: "/lion1.jpeg" },
+  { label: "antelope", value: "/Hero/antelopep.png"},
   { label: "4Zebras", value: "/Animals/4zebras.jpeg" },
 ];
 

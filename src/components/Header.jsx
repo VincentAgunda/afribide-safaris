@@ -8,7 +8,7 @@ import { useAuth } from "../context/AuthContext";
 
 // Updated navLinks for Option 1
 const navLinks = [
-  { path: "/#about", label: "About Us" },
+  { path: "/about", label: "About Us" },
   { path: "/#gallery", label: "Explore" },
   { path: "/#full-gallery", label: "Gallery" },
   { path: "/#safariheros", label: "Testimonials & Blogs" },

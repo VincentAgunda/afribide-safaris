@@ -1,4 +1,3 @@
-// App.jsx
 import React from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,13 +8,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import FloatingActions from "./components/FloatingActions";
+import CookieBanner from "./components/CookieConsent"; // ✅ ADDED
 
 import Home from "./pages/Home";
 import About from "./pages/About";
-
 import NextureWork from "./pages/NextureWork";
 import GalleryPage from "./pages/GalleryPage";
-
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -29,7 +28,7 @@ const pageVariants = {
   animate: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] } 
+    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }
   },
   exit: {
     opacity: 0,
@@ -59,8 +58,7 @@ function AppContent() {
           {/* =========================
               PUBLIC ROUTES
           ========================= */}
-          
-          {/* HOME */}
+
           <Route
             path="/"
             element={
@@ -76,7 +74,6 @@ function AppContent() {
             }
           />
 
-          {/* ABOUT */}
           <Route
             path="/about"
             element={
@@ -92,7 +89,6 @@ function AppContent() {
             }
           />
 
-          {/* NEXTURE WORK PAGE */}
           <Route
             path="/nexture-work"
             element={
@@ -108,7 +104,6 @@ function AppContent() {
             }
           />
 
-          {/* FULL GALLERY PAGE */}
           <Route
             path="/gallery"
             element={
@@ -158,7 +153,6 @@ function AppContent() {
             }
           />
 
-          {/* OPTIONAL ADMIN AUTH */}
           <Route
             path="/admin-auth"
             element={
@@ -194,15 +188,19 @@ function AppContent() {
             }
           />
 
-          {/* =========================
-              FALLBACK ROUTE
-          ========================= */}
+          {/* FALLBACK ROUTE */}
           <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>
       </AnimatePresence>
 
       <Footer />
+
+      {/* Floating Buttons */}
+      <FloatingActions />
+
+      {/* ✅ COOKIE CONSENT (GLOBAL OVERLAY) */}
+      <CookieBanner />
 
       {/* =========================
           GLOBAL STYLES
